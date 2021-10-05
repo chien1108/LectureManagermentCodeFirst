@@ -9,6 +9,7 @@ namespace LecturerManagermentCodeFirst.API.Entities
     {
         [ForeignKey("Lecturer")]
         public string LecturerID { get; set; }
+
         [Key]
         public string UserName { get; set; }
         public byte[] PasswordHash { get; set; }

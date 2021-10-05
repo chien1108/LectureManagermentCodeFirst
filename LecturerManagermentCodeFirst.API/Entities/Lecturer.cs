@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LecturerManagermentCodeFirst.API.Entities
 {
     public class Lecturer
     {
+        [Key]
         public string ID { get; set; }
         public string FullName { get; set; }
         public string Gender { get; set; }
@@ -22,7 +24,7 @@ namespace LecturerManagermentCodeFirst.API.Entities
         public string PhoneNumber { get; set; }
         [ForeignKey("SubjectDepartment")]
         public string SubjectDepartmentID { get; set; }
-        public string? Description { get; set; }
+        public string Description { get; set; } = null;
 
         public SubjectDepartment SubjectDepartment { get; set; }
         public StandardTime StandardTime { get; set; }
