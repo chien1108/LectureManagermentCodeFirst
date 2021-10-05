@@ -8,10 +8,12 @@
         public string DynamicClassID { get; set; }
         public int? FromDynamic { get; set; }
         public int? ToDynamic { get; set; }
+
         /// <summary>
         /// hệ số
         /// </summary>
         public double Coefficient { get; set; }
+
         public string TeachesForm { get; set; }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace LecturerManagermentCodeFirst.API.Entities
+﻿namespace LecturerManagermentCodeFirst.API.Entities
 {
     // đồ án tốt nghiệp
     public class GraduationThesis

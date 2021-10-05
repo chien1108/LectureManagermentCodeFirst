@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LecturerManagermentCodeFirst.API.Services.AccountServices
 {
-    public class AccountService
+    public class AccountService : IAccountService
     {
     }
 }
