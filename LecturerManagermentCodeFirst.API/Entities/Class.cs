@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LecturerManagermentCodeFirst.API.Entities
 {
@@ -7,21 +8,16 @@ namespace LecturerManagermentCodeFirst.API.Entities
     /// </summary>
     public class Class
     {
-        public string ClassID { get; set; }
+        public string ID { get; set; }
+        [ForeignKey("TrainingSystem")]
         public string TrainingSystemID { get; set; }
-        public string ClassName { get; set; }
-        public int? NumberOfSutdent { get; set; }
+        public string Name { get; set; }
+        public int? NumberOfStudent { get; set; }
         public string FormsOfTraining { get; set; }
         public string? Description { get; set; }
 
-        public TrainingSystem TrainingSystemIDNavigation { get; set; }
-        public ICollection<Teaching> Teachings { get; set; }
-        public ICollection<GraduationThesis> GraduationTheses { get; set; }
-
-        public Class()
-        {
-            Teachings = new HashSet<Teaching>();
-            GraduationTheses = new HashSet<GraduationThesis>();
-        }
+        public TrainingSystem TrainingSystem { get; set; }
+        public ICollection<Teaching> Teachings { get; set; } = new HashSet<Teaching>();
+        public ICollection<GraduationThesis> GraduationTheses { get; set; } = new HashSet<GraduationThesis>();
     }
 }

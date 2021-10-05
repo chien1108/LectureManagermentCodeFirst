@@ -10,15 +10,10 @@ namespace LecturerManagermentCodeFirst.API.Entities
     /// </summary>
     public class SubjectDepartment
     {
-        public string SubjectDepartmentID { get; set; }
-        public string SubjectDepartmentName { get; set; }
+        public string ID { get; set; }
+        public string Name { get; set; }
         public string? Description { get; set; }
 
-        public ICollection<Lecturer> Lecturers { get; set; }
-
-        public SubjectDepartment()
-        {
-            Lecturers = new HashSet<Lecturer>();
-        }
+        public ICollection<Lecturer> Lecturers { get; set; } = new HashSet<Lecturer>();
     }
 }

@@ -10,15 +10,10 @@ namespace LecturerManagermentCodeFirst.API.Entities
     /// </summary>
     public class SubjectType
     {
-        public string SubjectTypeID { get; set; }
-        public string SubjectTypeName { get; set; }
+        public string ID { get; set; }
+        public string Name { get; set; }
         public string? Description { get; set; }
 
-        public ICollection<Subject> Subjects { get; set; }
-
-        public SubjectType()
-        {
-            Subjects = new HashSet<Subject>();
-        }
+        public ICollection<Subject> Subjects { get; set; } = new HashSet<Subject>();
     }
 }

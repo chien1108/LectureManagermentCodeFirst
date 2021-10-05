@@ -7,8 +7,8 @@ namespace LecturerManagermentCodeFirst.API.Entities
 {
     public class Position
     {
-        public string PositionID { get; set; }
-        public string PositionName { get; set; }
+        public string ID { get; set; }
+        public string Name { get; set; }
         public int? DiscountPercent { get; set; }
         public string? Description { get; set; }
 

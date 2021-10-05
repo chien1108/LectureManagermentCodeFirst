@@ -5,7 +5,7 @@
     /// </summary>
     public class DynamicClassFactor
     {
-        public string DynamicClassID { get; set; }
+        public string ID { get; set; }
         public int? FromDynamic { get; set; }
         public int? ToDynamic { get; set; }
         /// <summary>

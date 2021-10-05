@@ -7,18 +7,12 @@ namespace LecturerManagermentCodeFirst.API.Entities
     /// </summary>
     public class TrainingSystem
     {
-        public string TrainingSystemID { get; set; }
-        public string TrainingSystemName { get; set; }
+        public string ID { get; set; }
+        public string Name { get; set; }
         public int NumberOfLearningUnit { get; set; }
         public string? Description { get; set; }
 
-        public ICollection<Class> Classes { get; set; }
-        public ICollection<Subject> Subjects { get; set; }
-
-        public TrainingSystem()
-        {
-            Classes = new HashSet<Class>();
-            Subjects = new HashSet<Subject>();
-        }
+        public ICollection<Class> Classes { get; set; } = new HashSet<Class>();
+        public ICollection<Subject> Subjects { get; set; } = new HashSet<Subject>();
     }
 }
