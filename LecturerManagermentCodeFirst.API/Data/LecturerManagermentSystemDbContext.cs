@@ -37,5 +37,13 @@ namespace LecturerManagermentCodeFirst.API.Data
         public DbSet<StandardTime> StandardTimes { get; set; }
         public DbSet<MachineRoom> MachineRooms { get; set; }
 
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Teaching>(entity => 
+            { 
+                entity.HasKey(e => new { e.SubjectID, e.LectureID, e.ClassID }); 
+            });
+        }
     }
 }
