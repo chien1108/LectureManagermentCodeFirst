@@ -18,8 +18,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\LectureManagermentCodeFirst.DTO\LecturerManagermentCodeFirst.DTO.csproj" />
-  </ItemGroup>
-
 </Project>
