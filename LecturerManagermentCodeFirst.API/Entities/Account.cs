@@ -1,14 +1,20 @@
 ﻿using LecturerManagermentCodeFirst.DTO.Enum;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace LecturerManagermentCodeFirst.API.Entities
 {
     public class Account
     {
+        [Required]
         public string LecturerID { get; set; }
+
+        [Required]
         public string UserName { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+
+        [Required]
         public Permission Permission { get; set; }
         public DateTime? DateCreated { get; set; }
 
