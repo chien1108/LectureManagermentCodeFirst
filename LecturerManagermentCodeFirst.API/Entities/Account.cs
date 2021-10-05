@@ -6,16 +6,11 @@ namespace LecturerManagermentCodeFirst.API.Entities
 {
     public class Account
     {
-        [Required]
         public string LecturerID { get; set; }
-
-        [Required]
         public string UserName { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-
-        [Required]
-        public Permission Permission { get; set; }
+        public Permission Permission { get; set; } = Permission.Lecturer;
         public DateTime? DateCreated { get; set; }
 
 
