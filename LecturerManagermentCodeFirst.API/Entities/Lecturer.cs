@@ -9,21 +9,24 @@ namespace LecturerManagermentCodeFirst.API.Entities
     {
         [Key]
         public string ID { get; set; }
+
+        [ForeignKey("StandardTime")]
+        public string StandardTimeID { get; set; }
+
+        [ForeignKey("SubjectDepartment")]
+        public string SubjectDepartmentID { get; set; }
+
         public string FullName { get; set; }
         public string Gender { get; set; }
         public DateTime? BirthDate { get; set; }
         public string IdentityCardNumber { get; set; }
         public string Portrait { get; set; }
         public string AcademicLevel { get; set; }
-        [ForeignKey("StandardTime")]
-        public string StandardTimeID { get; set; }
         public string PositionID { get; set; }
         public string YearStartWork { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
-        [ForeignKey("SubjectDepartment")]
-        public string SubjectDepartmentID { get; set; }
         public string Description { get; set; } = null;
 
         public SubjectDepartment SubjectDepartment { get; set; }

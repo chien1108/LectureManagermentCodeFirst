@@ -10,8 +10,10 @@ namespace LecturerManagermentCodeFirst.API.Entities
     {
         [Key]
         public string ID { get; set; }
+
         [ForeignKey("Lecturer")]
         public string LecturerID { get; set; }
+
         public int QantityRoom { get; set; }
         public string SchoolYear { get; set; }
         public string Description { get; set; } = null;

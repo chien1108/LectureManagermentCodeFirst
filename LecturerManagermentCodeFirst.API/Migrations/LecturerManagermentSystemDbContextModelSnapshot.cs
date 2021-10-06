@@ -560,7 +560,7 @@ namespace LecturerManagermentCodeFirst.API.Migrations
                         .IsRequired();
 
                     b.HasOne("LecturerManagermentCodeFirst.API.Entities.Subject", "Subject")
-                        .WithMany("Teaches")
+                        .WithMany("Teachings")
                         .HasForeignKey("SubjectID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -608,7 +608,7 @@ namespace LecturerManagermentCodeFirst.API.Migrations
 
             modelBuilder.Entity("LecturerManagermentCodeFirst.API.Entities.Subject", b =>
                 {
-                    b.Navigation("Teaches");
+                    b.Navigation("Teachings");
                 });
 
             modelBuilder.Entity("LecturerManagermentCodeFirst.API.Entities.SubjectDepartment", b =>

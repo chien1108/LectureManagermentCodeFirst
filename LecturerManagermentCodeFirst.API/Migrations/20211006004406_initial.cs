@@ -95,19 +95,19 @@ namespace LecturerManagermentCodeFirst.API.Migrations
                 columns: table => new
                 {
                     ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    StandardTimeID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    SubjectDepartmentID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IdentityCardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Portrait = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AcademicLevel = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StandardTimeID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     PositionID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     YearStartWork = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SubjectDepartmentID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>

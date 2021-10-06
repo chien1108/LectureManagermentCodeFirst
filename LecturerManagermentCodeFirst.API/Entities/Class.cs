@@ -11,8 +11,10 @@ namespace LecturerManagermentCodeFirst.API.Entities
     {
         [Key]
         public string ID { get; set; }
+
         [ForeignKey("TrainingSystem")]
         public string TrainingSystemID { get; set; }
+
         public string Name { get; set; }
         public int? NumberOfStudent { get; set; }
         public string FormsOfTraining { get; set; }

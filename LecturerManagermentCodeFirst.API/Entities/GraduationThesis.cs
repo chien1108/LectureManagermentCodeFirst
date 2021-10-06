@@ -8,10 +8,13 @@ namespace LecturerManagermentCodeFirst.API.Entities
     {
         [Key]
         public int ID { get; set; }
+
         [ForeignKey("Lecturer")]
         public string LecturerID { get; set; }
+
         [ForeignKey("Class")]
         public string ClassID { get; set; }
+
         public int? TopicNumbers { get; set; }
         public int? RebuttalProjectNumbers { get; set; }
         public int? MarkSessionNumbers { get; set; }

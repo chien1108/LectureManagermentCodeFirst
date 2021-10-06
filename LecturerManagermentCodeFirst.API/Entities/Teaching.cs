@@ -20,7 +20,6 @@ namespace LecturerManagermentCodeFirst.API.Entities
         public string SchoolYear { get; set; }
         public string Description { get; set; } = null;
 
-
         public Lecturer Lecturer { get; set; }
         public Class Class { get; set; }
         public Subject Subject { get; set; }
