@@ -21,8 +21,10 @@ namespace LecturerManagermentCodeFirst.API.Migrations
 
             modelBuilder.Entity("LecturerManagermentCodeFirst.API.Entities.Account", b =>
                 {
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
@@ -39,7 +41,10 @@ namespace LecturerManagermentCodeFirst.API.Migrations
                     b.Property<int>("Permission")
                         .HasColumnType("int");
 
-                    b.HasKey("UserName");
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
 
                     b.HasIndex("LecturerID")
                         .IsUnique()

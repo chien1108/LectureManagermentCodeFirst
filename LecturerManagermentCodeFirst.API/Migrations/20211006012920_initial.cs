@@ -187,8 +187,10 @@ namespace LecturerManagermentCodeFirst.API.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     LecturerID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     Permission = table.Column<int>(type: "int", nullable: false),
@@ -196,7 +198,7 @@ namespace LecturerManagermentCodeFirst.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Accounts", x => x.UserName);
+                    table.PrimaryKey("PK_Accounts", x => x.ID);
                     table.ForeignKey(
                         name: "FK_Accounts_Lecturers_LecturerID",
                         column: x => x.LecturerID,

@@ -8,11 +8,13 @@ namespace LecturerManagermentCodeFirst.API.Entities
     public class Account
     {
         [Key]
-        public string UserName { get; set; }
+        public int ID { get; set; }
+
 
         [ForeignKey("Lecturer")]
         public string LecturerID { get; set; }
 
+        public string UserName { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public Permission Permission { get; set; }
