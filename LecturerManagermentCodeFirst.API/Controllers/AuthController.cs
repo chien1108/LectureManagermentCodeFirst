@@ -23,11 +23,9 @@ namespace LecturerManagermentCodeFirst.API.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult<ServiceResponse<int>>> Register(AccountResgisterDto request)
+        public async Task<IActionResult> Register(AccountResgisterDto request)
         {
-            var response = await _authRepo.Register(
-                new Account { UserName = request.Username }, request.Password
-            );
+            var response = await _authRepo.Register(request);
 
             if (!response.Success)
             {

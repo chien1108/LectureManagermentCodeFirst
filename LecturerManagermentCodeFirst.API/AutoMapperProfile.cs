@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LecturerManagermentCodeFirst.API.Entities;
+using LecturerManagermentCodeFirst.DTO.DTOS.Account;
 using LecturerManagermentCodeFirst.DTO.DTOS.AdvancedLearning;
 
 namespace LecturerManagermentCodeFirst.API
@@ -10,6 +11,7 @@ namespace LecturerManagermentCodeFirst.API
         {
             CreateMap<AdvancedLearning, AddAdvancedLearningDto>();
             CreateMap<AddAdvancedLearningDto, AdvancedLearning>();
+            CreateMap<AccountResgisterDto, Lecturer>();
         }
     }
 }
