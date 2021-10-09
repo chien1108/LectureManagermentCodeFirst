@@ -2,6 +2,7 @@
 using LecturerManagermentCodeFirst.API.Entities;
 using LecturerManagermentCodeFirst.DTO.DTOS.Account;
 using LecturerManagermentCodeFirst.DTO.DTOS.AdvancedLearning;
+using LecturerManagermentCodeFirst.DTO.DTOS.Lecturer;
 
 namespace LecturerManagermentCodeFirst.API
 {
@@ -12,6 +13,7 @@ namespace LecturerManagermentCodeFirst.API
             CreateMap<AdvancedLearning, AddAdvancedLearningDto>();
             CreateMap<AddAdvancedLearningDto, AdvancedLearning>();
             CreateMap<AccountResgisterDto, Lecturer>();
+            CreateMap<Lecturer, GetLecturerDto>();
         }
     }
 }

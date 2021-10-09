@@ -7,8 +7,8 @@ namespace LecturerManagermentCodeFirst.API.Services.AccountService
     {
 
         //RUD
-        Task<ServiceResponse<GetAccountDto>> GetAccountByID(int id);
+        Task<ServiceResponse<GetAccountDto>> GetAccountByUsername(string username);
         Task<ServiceResponse<GetAccountDto>> UpdateAccount(UpdateAccountDto updateAccount);
-        Task<ServiceResponse<string>> DeleteAccount(int id);
+        Task<ServiceResponse<string>> DeleteAccount(string username);
     }
 }
