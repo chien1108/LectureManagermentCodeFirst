@@ -14,6 +14,7 @@ namespace LecturerManagermentCodeFirst.API
             CreateMap<AddAdvancedLearningDto, AdvancedLearning>();
             CreateMap<AccountResgisterDto, Lecturer>();
             CreateMap<Lecturer, GetLecturerDto>();
+            CreateMap<Account, GetAccountDto>();
         }
     }
 }

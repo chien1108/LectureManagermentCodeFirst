@@ -21,6 +21,7 @@ namespace LecturerManagermentCodeFirst.DTO.DTOS.Lecturer
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
         public string Description { get; set; } = null;
+        public string AccountId { get; set; }
         public GetAccountDto Account { get; set; }
     }
 }
