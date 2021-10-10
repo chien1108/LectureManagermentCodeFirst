@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LecturerManagermentCodeFirst.API.Services.AccountService;
 
 namespace LecturerManagermentCodeFirst.API
 {
@@ -52,6 +53,7 @@ namespace LecturerManagermentCodeFirst.API
 
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {

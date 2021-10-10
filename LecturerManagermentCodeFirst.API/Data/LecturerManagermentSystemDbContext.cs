@@ -44,6 +44,8 @@ namespace LecturerManagermentCodeFirst.API.Data
             { 
                 entity.HasKey(e => new { e.SubjectID, e.LectureID, e.ClassID }); 
             });
+
+            modelBuilder.Entity<Account>().Property(x => x.Permission).HasDefaultValue("Lecturer");
         }
     }
 }

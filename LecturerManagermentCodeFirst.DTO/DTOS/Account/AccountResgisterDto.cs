@@ -8,6 +8,7 @@ namespace LecturerManagermentCodeFirst.DTO.DTOS.Account
         public string Gender { get; set; }
         public DateTime? BirthDate { get; set; }
         public string IdentityCardNumber { get; set; }
+        public string Permission { get; set; }
         public string Portrait { get; set; }
         public string AcademicLevel { get; set; }
         public string YearStartWork { get; set; }
