@@ -1,8 +1,6 @@
-﻿using System;
+﻿using LecturerManagermentCodeFirst.DTO.DTOS.Class;
+using LecturerManagermentCodeFirst.DTO.DTOS.Subject;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LecturerManagermentCodeFirst.DTO.DTOS.TrainingSystem
 {
@@ -12,5 +10,8 @@ namespace LecturerManagermentCodeFirst.DTO.DTOS.TrainingSystem
         public string Name { get; set; }
         public int NumberOfLearningUnit { get; set; }
         public string Description { get; set; } = null;
+
+        public ICollection<GetClassDto> Classes { get; set; }
+        public ICollection<GetSubjectDto> Subjects { get; set; }
     }
 }
