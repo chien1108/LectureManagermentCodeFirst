@@ -65,7 +65,7 @@ namespace LecturerManagermentCodeFirst.API.Data
                 account.PasswordHash = passwordHash;
                 account.PasswordSalt = passwordSalt;
                 account.Lecturer = lecturer;
-                account.Permission = accountRegisterDto.Permission;
+                account.Permission = DTO.Enum.Permission.Lecturer;
 
                 _context.Accounts.Add(account);
                 _context.Lecturers.Add(lecturer);
@@ -112,7 +112,7 @@ namespace LecturerManagermentCodeFirst.API.Data
             {
                 new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, user.Permission),
+                new Claim(ClaimTypes.Role, user.Permission.ToString()),
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
