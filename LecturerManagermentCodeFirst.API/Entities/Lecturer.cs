@@ -9,7 +9,7 @@ namespace LecturerManagermentCodeFirst.API.Entities
     public class Lecturer
     {
         [Key]
-        public string ID { get; set; }
+        public string ID { get; set; } 
 
         [ForeignKey("StandardTime")]
         public string StandardTimeID { get; set; }

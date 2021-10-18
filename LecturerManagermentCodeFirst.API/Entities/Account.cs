@@ -8,7 +8,7 @@ namespace LecturerManagermentCodeFirst.API.Entities
     public class Account
     {
         [Key]
-        public int ID { get; set; }
+        public int ID { get; set; } // auto increa
 
 
         [ForeignKey("Lecturer")]

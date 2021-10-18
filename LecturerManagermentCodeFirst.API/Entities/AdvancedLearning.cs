@@ -9,7 +9,7 @@ namespace LecturerManagermentCodeFirst.API.Entities
     public class AdvancedLearning
     {
         [Key]
-        public int ID { get; set; }
+        public int ID { get; set; } // auto
 
         [ForeignKey("Lecturer")]
         public string LecturerID { get; set; }

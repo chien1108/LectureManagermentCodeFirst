@@ -8,7 +8,7 @@ namespace LecturerManagermentCodeFirst.API.Entities
     public class DynamicClassFactor
     {
         [Key]
-        public string ID { get; set; }
+        public string ID { get; set; } // HSD
 
         public int? FromDynamic { get; set; }
         public int? ToDynamic { get; set; }

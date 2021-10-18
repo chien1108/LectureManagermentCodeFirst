@@ -10,7 +10,7 @@ namespace LecturerManagermentCodeFirst.API.Entities
     public class Class
     {
         [Key]
-        public string ID { get; set; }
+        public string ID { get; set; } // VD 69DCHT21
 
         [ForeignKey("TrainingSystem")]
         public string TrainingSystemID { get; set; }
