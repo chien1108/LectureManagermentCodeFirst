@@ -43,7 +43,7 @@ namespace LecturerManagermentCodeFirst.API.Services.LecturerScientificResearchSe
             var response = new ServiceResponse<IEnumerable<GetLecturerScientificResearchDto>>();
             try
             {
-                var lecturerScientificResearch = await _context.LecturerScientificResearches.FirstOrDefaultAsync(x => x.ID == id);
+                var lecturerScientificResearch = await _context.LecturerScientificResearches.FirstOrDefaultAsync(x => x.ID.Equals(id));
                 _context.LecturerScientificResearches.Remove(lecturerScientificResearch);
                 await _context.SaveChangesAsync();
                 response.Data = await _context.LecturerScientificResearches.Select(x => _mapper.Map<GetLecturerScientificResearchDto>(x)).ToListAsync();
@@ -61,7 +61,7 @@ namespace LecturerManagermentCodeFirst.API.Services.LecturerScientificResearchSe
             var response = new ServiceResponse<GetLecturerScientificResearchDto>();
             try
             {
-                response.Data = await _mapper.Map<GetLecturerScientificResearchDto>(_context.LecturerScientificResearches.FirstOrDefaultAsync(x => x.ID == id));
+                response.Data = _mapper.Map<GetLecturerScientificResearchDto>(_context.LecturerScientificResearches.FirstOrDefaultAsync(x => x.ID.Equals(id)));
             }
             catch (Exception ex)
             {

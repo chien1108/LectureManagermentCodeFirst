@@ -43,7 +43,7 @@ namespace LecturerManagermentCodeFirst.API.Services.LecturerService
             var response = new ServiceResponse<IEnumerable<GetLecturerDto>>();
             try
             {
-                var lecturer = await _context.Lecturers.FirstOrDefaultAsync(x => x.ID == id);
+                var lecturer = await _context.Lecturers.FirstOrDefaultAsync(x => x.ID.Equals(id));
                 _context.Lecturers.Remove(lecturer);
                 await _context.SaveChangesAsync();
                 response.Data = _context.Lecturers.Select(x => _mapper.Map<GetLecturerDto>(x));
@@ -61,7 +61,7 @@ namespace LecturerManagermentCodeFirst.API.Services.LecturerService
             var response = new ServiceResponse<GetLecturerDto>();
             try
             {
-                response.Data = await _mapper.Map<GetLecturerDto>(_context.Lecturers.FirstOrDefaultAsync(x => x.ID == id));
+                response.Data = _mapper.Map<GetLecturerDto>(_context.Lecturers.FirstOrDefaultAsync(x => x.ID.Equals(id)));
             }
             catch (Exception ex)
             {

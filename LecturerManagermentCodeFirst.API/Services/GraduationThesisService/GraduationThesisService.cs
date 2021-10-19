@@ -43,7 +43,7 @@ namespace LecturerManagermentCodeFirst.API.Services.GraduationThesisService
             var response = new ServiceResponse<IEnumerable<GetGraduationThesisDto>>();
             try
             {
-                var graduationThesis = await _context.GraduationTheses.FirstOrDefaultAsync(x => x.Id == id);
+                var graduationThesis = await _context.GraduationTheses.FirstOrDefaultAsync(x => x.ID.Equals(id));
                 _context.GraduationTheses.Remove(graduationThesis);
                 await _context.SaveChangesAsync();
                 response.Data = _context.GraduationTheses.Select(x => _mapper.Map<GetGraduationThesisDto>(x));
@@ -61,7 +61,7 @@ namespace LecturerManagermentCodeFirst.API.Services.GraduationThesisService
             var response = new ServiceResponse<GetGraduationThesisDto>();
             try
             {
-                var graduationThesis = await _context.GraduationTheses.FirstOrDefaultAsync(x => x.Id == id);
+                var graduationThesis = await _context.GraduationTheses.FirstOrDefaultAsync(x => x.ID.Equals(id));
                 response.Data = _mapper.Map<GetGraduationThesisDto>(graduationThesis);
             }
             catch (Exception ex)

@@ -43,7 +43,7 @@ namespace LecturerManagermentCodeFirst.API.Services.MachineRoomService
             var response = new ServiceResponse<IEnumerable<GetMachineRoomDto>>();
             try
             {
-                var machineRoom = await _context.MachineRooms.FirstOrDefaultAsync(x => x.ID == id);
+                var machineRoom = await _context.MachineRooms.FirstOrDefaultAsync(x => x.ID.Equals( id));
                 _context.MachineRooms.Remove(machineRoom);
                 await _context.SaveChangesAsync();
             }
