@@ -86,9 +86,14 @@ namespace LecturerManagermentCodeFirst.API.Services.MachineRoomService
             return response;
         }
 
-        public Task<ServiceResponse<GetMachineRoomDto>> UpdateMachineRoom(UpdateMachineRoomDto update)
+        public async Task<ServiceResponse<GetMachineRoomDto>> UpdateMachineRoom(UpdateMachineRoomDto update)
         {
-            throw new NotImplementedException();
+            var response = new ServiceResponse<GetMachineRoomDto>();
+            var machineRoom = _mapper.Map<MachineRoom>(update);
+            _context.MachineRooms.Update(machineRoom);
+            await _context.SaveChangesAsync();
+            response.Data = _mapper.Map<GetMachineRoomDto>(machineRoom);
+            return response;
         }
     }
 }
