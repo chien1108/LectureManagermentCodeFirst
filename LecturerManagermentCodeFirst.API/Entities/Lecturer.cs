@@ -22,7 +22,7 @@ namespace LecturerManagermentCodeFirst.API.Entities
         public DateTime? BirthDate { get; set; }
         public string IdentityCardNumber { get; set; }
         public string Portrait { get; set; }
-        public string AcademicLevel { get; set; }
+        public AcademicLevel AcademicLevel { get; set; }
         public string PositionID { get; set; }
         public string YearStartWork { get; set; }
         public string Email { get; set; }
