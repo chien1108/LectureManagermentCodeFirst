@@ -1,9 +1,5 @@
 ﻿using LecturerManagermentCodeFirst.DTO.Enum;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LecturerManagermentCodeFirst.DTO.DTOS.Account
 {
@@ -18,7 +14,7 @@ namespace LecturerManagermentCodeFirst.DTO.DTOS.Account
         public DateTime? BirthDate { get; set; }
         public string IdentityCardNumber { get; set; }
         public string Portrait { get; set; }
-        public string AcademicLevel { get; set; }
+        public AcademicLevel AcademicLevel { get; set; }
         public string YearStartWork { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }

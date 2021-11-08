@@ -1,4 +1,5 @@
 ﻿using LecturerManagermentCodeFirst.API.Entities;
+using LecturerManagermentCodeFirst.DTO.Enum;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace LecturerManagermentCodeFirst.API.Data
                 entity.HasKey(e => new { e.SubjectID, e.LectureID, e.ClassID }); 
             });
 
-            modelBuilder.Entity<Account>().Property(x => x.Permission).HasDefaultValue("Lecturer");
+            modelBuilder.Entity<Account>().Property(x => x.Permission).HasDefaultValue(Permission.Lecturer);
         }
     }
 }

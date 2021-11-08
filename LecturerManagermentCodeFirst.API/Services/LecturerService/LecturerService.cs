@@ -61,7 +61,7 @@ namespace LecturerManagermentCodeFirst.API.Services.LecturerService
             var response = new ServiceResponse<GetLecturerDto>();
             try
             {
-                response.Data = _mapper.Map<GetLecturerDto>(_context.Lecturers.FirstOrDefaultAsync(x => x.ID.Equals(id)));
+                response.Data = _mapper.Map<GetLecturerDto>(await _context.Lecturers.FirstOrDefaultAsync(x => x.ID.Equals(id)));
             }
             catch (Exception ex)
             {

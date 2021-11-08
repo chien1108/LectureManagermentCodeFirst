@@ -1,4 +1,5 @@
 ﻿using LecturerManagermentCodeFirst.DTO.DTOS.Account;
+using LecturerManagermentCodeFirst.DTO.Enum;
 using System;
 
 namespace LecturerManagermentCodeFirst.DTO.DTOS.Lecturer
@@ -10,7 +11,7 @@ namespace LecturerManagermentCodeFirst.DTO.DTOS.Lecturer
         public DateTime? BirthDate { get; set; }
         public string IdentityCardNumber { get; set; }
         public string Portrait { get; set; }
-        public string AcademicLevel { get; set; }
+        public AcademicLevel AcademicLevel { get; set; }
         public string PositionID { get; set; }
         public string YearStartWork { get; set; }
         public string Email { get; set; }

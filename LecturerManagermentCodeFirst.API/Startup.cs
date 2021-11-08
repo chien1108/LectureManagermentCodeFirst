@@ -35,7 +35,9 @@ namespace LecturerManagermentCodeFirst.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<LecturerManagermentSystemDbContext>(options =>
-                   options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

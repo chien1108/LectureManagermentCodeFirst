@@ -4,14 +4,16 @@ using LecturerManagermentCodeFirst.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LecturerManagermentCodeFirst.API.Migrations
 {
     [DbContext(typeof(LecturerManagermentSystemDbContext))]
-    partial class LecturerManagermentSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211027155112_Add1")]
+    partial class Add1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

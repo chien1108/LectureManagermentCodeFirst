@@ -2,7 +2,7 @@
 {
     public enum Permission
     {
-        Admin,
+        Admin = 0,
         Lecturer
     }
 }
