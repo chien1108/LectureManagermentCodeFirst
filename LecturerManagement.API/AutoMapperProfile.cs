@@ -15,7 +15,7 @@ namespace LecturerManagement.API
         {
             CreateMap<AdvancedLearning, AddAdvancedLearningDto>().ReverseMap();
             CreateMap<AccountResgisterDto, Lecturer>().ReverseMap();
-            CreateMap<Lecturer, GetLecturerDto>().ReverseMap();
+            CreateMap<Lecturer, GetLecturerScientificResearchDto>().ReverseMap();
             CreateMap<Account, GetAccountDto>().ReverseMap();
             CreateMap<Class, GetClassDto>().ReverseMap();
             CreateMap<AddClassDto, Class>().ReverseMap();

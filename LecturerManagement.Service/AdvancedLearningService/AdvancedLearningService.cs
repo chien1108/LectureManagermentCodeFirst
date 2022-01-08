@@ -70,14 +70,14 @@ namespace LecturerManagement.Services.AdvancedLearningService
         }
 
         public async Task<GetAdvancedLearningDto> Find(Expression<Func<AdvancedLearning, bool>> expression = null, List<string> includes = null)
-        => _mapper.Map<GetAdvancedLearningDto>(await _unitOfWork.AdvancedLearnings.FindByCondition(expression, includes));
+        => _mapper.Map<GetAdvancedLearningDto>(await _unitOfWork.AdvancedLearnings.FindByConditionAsync(expression, includes));
 
         public async Task<ICollection<GetAdvancedLearningDto>> FindAll(Expression<Func<AdvancedLearning, bool>> expression = null, Func<IQueryable<AdvancedLearning>, IOrderedQueryable<AdvancedLearning>> orderBy = null, List<string> includes = null)
-        => _mapper.Map<ICollection<GetAdvancedLearningDto>>(await _unitOfWork.AdvancedLearnings.GetAll(expression, orderBy, includes));
+        => _mapper.Map<ICollection<GetAdvancedLearningDto>>(await _unitOfWork.AdvancedLearnings.FindAllAsync(expression, orderBy, includes));
 
         public async Task<bool> IsExisted(Expression<Func<AdvancedLearning, bool>> expression = null)
         {
-            var isExist = await _unitOfWork.AdvancedLearnings.FindByCondition(expression);
+            var isExist = await _unitOfWork.AdvancedLearnings.FindByConditionAsync(expression);
             if (isExist == null)
             {
                 return false;

@@ -1,5 +1,6 @@
 ﻿using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Data;
+using LecturerManagement.Core.Repositories.AccountRepo;
 using LecturerManagement.Core.Repositories.AdvancedLearningRepo;
 using LecturerManagement.Core.Repositories.ClassRepo;
 using LecturerManagement.Core.Repositories.DynamicClassFactorRepo;
@@ -24,6 +25,7 @@ namespace LecturerManagement.Core.Repositories.UnitOfWork
     {
         private readonly LecturerManagementSystemDbContext _context;
 
+        private IAccountRepository _accountRepository;
         private IAdvancedLearningRepository _advancedLearningRepository;
         private IClassRepository _classRepository;
         private IDynamicClassFactorRepository _dynamicClassFactorRepository;
@@ -76,6 +78,8 @@ namespace LecturerManagement.Core.Repositories.UnitOfWork
         public ITeachingRepository Teachings => _teachingRepository ??= new TeachingRepository(_context);
 
         public ITrainingSystemRepository TrainingSystems => _trainingSystemRepository ??= new TrainingSystemRepository(_context);
+
+        public IAccountRepository Accounts => _accountRepository ??= new AccountRepository(_context);
 
         public void Dispose()
         {

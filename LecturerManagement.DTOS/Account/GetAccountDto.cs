@@ -10,7 +10,7 @@ namespace LecturerManagement.DTOS.Account
         public byte[] PasswordHash { get; set; }
         public Permission Permission { get; set; }
         public DateTime? DateCreated { get; set; }
-        public GetLecturerDto Lecturer { get; set; }
+        public GetLecturerScientificResearchDto Lecturer { get; set; }
 
     }
 }

@@ -66,19 +66,20 @@ namespace LecturerManagement.Services.ClassService
             }
         }
 
-        public Task<GetClassDto> Find(Expression<Func<Class, bool>> expression = null, List<string> includes = null)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<GetClassDto> Find(Expression<Func<Class, bool>> expression = null, List<string> includes = null)
+        => _mapper.Map<GetClassDto>(await _unitOfWork.Classes.FindByConditionAsync(expression, includes));
 
-        public Task<ICollection<GetClassDto>> FindAll(Expression<Func<Class, bool>> expression = null, Func<IQueryable<Class>, IOrderedQueryable<Class>> orderBy = null, List<string> includes = null)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<ICollection<GetClassDto>> FindAll(Expression<Func<Class, bool>> expression = null, Func<IQueryable<Class>, IOrderedQueryable<Class>> orderBy = null, List<string> includes = null)
+        => _mapper.Map<ICollection<GetClassDto>>(await _unitOfWork.Classes.FindAllAsync(expression, orderBy, includes));
 
-        public Task<bool> IsExisted(Expression<Func<Class, bool>> expression = null)
+        public async Task<bool> IsExisted(Expression<Func<Class, bool>> expression = null)
         {
-            throw new NotImplementedException();
+            var isExist = await _unitOfWork.Classes.FindByConditionAsync(expression);
+            if (isExist == null)
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<bool> SaveChange()

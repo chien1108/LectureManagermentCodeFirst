@@ -1,4 +1,5 @@
-﻿using LecturerManagement.Core.Repositories.AdvancedLearningRepo;
+﻿using LecturerManagement.Core.Repositories.AccountRepo;
+using LecturerManagement.Core.Repositories.AdvancedLearningRepo;
 using LecturerManagement.Core.Repositories.ClassRepo;
 using LecturerManagement.Core.Repositories.DynamicClassFactorRepo;
 using LecturerManagement.Core.Repositories.GraduationThesisRepo;
@@ -20,6 +21,7 @@ namespace LecturerManagement.Core.Contracts
 {
     public interface IUnitOfWork : IDisposable
     {
+        IAccountRepository Accounts { get; }
         IAdvancedLearningRepository AdvancedLearnings { get; }
         IClassRepository Classes { get; }
         IDynamicClassFactorRepository DynamicClassFactors { get; }
@@ -35,6 +37,7 @@ namespace LecturerManagement.Core.Contracts
         ISubjectTypeRepository SubjectTypes { get; }
         ITeachingRepository Teachings { get; }
         ITrainingSystemRepository TrainingSystems { get; }
+
         Task<bool> Save();
     }
 }

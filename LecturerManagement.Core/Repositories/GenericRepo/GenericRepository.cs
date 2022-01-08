@@ -28,7 +28,7 @@ namespace LecturerManagement.Core.Repositories.GenericRepo
             _db.Remove(entity);
         }
 
-        public async Task<T> FindByCondition(Expression<Func<T, bool>> expression, List<string> includes = null)
+        public async Task<T> FindByConditionAsync(Expression<Func<T, bool>> expression, List<string> includes = null)
         {
             IQueryable<T> query = _db;
             if (includes != null)
@@ -40,10 +40,9 @@ namespace LecturerManagement.Core.Repositories.GenericRepo
             }
 
             return await query.FirstOrDefaultAsync(expression);
-
         }
 
-        public async Task<IList<T>> GetAll(Expression<Func<T, bool>> expression = null,
+        public async Task<IList<T>> FindAllAsync(Expression<Func<T, bool>> expression = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             List<string> includes = null
             )
@@ -70,7 +69,7 @@ namespace LecturerManagement.Core.Repositories.GenericRepo
             return await query.ToListAsync();
         }
 
-        public async Task<bool> IsExists(Expression<Func<T, bool>> expression = null)
+        public async Task<bool> IsExistsAsync(Expression<Func<T, bool>> expression = null)
         {
             IQueryable<T> query = _db;
             return await query.AnyAsync(expression);

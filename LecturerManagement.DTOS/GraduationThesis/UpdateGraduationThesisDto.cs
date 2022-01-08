@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LecturerManagement.DTOS.GraduationThesis
+﻿namespace LecturerManagement.DTOS.GraduationThesis
 {
     public class UpdateGraduationThesisDto
     {
+        public int? TopicNumbers { get; set; }
+        public int? RebuttalProjectNumbers { get; set; }
+        public int? MarkSessionNumbers { get; set; }
+        public string SchoolYear { get; set; }
+        public string Description { get; set; } = null;
     }
 }
