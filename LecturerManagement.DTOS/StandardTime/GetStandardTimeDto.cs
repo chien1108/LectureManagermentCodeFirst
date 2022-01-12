@@ -10,6 +10,6 @@ namespace LecturerManagement.DTOS.StandardTime
         public string Name { get; set; }
         public int StandardHours { get; set; }
         public string Description { get; set; } = null;
-        public ICollection<GetLecturerScientificResearchDto> Lecturers { get; set; }
+        public ICollection<GetLecturerDto> Lecturers { get; set; }
     }
 }

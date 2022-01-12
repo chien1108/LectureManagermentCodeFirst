@@ -4,7 +4,7 @@ using System;
 
 namespace LecturerManagement.DTOS.LecturerDTO
 {
-    public class GetLecturerScientificResearchDto
+    public class GetLecturerDto
     {
         public string FullName { get; set; }
         public string Gender { get; set; }

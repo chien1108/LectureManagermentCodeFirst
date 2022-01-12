@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LecturerManagement.DTOS.MachineRoom
+﻿namespace LecturerManagement.DTOS.MachineRoom
 {
     public class AddMachineRoomDto
     {
+        public string LecturerID { get; set; }
+
+        public int QantityRoom { get; set; }
+        public string SchoolYear { get; set; }
+        public string Description { get; set; } = null;
+
+        //public Lecturer Lecturer { get; set; }
     }
 }

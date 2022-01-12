@@ -17,12 +17,12 @@ namespace LecturerManagement.Services.LecturerService
         Task<ServiceResponse<Lecturer>> Delete(Lecturer deleteLecturer);
         Task<ServiceResponse<UpdateLecturerDto>> Update(UpdateLecturerDto updateLecturer);
         Task<bool> IsExisted(Expression<Func<Lecturer, bool>> expression = null);
-        Task<ICollection<GetLecturerScientificResearchDto>> FindAll(Expression<Func<Lecturer,
+        Task<ICollection<GetLecturerDto>> FindAll(Expression<Func<Lecturer,
                                 bool>> expression = null,
                                 Func<IQueryable<Lecturer>,
                                IOrderedQueryable<Lecturer>> orderBy = null,
                                 List<string> includes = null);
-        Task<GetLecturerScientificResearchDto> Find(Expression<Func<Lecturer, bool>> expression = null, List<string> includes = null);
+        Task<GetLecturerDto> Find(Expression<Func<Lecturer, bool>> expression = null, List<string> includes = null);
         Task<bool> SaveChange();
     }
 }

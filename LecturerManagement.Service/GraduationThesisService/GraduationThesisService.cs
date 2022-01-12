@@ -32,29 +32,50 @@ namespace LecturerManagement.Services.GraduationThesisService
             throw new NotImplementedException();
         }
 
-        public Task<GetGraduationThesisDto> Find(Expression<Func<GraduationThesis, bool>> expression = null, List<string> includes = null)
+        public async Task<GetGraduationThesisDto> Find(Expression<Func<GraduationThesis, bool>> expression = null, List<string> includes = null)
+         => _mapper.Map<GetGraduationThesisDto>(await _unitOfWork.GraduationThesises.FindByConditionAsync(expression, includes));
+
+        public async Task<ICollection<GetGraduationThesisDto>> FindAll(Expression<Func<GraduationThesis, bool>> expression = null, Func<IQueryable<GraduationThesis>, IOrderedQueryable<GraduationThesis>> orderBy = null, List<string> includes = null)
+        => _mapper.Map<ICollection<GetGraduationThesisDto>>(await _unitOfWork.GraduationThesises.FindAllAsync(expression, orderBy, includes));
+
+
+        public async Task<bool> IsExisted(Expression<Func<GraduationThesis, bool>> expression = null)
         {
-            throw new NotImplementedException();
+            var isExist = await _unitOfWork.GraduationThesises.FindByConditionAsync(expression);
+            if (isExist == null)
+            {
+                return false;
+            }
+            return true;
         }
 
-        public Task<ICollection<GetGraduationThesisDto>> FindAll(Expression<Func<GraduationThesis, bool>> expression = null, Func<IQueryable<GraduationThesis>, IOrderedQueryable<GraduationThesis>> orderBy = null, List<string> includes = null)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<bool> SaveChange()
+            => await _unitOfWork.GraduationThesises.Save();
 
-        public Task<bool> IsExisted(Expression<Func<GraduationThesis, bool>> expression = null)
+        public async Task<ServiceResponse<UpdateGraduationThesisDto>> Update(UpdateGraduationThesisDto updateGraduationThesis)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> SaveChange()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ServiceResponse<UpdateGraduationThesisDto>> Update(UpdateGraduationThesisDto updateGraduationThesis)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                var graduationThesisFromDB = await Find(x => x.Id == 1);
+                if (graduationThesisFromDB != null)
+                {
+                    var task = _mapper.Map<GraduationThesis>(updateGraduationThesis);
+                    _unitOfWork.GraduationThesises.Update(task);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<UpdateGraduationThesisDto> { Success = false, Message = "Error when update Graduation Thesis" };
+                    }
+                    return new ServiceResponse<UpdateGraduationThesisDto> { Success = true, Message = "Update Graduation Thesis Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<UpdateGraduationThesisDto> { Success = false, Message = "Not Found Graduation Thesis" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<UpdateGraduationThesisDto> { Success = false, Message = ex.Message };
+            }
         }
     }
 }

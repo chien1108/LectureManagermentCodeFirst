@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LecturerManagement.DTOS.LecturerScientificResearch
+﻿namespace LecturerManagement.DTOS.LecturerScientificResearch
 {
     public class UpdateLecturerScientificResearchDto
     {
+        public string LecturerID { get; set; }
+
+        public string Name { get; set; }
+        public string LevelOfResearch { get; set; }
+        public string YearOfResearchParticipation { get; set; }
+        public string Description { get; set; } = null;
+
+        //public Lecturer Lecturer { get; set; }
     }
 }

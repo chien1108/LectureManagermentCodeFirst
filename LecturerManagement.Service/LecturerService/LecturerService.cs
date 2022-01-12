@@ -33,12 +33,12 @@ namespace LecturerManagement.Services.LecturerService
             throw new NotImplementedException();
         }
 
-        public Task<GetLecturerScientificResearchDto> Find(Expression<Func<Lecturer, bool>> expression = null, List<string> includes = null)
+        public Task<GetLecturerDto> Find(Expression<Func<Lecturer, bool>> expression = null, List<string> includes = null)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ICollection<GetLecturerScientificResearchDto>> FindAll(Expression<Func<Lecturer, bool>> expression = null, Func<IQueryable<Lecturer>, IOrderedQueryable<Lecturer>> orderBy = null, List<string> includes = null)
+        public Task<ICollection<GetLecturerDto>> FindAll(Expression<Func<Lecturer, bool>> expression = null, Func<IQueryable<Lecturer>, IOrderedQueryable<Lecturer>> orderBy = null, List<string> includes = null)
         {
             throw new NotImplementedException();
         }
