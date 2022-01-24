@@ -1,4 +1,4 @@
-﻿namespace LecturerManagement.Core.Modules.Enums
+﻿namespace LecturerManagement.DTOS.Modules.Enums
 {
     public enum AcademicLevel
     {

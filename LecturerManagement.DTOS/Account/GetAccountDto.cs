@@ -1,5 +1,5 @@
-﻿using LecturerManagement.Core.Modules.Enums;
-using LecturerManagement.DTOS.LecturerDTO;
+﻿using LecturerManagement.DTOS.LecturerDTO;
+using LecturerManagement.DTOS.Modules.Enums;
 using System;
 
 namespace LecturerManagement.DTOS.Account

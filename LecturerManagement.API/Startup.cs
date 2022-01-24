@@ -17,6 +17,21 @@ using LecturerManagement.Core.Repositories.SubjectTypeRepo;
 using LecturerManagement.Core.Repositories.TeachingRepo;
 using LecturerManagement.Core.Repositories.TrainingSystemRepo;
 using LecturerManagement.Core.Repositories.UnitOfWork;
+using LecturerManagement.Services.AccountService;
+using LecturerManagement.Services.AdvancedLearningService;
+using LecturerManagement.Services.ClassService;
+using LecturerManagement.Services.GraduationThesisService;
+using LecturerManagement.Services.LecturerScientificResearchService;
+using LecturerManagement.Services.LecturerService;
+using LecturerManagement.Services.MachineRoomService;
+using LecturerManagement.Services.PositionService;
+using LecturerManagement.Services.ScientificResearchGuideService;
+using LecturerManagement.Services.StandardTimeService;
+using LecturerManagement.Services.SubjectDepartmentService;
+using LecturerManagement.Services.SubjectService;
+using LecturerManagement.Services.SubjectTypeService;
+using LecturerManagement.Services.TeachingService;
+using LecturerManagement.Services.TrainingSystemService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -71,8 +86,22 @@ namespace LecturerManagement.API
             services.AddScoped<ITrainingSystemRepository, TrainingSystemRepository>();
 
             //DI Service
-            // services.AddScoped<IAccountService, AccountService>();
-
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IAdvancedLearningService, AdvancedLearningService>();
+            services.AddScoped<IClassService, ClassService>();
+            //services.AddScoped<IDynamicClassFactorService, DynamicClassFactorRepository>();
+            services.AddScoped<IGraduationThesisService, GraduationThesisService>();
+            services.AddScoped<ILecturerService, LecturerService>();
+            services.AddScoped<ILecturerScientificResearchService, LecturerScientificResearchService>();
+            services.AddScoped<IMachineRoomService, MachineRoomService>();
+            services.AddScoped<IPositionService, PositionService>();
+            services.AddScoped<IScientificResearchGuideService, ScientificResearchGuideService>();
+            services.AddScoped<IStandardTimeService, StandardTimeService>();
+            services.AddScoped<ISubjectDepartmentService, SubjectDepartmentService>();
+            services.AddScoped<ISubjectService, SubjectService>();
+            services.AddScoped<ISubjectTypeService, SubjectTypeService>();
+            services.AddScoped<ITeachingService, TeachingService>();
+            services.AddScoped<ITrainingSystemService, TrainingSystemService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -88,7 +117,7 @@ namespace LecturerManagement.API
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
-            //services.AddAutoMapper(typeof(AutoMapperProfile));
+            services.AddAutoMapper(typeof(AutoMapperProfile));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

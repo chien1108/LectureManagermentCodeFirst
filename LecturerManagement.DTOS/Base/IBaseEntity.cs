@@ -1,7 +1,7 @@
 ﻿using LecturerManagement.DTOS.Modules.Enums;
 using System;
 
-namespace LecturerManagement.Core.Models.Base
+namespace LecturerManagement.DTOS.Models.Base
 {
     public interface IBaseEntity<T>
     {

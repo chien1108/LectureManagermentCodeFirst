@@ -1,5 +1,5 @@
 ﻿using LecturerManagement.Core.Models.Base;
-using LecturerManagement.Core.Modules.Enums;
+using LecturerManagement.DTOS.Modules.Enums;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 

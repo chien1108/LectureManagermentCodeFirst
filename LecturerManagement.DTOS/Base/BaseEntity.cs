@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace LecturerManagement.Core.Models.Base
+namespace LecturerManagement.DTOS.Models.Base
 {
     public class BaseEntity<T> : IBaseEntity<T>
     {

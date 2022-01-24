@@ -7,7 +7,7 @@
         public string Description { get; set; } = null;
 
         // [Required]
-        public ICollection<Class> Classes { get; set; } = new HashSet<Class>();
-        public ICollection<Subject> Subjects { get; set; } = new HashSet<Subject>();
+        //public ICollection<Class> Classes { get; set; } = new HashSet<Class>();
+        //public ICollection<Subject> Subjects { get; set; } = new HashSet<Subject>();
     }
 }

@@ -1,12 +1,13 @@
-﻿using LecturerManagement.Core.Modules.Enums;
+﻿using LecturerManagement.DTOS.Models.Base;
+using LecturerManagement.DTOS.Modules.Enums;
 using System;
 
 namespace LecturerManagement.DTOS.LecturerDTO
 {
-    public class AddLecturerDto
+    public class AddLecturerDto : BaseEntity<string>
     {
         //[Key]
-        //public string ID { get; set; }
+        //public string Id { get; set; }
         public string StandardTimeID { get; set; }
 
         public string SubjectDepartmentID { get; set; }

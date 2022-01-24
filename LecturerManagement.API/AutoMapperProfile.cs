@@ -22,7 +22,7 @@ namespace LecturerManagement.API
         public AutoMapperProfile()
         {
             // Account
-            CreateMap<AccountResgisterDto, Lecturer>().ReverseMap();
+            //CreateMap<AccountResgisterDto, Lecturer>().ReverseMap();
             CreateMap<Account, GetAccountDto>().ReverseMap();
 
 

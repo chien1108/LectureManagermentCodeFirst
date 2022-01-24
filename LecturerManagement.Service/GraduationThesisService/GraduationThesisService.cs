@@ -22,14 +22,50 @@ namespace LecturerManagement.Services.GraduationThesisService
             _mapper = mapper;
         }
 
-        public Task<ServiceResponse<AddGraduationThesisDto>> Create(AddGraduationThesisDto createGraduationThesis)
+        public async Task<ServiceResponse<AddGraduationThesisDto>> Create(AddGraduationThesisDto createGraduationThesis)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _unitOfWork.GraduationThesises.Create(_mapper.Map<GraduationThesis>(createGraduationThesis));
+                if (await SaveChange())
+                {
+                    return new ServiceResponse<AddGraduationThesisDto> { Success = true, Message = "Add Graduation Thesis Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<AddGraduationThesisDto> { Success = false, Message = "Error when create new Graduation Thesis" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<AddGraduationThesisDto> { Success = false, Message = ex.Message };
+            }
         }
 
-        public Task<ServiceResponse<GraduationThesis>> Delete(GraduationThesis deleteGraduationThesis)
+        public async Task<ServiceResponse<GraduationThesis>> Delete(GraduationThesis deleteGraduationThesis)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var deleteGraduationThesisFromDB = await Find(x => x.Id == 1);
+                if (deleteGraduationThesisFromDB != null)
+                {
+                    _unitOfWork.GraduationThesises.Delete(deleteGraduationThesis);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<GraduationThesis> { Success = false, Message = "Error when delete Graduation Thesis" };
+                    }
+                    return new ServiceResponse<GraduationThesis> { Success = true, Message = "Delete Graduation Thesis Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<GraduationThesis> { Success = false, Message = "Not Found Graduation Thesis" };
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new ServiceResponse<GraduationThesis> { Success = false, Message = ex.Message };
+            }
         }
 
         public async Task<GetGraduationThesisDto> Find(Expression<Func<GraduationThesis, bool>> expression = null, List<string> includes = null)

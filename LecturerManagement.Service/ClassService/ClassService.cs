@@ -15,11 +15,13 @@ namespace LecturerManagement.Services.ClassService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+
         public ClassService(IMapper mapper, IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
         public async Task<ServiceResponse<AddClassDto>> Create(AddClassDto createClass)
         {
             try
@@ -61,7 +63,6 @@ namespace LecturerManagement.Services.ClassService
             }
             catch (Exception ex)
             {
-
                 return new ServiceResponse<Class> { Success = false, Message = ex.Message };
             }
         }
