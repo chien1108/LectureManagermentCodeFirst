@@ -72,7 +72,11 @@ namespace LecturerManagement.Core.Repositories.AuthenRepo
                     BirthDate = accountRegisterDto.BirthDate,
                     IdentityCardNumber = accountRegisterDto.IdentityCardNumber,
                     Portrait = accountRegisterDto.Portrait,
-                    Email = account.UserName.ToString() + "@utt.edu.vn"
+                    Email = account.UserName.ToString() + "@utt.edu.vn",
+                    YearStartWork = DateTime.Now.Year.ToString(),
+                    PhoneNumber = accountRegisterDto.PhoneNumber,
+                    Address = accountRegisterDto.Address,
+                    AcademicLevel = accountRegisterDto.AcademicLevel,
                 };
                 account.Lecturer = lecturer;
 
@@ -96,6 +100,33 @@ namespace LecturerManagement.Core.Repositories.AuthenRepo
                     Success = false
                 };
             }
+            return response;
+        }
+
+        public async Task<ServiceResponse<string>> ChangePassword(string username, string newPassword)
+        {
+            var response = new ServiceResponse<string>();
+            var user = await _unitOfWork.Accounts.FindByConditionAsync(x => x.UserName.ToLower().Equals(username.ToLower()));
+            if (user == null)
+            {
+                response = new() { Message = "User not found!", Success = false };
+            }
+            else
+            {
+                CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
+                user.ModifiedDate = DateTime.Now;
+                if (await _unitOfWork.Save())
+                {
+                    response = new() { Success = true, Message = "Change Password Success" };
+                }
+                else
+                {
+                    response = new() { Message = "An error occurred. Please try again later", Success = false };
+                }
+            }
+
             return response;
         }
 

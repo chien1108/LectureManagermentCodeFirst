@@ -21,39 +21,94 @@ namespace LecturerManagement.Services.SubjectDepartmentService
             _mapper = mapper;
         }
 
-        public Task<ServiceResponse<AddSubjectDepartmentDto>> Create(AddSubjectDepartmentDto createSubjectDepartment)
+        public async Task<ServiceResponse<AddSubjectDepartmentDto>> Create(AddSubjectDepartmentDto createSubjectDepartment)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _unitOfWork.SubjectDepartments.Create(_mapper.Map<SubjectDepartment>(createSubjectDepartment));
+                if (await SaveChange())
+                {
+                    return new ServiceResponse<AddSubjectDepartmentDto> { Success = true, Message = "Add Subject Department Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<AddSubjectDepartmentDto> { Success = false, Message = "Error when create new Subject Department" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<AddSubjectDepartmentDto> { Success = false, Message = ex.Message };
+            }
         }
 
-        public Task<ServiceResponse<SubjectDepartment>> Delete(SubjectDepartment deleteSubjectDepartment)
+        public async Task<ServiceResponse<SubjectDepartment>> Delete(SubjectDepartment deleteSubjectDepartment)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var subjectDepartmentFromDB = await Find(x => x.Id == 1.ToString());
+                if (subjectDepartmentFromDB != null)
+                {
+                    _unitOfWork.SubjectDepartments.Delete(deleteSubjectDepartment);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<SubjectDepartment> { Success = false, Message = "Error when delete Subject Department" };
+                    }
+                    return new ServiceResponse<SubjectDepartment> { Success = true, Message = "Delete Subject Department Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<SubjectDepartment> { Success = false, Message = "Not Found Subject Department" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<SubjectDepartment> { Success = false, Message = ex.Message };
+            }
         }
 
-        public Task<GetSubjectDepartmentDto> Find(Expression<Func<SubjectDepartment, bool>> expression = null, List<string> includes = null)
+        public async Task<GetSubjectDepartmentDto> Find(Expression<Func<SubjectDepartment, bool>> expression = null, List<string> includes = null)
+         => _mapper.Map<GetSubjectDepartmentDto>(await _unitOfWork.SubjectDepartments.FindByConditionAsync(expression, includes));
+
+        public async Task<ICollection<GetSubjectDepartmentDto>> FindAll(Expression<Func<SubjectDepartment, bool>> expression = null, Func<IQueryable<SubjectDepartment>, IOrderedQueryable<SubjectDepartment>> orderBy = null, List<string> includes = null)
+        => _mapper.Map<ICollection<GetSubjectDepartmentDto>>(await _unitOfWork.SubjectDepartments.FindAllAsync(expression, orderBy, includes));
+
+        public async Task<bool> IsExisted(Expression<Func<SubjectDepartment, bool>> expression = null)
         {
-            throw new NotImplementedException();
+            var isExist = await _unitOfWork.SubjectDepartments.FindByConditionAsync(expression);
+            if (isExist == null)
+            {
+                return false;
+            }
+            return true;
         }
 
-        public Task<ICollection<GetSubjectDepartmentDto>> FindAll(Expression<Func<SubjectDepartment, bool>> expression = null, Func<IQueryable<SubjectDepartment>, IOrderedQueryable<SubjectDepartment>> orderBy = null, List<string> includes = null)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<bool> SaveChange()
+        => await _unitOfWork.SubjectDepartments.Save();
 
-        public Task<bool> IsExisted(Expression<Func<SubjectDepartment, bool>> expression = null)
+        public async Task<ServiceResponse<UpdateSubjectDepartmentDto>> Update(UpdateSubjectDepartmentDto updateSubjectDepartment)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> SaveChange()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ServiceResponse<UpdateSubjectDepartmentDto>> Update(UpdateSubjectDepartmentDto updateSubjectDepartment)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                var subjectDepartmentFromDB = await Find(x => x.Id == 1.ToString());
+                if (subjectDepartmentFromDB != null)
+                {
+                    var task = _mapper.Map<SubjectDepartment>(updateSubjectDepartment);
+                    _unitOfWork.SubjectDepartments.Update(task);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<UpdateSubjectDepartmentDto> { Success = false, Message = "Error when update Subject Department" };
+                    }
+                    return new ServiceResponse<UpdateSubjectDepartmentDto> { Success = true, Message = "Update Subject Department Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<UpdateSubjectDepartmentDto> { Success = false, Message = "Not Found Subject Department" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<UpdateSubjectDepartmentDto> { Success = false, Message = ex.Message };
+            }
         }
     }
 }

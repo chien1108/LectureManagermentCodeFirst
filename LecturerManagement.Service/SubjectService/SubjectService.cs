@@ -21,39 +21,95 @@ namespace LecturerManagement.Services.SubjectService
             _mapper = mapper;
         }
 
-        public Task<ServiceResponse<AddSubjectDto>> Create(AddSubjectDto createSubject)
+        public async Task<ServiceResponse<AddSubjectDto>> Create(AddSubjectDto createSubject)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _unitOfWork.Subjects.Create(_mapper.Map<Subject>(createSubject));
+                if (await SaveChange())
+                {
+                    return new ServiceResponse<AddSubjectDto> { Success = true, Message = "Add Subject Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<AddSubjectDto> { Success = false, Message = "Error when create new Subject" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<AddSubjectDto> { Success = false, Message = ex.Message };
+            }
         }
 
-        public Task<ServiceResponse<Subject>> Delete(Subject deleteSubject)
+        public async Task<ServiceResponse<Subject>> Delete(Subject deleteSubject)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var subjectFromDB = await Find(x => x.Id == 1.ToString());
+                if (subjectFromDB != null)
+                {
+                    _unitOfWork.Subjects.Delete(deleteSubject);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<Subject> { Success = false, Message = "Error when delete Subject" };
+                    }
+                    return new ServiceResponse<Subject> { Success = true, Message = "Delete Subject Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<Subject> { Success = false, Message = "Not Found Subject" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<Subject> { Success = false, Message = ex.Message };
+            }
         }
 
-        public Task<GetSubjectDto> Find(Expression<Func<Subject, bool>> expression = null, List<string> includes = null)
+        public async Task<GetSubjectDto> Find(Expression<Func<Subject, bool>> expression = null, List<string> includes = null)
+        => _mapper.Map<GetSubjectDto>(await _unitOfWork.Subjects.FindByConditionAsync(expression, includes));
+
+        public async Task<ICollection<GetSubjectDto>> FindAll(Expression<Func<Subject, bool>> expression = null, Func<IQueryable<Subject>, IOrderedQueryable<Subject>> orderBy = null, List<string> includes = null)
+        => _mapper.Map<ICollection<GetSubjectDto>>(await _unitOfWork.Subjects.FindAllAsync(expression, orderBy, includes));
+
+
+        public async Task<bool> IsExisted(Expression<Func<Subject, bool>> expression = null)
         {
-            throw new NotImplementedException();
+            var isExist = await _unitOfWork.Subjects.FindByConditionAsync(expression);
+            if (isExist == null)
+            {
+                return false;
+            }
+            return true;
         }
 
-        public Task<ICollection<GetSubjectDto>> FindAll(Expression<Func<Subject, bool>> expression = null, Func<IQueryable<Subject>, IOrderedQueryable<Subject>> orderBy = null, List<string> includes = null)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<bool> SaveChange()
+        => await _unitOfWork.Subjects.Save();
 
-        public Task<bool> IsExisted(Expression<Func<Subject, bool>> expression = null)
+        public async Task<ServiceResponse<UpdateSubjectDto>> Update(UpdateSubjectDto updateSubject)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> SaveChange()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ServiceResponse<UpdateSubjectDto>> Update(UpdateSubjectDto updateSubject)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                var subjectFromDB = await Find(x => x.Id == 1.ToString());
+                if (subjectFromDB != null)
+                {
+                    var task = _mapper.Map<Subject>(updateSubject);
+                    _unitOfWork.Subjects.Update(task);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<UpdateSubjectDto> { Success = false, Message = "Error when update Subject" };
+                    }
+                    return new ServiceResponse<UpdateSubjectDto> { Success = true, Message = "Update Subject Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<UpdateSubjectDto> { Success = false, Message = "Not Found Subject" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<UpdateSubjectDto> { Success = false, Message = ex.Message };
+            }
         }
     }
 }

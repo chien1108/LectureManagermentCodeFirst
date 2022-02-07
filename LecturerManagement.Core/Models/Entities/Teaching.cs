@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using LecturerManagement.Core.Models.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LecturerManagement.Core.Models.Entities
 {
     /// <summary>
     /// giảng dạy
     /// </summary>
-    public class Teaching
+    public class Teaching : BaseEntity<int>
     {
         [ForeignKey("Lecturer")]
         public string LectureID { get; set; }

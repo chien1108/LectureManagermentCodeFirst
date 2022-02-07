@@ -21,39 +21,94 @@ namespace LecturerManagement.Services.PositionService
             _mapper = mapper;
         }
 
-        public Task<ServiceResponse<AddPositionDto>> Create(AddPositionDto createPosition)
+        public async Task<ServiceResponse<AddPositionDto>> Create(AddPositionDto createPosition)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _unitOfWork.Positions.Create(_mapper.Map<Position>(createPosition));
+                if (await SaveChange())
+                {
+                    return new ServiceResponse<AddPositionDto> { Success = true, Message = "Add Position Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<AddPositionDto> { Success = false, Message = "Error when create new Position" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<AddPositionDto> { Success = false, Message = ex.Message };
+            }
         }
 
-        public Task<ServiceResponse<Position>> Delete(Position deletePosition)
+        public async Task<ServiceResponse<Position>> Delete(Position deletePosition)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var positionFromDB = await Find(x => x.Id == 1.ToString());
+                if (positionFromDB != null)
+                {
+                    _unitOfWork.Positions.Delete(deletePosition);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<Position> { Success = false, Message = "Error when delete Position" };
+                    }
+                    return new ServiceResponse<Position> { Success = true, Message = "Delete Position Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<Position> { Success = false, Message = "Not Found Position" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<Position> { Success = false, Message = ex.Message };
+            }
         }
 
-        public Task<GetPositionDto> Find(Expression<Func<Position, bool>> expression = null, List<string> includes = null)
+        public async Task<GetPositionDto> Find(Expression<Func<Position, bool>> expression = null, List<string> includes = null)
+        => _mapper.Map<GetPositionDto>(await _unitOfWork.Positions.FindByConditionAsync(expression, includes));
+
+        public async Task<ICollection<GetPositionDto>> FindAll(Expression<Func<Position, bool>> expression = null, Func<IQueryable<Position>, IOrderedQueryable<Position>> orderBy = null, List<string> includes = null)
+        => _mapper.Map<ICollection<GetPositionDto>>(await _unitOfWork.Positions.FindAllAsync(expression, orderBy, includes));
+
+        public async Task<bool> IsExisted(Expression<Func<Position, bool>> expression = null)
         {
-            throw new NotImplementedException();
+            var isExist = await _unitOfWork.Positions.FindByConditionAsync(expression);
+            if (isExist == null)
+            {
+                return false;
+            }
+            return true;
         }
 
-        public Task<ICollection<GetPositionDto>> FindAll(Expression<Func<Position, bool>> expression = null, Func<IQueryable<Position>, IOrderedQueryable<Position>> orderBy = null, List<string> includes = null)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<bool> SaveChange()
+        => await _unitOfWork.Positions.Save();
 
-        public Task<bool> IsExisted(Expression<Func<Position, bool>> expression = null)
+        public async Task<ServiceResponse<UpdatePositionDto>> Update(UpdatePositionDto updatePosition)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> SaveChange()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ServiceResponse<UpdatePositionDto>> Update(UpdatePositionDto updatePosition)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                var positionFromDB = await Find(x => x.Id == 1.ToString());
+                if (positionFromDB != null)
+                {
+                    var task = _mapper.Map<Position>(updatePosition);
+                    _unitOfWork.Positions.Update(task);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<UpdatePositionDto> { Success = false, Message = "Error when update Position" };
+                    }
+                    return new ServiceResponse<UpdatePositionDto> { Success = true, Message = "Update Position Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<UpdatePositionDto> { Success = false, Message = "Not Found Position" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<UpdatePositionDto> { Success = false, Message = ex.Message };
+            }
         }
     }
 }

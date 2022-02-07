@@ -14,10 +14,10 @@ namespace LecturerManagement.Services.AccountService
 
         //RUD
         Task<ServiceResponse<GetAccountDto>> GetAccountByUsername(string username);
-        Task<ServiceResponse<GetAccountDto>> UpdateAccount(UpdateAccountDto updateAccount);
+        Task<ServiceResponse<GetAccountDto>> UpdateAccount(string username, UpdateAccountDto updateAccount);
         Task<ServiceResponse<string>> DeleteAccount(string username);
 
-        //Task<ServiceResponse<AddAdvancedLearningDto>> Create(AddAdvancedLearningDto createAdvancedLearning);
+        ////Task<ServiceResponse<AddAdvancedLearningDto>> Create(AddAdvancedLearningDto createAdvancedLearning);
 
         Task<ServiceResponse<string>> Delete(string userName);
         Task<ServiceResponse<UpdateAccountDto>> Update(UpdateAccountDto updateAccount);

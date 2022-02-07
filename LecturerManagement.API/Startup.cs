@@ -43,6 +43,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System.Text.Json.Serialization;
 
 namespace LecturerManagement.API
 {
@@ -89,7 +90,7 @@ namespace LecturerManagement.API
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IAdvancedLearningService, AdvancedLearningService>();
             services.AddScoped<IClassService, ClassService>();
-            //services.AddScoped<IDynamicClassFactorService, DynamicClassFactorRepository>();
+            ///services.AddScoped<IDynamicClassFactorService, DynamicClassFactorRepository>();
             services.AddScoped<IGraduationThesisService, GraduationThesisService>();
             services.AddScoped<ILecturerService, LecturerService>();
             services.AddScoped<ILecturerScientificResearchService, LecturerScientificResearchService>();
@@ -103,13 +104,17 @@ namespace LecturerManagement.API
             services.AddScoped<ITeachingService, TeachingService>();
             services.AddScoped<ITrainingSystemService, TrainingSystemService>();
 
-            services.AddControllers();
+
+            services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+            ///services.AddControllers();
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LecturerManagermentCodeFirst.API", Version = "v1" });
                 c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
-                    Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+                    Description = "Standard Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
                     In = ParameterLocation.Header,
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey

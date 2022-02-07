@@ -46,8 +46,8 @@ namespace LecturerManagement.Services.GraduationThesisService
         {
             try
             {
-                var deleteGraduationThesisFromDB = await Find(x => x.Id == 1);
-                if (deleteGraduationThesisFromDB != null)
+                var graduationThesisFromDB = await Find(x => x.Id == 1);
+                if (graduationThesisFromDB != null)
                 {
                     _unitOfWork.GraduationThesises.Delete(deleteGraduationThesis);
                     if (!await SaveChange())

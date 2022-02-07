@@ -21,39 +21,95 @@ namespace LecturerManagement.Services.SubjectTypeService
             _mapper = mapper;
         }
 
-        public Task<ServiceResponse<AddSubjectTypeDto>> Create(AddSubjectTypeDto createSubjectType)
+        public async Task<ServiceResponse<AddSubjectTypeDto>> Create(AddSubjectTypeDto createSubjectType)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _unitOfWork.SubjectTypes.Create(_mapper.Map<SubjectType>(createSubjectType));
+                if (await SaveChange())
+                {
+                    return new ServiceResponse<AddSubjectTypeDto> { Success = true, Message = "Add Subject Type Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<AddSubjectTypeDto> { Success = false, Message = "Error when create new Subject Type" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<AddSubjectTypeDto> { Success = false, Message = ex.Message };
+            }
         }
 
-        public Task<ServiceResponse<SubjectType>> Delete(SubjectType deleteSubjectType)
+        public async Task<ServiceResponse<SubjectType>> Delete(SubjectType deleteSubjectType)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var subjectTypeFromDB = await Find(x => x.Id == 1.ToString());
+                if (subjectTypeFromDB != null)
+                {
+                    _unitOfWork.SubjectTypes.Delete(deleteSubjectType);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<SubjectType> { Success = false, Message = "Error when delete Subject Type" };
+                    }
+                    return new ServiceResponse<SubjectType> { Success = true, Message = "Delete Subject Type Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<SubjectType> { Success = false, Message = "Not Found Subject Type" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<SubjectType> { Success = false, Message = ex.Message };
+            }
         }
 
-        public Task<GetSubjectTypeDto> Find(Expression<Func<SubjectType, bool>> expression = null, List<string> includes = null)
+        public async Task<GetSubjectTypeDto> Find(Expression<Func<SubjectType, bool>> expression = null, List<string> includes = null)
+            => _mapper.Map<GetSubjectTypeDto>(await _unitOfWork.SubjectTypes.FindByConditionAsync(expression, includes));
+
+
+        public async Task<ICollection<GetSubjectTypeDto>> FindAll(Expression<Func<SubjectType, bool>> expression = null, Func<IQueryable<SubjectType>, IOrderedQueryable<SubjectType>> orderBy = null, List<string> includes = null)
+        => _mapper.Map<ICollection<GetSubjectTypeDto>>(await _unitOfWork.SubjectTypes.FindAllAsync(expression, orderBy, includes));
+
+        public async Task<bool> IsExisted(Expression<Func<SubjectType, bool>> expression = null)
         {
-            throw new NotImplementedException();
+            var isExist = await _unitOfWork.SubjectTypes.FindByConditionAsync(expression);
+            if (isExist == null)
+            {
+                return false;
+            }
+            return true;
         }
 
-        public Task<ICollection<GetSubjectTypeDto>> FindAll(Expression<Func<SubjectType, bool>> expression = null, Func<IQueryable<SubjectType>, IOrderedQueryable<SubjectType>> orderBy = null, List<string> includes = null)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<bool> SaveChange()
+        => await _unitOfWork.SubjectTypes.Save();
 
-        public Task<bool> IsExisted(Expression<Func<SubjectType, bool>> expression = null)
+        public async Task<ServiceResponse<UpdateSubjectTypeDto>> Update(UpdateSubjectTypeDto updateSubjectType)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> SaveChange()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ServiceResponse<UpdateSubjectTypeDto>> Update(UpdateSubjectTypeDto updateSubjectType)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                var subjectTypeFromDB = await Find(x => x.Id == 1.ToString());
+                if (subjectTypeFromDB != null)
+                {
+                    var task = _mapper.Map<SubjectType>(updateSubjectType);
+                    _unitOfWork.SubjectTypes.Update(task);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<UpdateSubjectTypeDto> { Success = false, Message = "Error when update Subject Type" };
+                    }
+                    return new ServiceResponse<UpdateSubjectTypeDto> { Success = true, Message = "Update Subject Type Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<UpdateSubjectTypeDto> { Success = false, Message = "Not Found Subject Type" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<UpdateSubjectTypeDto> { Success = false, Message = ex.Message };
+            }
         }
     }
 }

@@ -45,8 +45,8 @@ namespace LecturerManagement.Services.LecturerScientificResearchService
         {
             try
             {
-                var deleteLecturerFromDB = await Find(x => x.Id == 1.ToString());
-                if (deleteLecturerFromDB != null)
+                var lecturerScientificResearchFromDB = await Find(x => x.Id == 1.ToString());
+                if (lecturerScientificResearchFromDB != null)
                 {
                     _unitOfWork.LecturerScientificResearches.Delete(deleteLecturerScientificResearch);
                     if (!await SaveChange())
@@ -93,8 +93,8 @@ namespace LecturerManagement.Services.LecturerScientificResearchService
                 var lecturerScientificResearchFromDB = await Find(x => x.Id == 1.ToString());
                 if (lecturerScientificResearchFromDB != null)
                 {
-                    var task = _mapper.Map<GraduationThesis>(updateLecturerScientificResearch);
-                    _unitOfWork.GraduationThesises.Update(task);
+                    var task = _mapper.Map<LecturerScientificResearch>(updateLecturerScientificResearch);
+                    _unitOfWork.LecturerScientificResearches.Update(task);
                     if (!await SaveChange())
                     {
                         return new ServiceResponse<UpdateLecturerScientificResearchDto> { Success = false, Message = "Error when update Lecturer Scientific Research" };

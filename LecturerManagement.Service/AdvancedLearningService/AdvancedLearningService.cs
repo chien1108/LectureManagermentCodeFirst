@@ -47,8 +47,8 @@ namespace LecturerManagement.Services.AdvancedLearningService
         {
             try
             {
-                var deleteAdvanceLearningFromDB = await Find(x => x.Id == deleteAdvancedLearning.Id);
-                if (deleteAdvanceLearningFromDB != null)
+                var advanceLearningFromDB = await Find(x => x.Id == deleteAdvancedLearning.Id);
+                if (advanceLearningFromDB != null)
                 {
                     _unitOfWork.AdvancedLearnings.Delete(deleteAdvancedLearning);
                     if (!await SaveChange())

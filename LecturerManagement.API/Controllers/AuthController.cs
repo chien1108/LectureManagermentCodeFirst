@@ -46,5 +46,19 @@ namespace LecturerManagement.API.Controllers
 
             return Ok(response);
         }
+
+
+        [HttpPatch("ChangePassword")]
+        public async Task<ActionResult<ServiceResponse<string>>> ChangePassword(string userName, string newPassword)
+        {
+            var response = await _authRepo.ChangePassword(userName, newPassword);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
     }
 }

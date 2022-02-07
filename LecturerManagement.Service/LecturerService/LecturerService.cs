@@ -46,8 +46,8 @@ namespace LecturerManagement.Services.LecturerService
         {
             try
             {
-                var deleteLecturerFromDB = await Find(x => x.Id == 1.ToString());
-                if (deleteLecturerFromDB != null)
+                var lecturerFromDB = await Find(x => x.Id == 1.ToString());
+                if (lecturerFromDB != null)
                 {
                     _unitOfWork.Lecturers.Delete(deleteLecturer);
                     if (!await SaveChange())
@@ -95,8 +95,8 @@ namespace LecturerManagement.Services.LecturerService
                 var lecturerFromDB = await Find(x => x.Id == 1.ToString());
                 if (lecturerFromDB != null)
                 {
-                    var task = _mapper.Map<GraduationThesis>(updateLecturer);
-                    _unitOfWork.GraduationThesises.Update(task);
+                    var task = _mapper.Map<Lecturer>(updateLecturer);
+                    _unitOfWork.Lecturers.Update(task);
                     if (!await SaveChange())
                     {
                         return new ServiceResponse<UpdateLecturerDto> { Success = false, Message = "Error when update Lecturer" };

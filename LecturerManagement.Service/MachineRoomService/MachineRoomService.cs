@@ -21,39 +21,94 @@ namespace LecturerManagement.Services.MachineRoomService
             _mapper = mapper;
         }
 
-        public Task<ServiceResponse<AddMachineRoomDto>> Create(AddMachineRoomDto createMachineRoom)
+        public async Task<ServiceResponse<AddMachineRoomDto>> Create(AddMachineRoomDto createMachineRoom)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _unitOfWork.MachineRooms.Create(_mapper.Map<MachineRoom>(createMachineRoom));
+                if (await SaveChange())
+                {
+                    return new ServiceResponse<AddMachineRoomDto> { Success = true, Message = "Add Machine Room Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<AddMachineRoomDto> { Success = false, Message = "Error when create new Machine Room" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<AddMachineRoomDto> { Success = false, Message = ex.Message };
+            }
         }
 
-        public Task<ServiceResponse<MachineRoom>> Delete(MachineRoom deleteMachineRoom)
+        public async Task<ServiceResponse<MachineRoom>> Delete(MachineRoom deleteMachineRoom)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var machineRoomFromDB = await Find(x => x.Id == 1.ToString());
+                if (machineRoomFromDB != null)
+                {
+                    _unitOfWork.MachineRooms.Delete(deleteMachineRoom);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<MachineRoom> { Success = false, Message = "Error when delete Machine Room" };
+                    }
+                    return new ServiceResponse<MachineRoom> { Success = true, Message = "Delete Machine Room Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<MachineRoom> { Success = false, Message = "Not Found Machine Room" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<MachineRoom> { Success = false, Message = ex.Message };
+            }
         }
 
-        public Task<GetMachineRoomDto> Find(Expression<Func<MachineRoom, bool>> expression = null, List<string> includes = null)
+        public async Task<GetMachineRoomDto> Find(Expression<Func<MachineRoom, bool>> expression = null, List<string> includes = null)
+        => _mapper.Map<GetMachineRoomDto>(await _unitOfWork.MachineRooms.FindByConditionAsync(expression, includes));
+
+        public async Task<ICollection<GetMachineRoomDto>> FindAll(Expression<Func<MachineRoom, bool>> expression = null, Func<IQueryable<MachineRoom>, IOrderedQueryable<MachineRoom>> orderBy = null, List<string> includes = null)
+          => _mapper.Map<ICollection<GetMachineRoomDto>>(await _unitOfWork.MachineRooms.FindAllAsync(expression, orderBy, includes));
+
+        public async Task<bool> IsExisted(Expression<Func<MachineRoom, bool>> expression = null)
         {
-            throw new NotImplementedException();
+            var isExist = await _unitOfWork.MachineRooms.FindByConditionAsync(expression);
+            if (isExist == null)
+            {
+                return false;
+            }
+            return true;
         }
 
-        public Task<ICollection<GetMachineRoomDto>> FindAll(Expression<Func<MachineRoom, bool>> expression = null, Func<IQueryable<MachineRoom>, IOrderedQueryable<MachineRoom>> orderBy = null, List<string> includes = null)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<bool> SaveChange()
+        => await _unitOfWork.MachineRooms.Save();
 
-        public Task<bool> IsExisted(Expression<Func<MachineRoom, bool>> expression = null)
+        public async Task<ServiceResponse<UpdateMachineRoomDto>> Update(UpdateMachineRoomDto updateMachineRoom)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> SaveChange()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ServiceResponse<UpdateMachineRoomDto>> Update(UpdateMachineRoomDto updateMachineRoom)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                var machineRoomFromDB = await Find(x => x.Id == 1.ToString());
+                if (machineRoomFromDB != null)
+                {
+                    var task = _mapper.Map<MachineRoom>(updateMachineRoom);
+                    _unitOfWork.MachineRooms.Update(task);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<UpdateMachineRoomDto> { Success = false, Message = "Error when update Machine Room" };
+                    }
+                    return new ServiceResponse<UpdateMachineRoomDto> { Success = true, Message = "Update Machine Room Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<UpdateMachineRoomDto> { Success = false, Message = "Not Found Machine Room" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<UpdateMachineRoomDto> { Success = false, Message = ex.Message };
+            }
         }
     }
 }

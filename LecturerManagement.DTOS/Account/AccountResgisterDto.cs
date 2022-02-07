@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LecturerManagement.DTOS.Modules.Enums;
+using System;
 
 namespace LecturerManagement.DTOS.Account
 {
@@ -10,7 +11,7 @@ namespace LecturerManagement.DTOS.Account
         public string IdentityCardNumber { get; set; }
         public string Permission { get; set; }
         public string Portrait { get; set; }
-        public string AcademicLevel { get; set; }
+        public AcademicLevel AcademicLevel { get; set; }
         public string YearStartWork { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }

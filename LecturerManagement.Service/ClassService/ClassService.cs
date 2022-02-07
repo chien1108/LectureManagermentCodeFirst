@@ -46,8 +46,8 @@ namespace LecturerManagement.Services.ClassService
         {
             try
             {
-                var deleteClassFromDB = await Find(x => x.Id == 1.ToString());
-                if (deleteClassFromDB != null)
+                var classFromDB = await Find(x => x.Id == 1.ToString());
+                if (classFromDB != null)
                 {
                     _unitOfWork.Classes.Delete(deleteClass);
                     if (!await SaveChange())

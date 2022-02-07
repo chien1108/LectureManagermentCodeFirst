@@ -21,39 +21,95 @@ namespace LecturerManagement.Services.TeachingService
             _mapper = mapper;
         }
 
-        public Task<ServiceResponse<AddTeachingDto>> Create(AddTeachingDto createTeaching)
+        public async Task<ServiceResponse<AddTeachingDto>> Create(AddTeachingDto createTeaching)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _unitOfWork.Teachings.Create(_mapper.Map<Teaching>(createTeaching));
+                if (await SaveChange())
+                {
+                    return new ServiceResponse<AddTeachingDto> { Success = true, Message = "Add Teaching Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<AddTeachingDto> { Success = false, Message = "Error when create new Teaching" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<AddTeachingDto> { Success = false, Message = ex.Message };
+            }
         }
 
-        public Task<ServiceResponse<Teaching>> Delete(Teaching deleteTeaching)
+        public async Task<ServiceResponse<Teaching>> Delete(Teaching deleteTeaching)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var teachingFromDB = await Find(x => x.Id == 1);
+                if (teachingFromDB != null)
+                {
+                    _unitOfWork.Teachings.Delete(deleteTeaching);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<Teaching> { Success = false, Message = "Error when delete Teaching" };
+                    }
+                    return new ServiceResponse<Teaching> { Success = true, Message = "Delete Teaching Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<Teaching> { Success = false, Message = "Not Found Teaching" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<Teaching> { Success = false, Message = ex.Message };
+            }
         }
 
-        public Task<GetTeachingDto> Find(Expression<Func<Teaching, bool>> expression = null, List<string> includes = null)
+        public async Task<GetTeachingDto> Find(Expression<Func<Teaching, bool>> expression = null, List<string> includes = null)
+            => _mapper.Map<GetTeachingDto>(await _unitOfWork.Teachings.FindByConditionAsync(expression, includes));
+
+
+        public async Task<ICollection<GetTeachingDto>> FindAll(Expression<Func<Teaching, bool>> expression = null, Func<IQueryable<Teaching>, IOrderedQueryable<Teaching>> orderBy = null, List<string> includes = null)
+        => _mapper.Map<ICollection<GetTeachingDto>>(await _unitOfWork.Teachings.FindAllAsync(expression, orderBy, includes));
+
+        public async Task<bool> IsExisted(Expression<Func<Teaching, bool>> expression = null)
         {
-            throw new NotImplementedException();
+            var isExist = await _unitOfWork.Teachings.FindByConditionAsync(expression);
+            if (isExist == null)
+            {
+                return false;
+            }
+            return true;
         }
 
-        public Task<ICollection<GetTeachingDto>> FindAll(Expression<Func<Teaching, bool>> expression = null, Func<IQueryable<Teaching>, IOrderedQueryable<Teaching>> orderBy = null, List<string> includes = null)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<bool> SaveChange()
+        => await _unitOfWork.Teachings.Save();
 
-        public Task<bool> IsExisted(Expression<Func<Teaching, bool>> expression = null)
+        public async Task<ServiceResponse<UpdateTeachingDto>> Update(UpdateTeachingDto updateTeaching)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> SaveChange()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ServiceResponse<UpdateTeachingDto>> Update(UpdateTeachingDto updateTeaching)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                var teachingFromDB = await Find(x => x.Id == 1);
+                if (teachingFromDB != null)
+                {
+                    var task = _mapper.Map<Teaching>(updateTeaching);
+                    _unitOfWork.Teachings.Update(task);
+                    if (!await SaveChange())
+                    {
+                        return new ServiceResponse<UpdateTeachingDto> { Success = false, Message = "Error when update Teaching" };
+                    }
+                    return new ServiceResponse<UpdateTeachingDto> { Success = true, Message = "Update Teaching Success" };
+                }
+                else
+                {
+                    return new ServiceResponse<UpdateTeachingDto> { Success = false, Message = "Not Found Teaching" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<UpdateTeachingDto> { Success = false, Message = ex.Message };
+            }
         }
     }
 }

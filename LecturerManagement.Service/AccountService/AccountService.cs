@@ -51,7 +51,7 @@ namespace LecturerManagement.Services.AccountService
         public async Task<ServiceResponse<GetAccountDto>> GetAccountByUsername(string username)
         {
             var response = new ServiceResponse<GetAccountDto>();
-            //var account = await _context.Accounts.Include(x => x.Lecturer).FirstOrDefaultAsync(x => x.UserName.ToLower().Equals(username.ToLower()));
+            ////var account = await _context.Accounts.Include(x => x.Lecturer).FirstOrDefaultAsync(x => x.UserName.ToLower().Equals(username.ToLower()));
             var account = await _unitOfWork.Accounts.FindByConditionAsync(expression: (x => x.UserName.ToLower().Equals(username.ToLower())), includes: new List<string> { "Lecturer" });
             if (account == null)
             {
@@ -62,12 +62,12 @@ namespace LecturerManagement.Services.AccountService
             return response;
         }
 
-        public async Task<ServiceResponse<GetAccountDto>> UpdateAccount(UpdateAccountDto updateAccount)
+        public async Task<ServiceResponse<GetAccountDto>> UpdateAccount(string username, UpdateAccountDto updateAccount)
         {
             var response = new ServiceResponse<GetAccountDto>();
             try
             {
-                var account = await _unitOfWork.Accounts.FindByConditionAsync(expression: (x => x.UserName.ToLower().Equals(updateAccount.Username.ToLower())), includes: new List<string> { "Lecturer" });
+                var account = await _unitOfWork.Accounts.FindByConditionAsync(expression: (x => x.UserName.ToLower().Trim().Equals(username.ToLower().Trim())), includes: new List<string> { "Lecturer" });
                 if (account == null)
                 {
                     response.Success = false;

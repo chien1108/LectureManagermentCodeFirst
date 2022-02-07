@@ -9,5 +9,6 @@ namespace LecturerManagement.Core.Repositories.AuthenRepo
     {
         Task<ServiceResponse<Tuple<string, string>>> Register(AccountResgisterDto accountRegisterDto);
         Task<ServiceResponse<string>> Login(string username, string password);
+        Task<ServiceResponse<string>> ChangePassword(string username, string newPassword);
     }
 }
