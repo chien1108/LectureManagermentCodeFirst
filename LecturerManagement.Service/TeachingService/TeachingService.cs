@@ -21,57 +21,62 @@ namespace LecturerManagement.Services.TeachingService
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<AddTeachingDto>> Create(AddTeachingDto createTeaching)
+        public async Task<ServiceResponse<GetTeachingDto>> AddTeaching(AddTeachingDto createTeaching)
         {
             try
             {
                 await _unitOfWork.Teachings.Create(_mapper.Map<Teaching>(createTeaching));
                 if (await SaveChange())
                 {
-                    return new ServiceResponse<AddTeachingDto> { Success = true, Message = "Add Teaching Success" };
+                    return new ServiceResponse<GetTeachingDto> { Success = true, Message = "Add Teaching Success" };
                 }
                 else
                 {
-                    return new ServiceResponse<AddTeachingDto> { Success = false, Message = "Error when create new Teaching" };
+                    return new ServiceResponse<GetTeachingDto> { Success = false, Message = "Error when create new Teaching" };
                 }
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<AddTeachingDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetTeachingDto> { Success = false, Message = ex.Message };
             }
         }
 
-        public async Task<ServiceResponse<Teaching>> Delete(Teaching deleteTeaching)
+        public async Task<ServiceResponse<GetTeachingDto>> DeleteTeaching(Teaching deleteTeaching)
         {
             try
             {
-                var teachingFromDB = await Find(x => x.Id == 1);
-                if (teachingFromDB != null)
+                _unitOfWork.Teachings.Delete(deleteTeaching);
+                if (!await SaveChange())
                 {
-                    _unitOfWork.Teachings.Delete(deleteTeaching);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<Teaching> { Success = false, Message = "Error when delete Teaching" };
-                    }
-                    return new ServiceResponse<Teaching> { Success = true, Message = "Delete Teaching Success" };
+                    return new ServiceResponse<GetTeachingDto> { Success = false, Message = "Error when delete Teaching" };
                 }
-                else
-                {
-                    return new ServiceResponse<Teaching> { Success = false, Message = "Not Found Teaching" };
-                }
+                return new ServiceResponse<GetTeachingDto> { Success = true, Message = "Delete Teaching Success" };
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<Teaching> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetTeachingDto> { Success = false, Message = ex.Message };
             }
         }
 
-        public async Task<GetTeachingDto> Find(Expression<Func<Teaching, bool>> expression = null, List<string> includes = null)
-            => _mapper.Map<GetTeachingDto>(await _unitOfWork.Teachings.FindByConditionAsync(expression, includes));
+        public async Task<ServiceResponse<ICollection<GetTeachingDto>>> GetAllTeaching(Expression<Func<Teaching, bool>> expression = null, Func<IQueryable<Teaching>, IOrderedQueryable<Teaching>> orderBy = null, List<string> includes = null)
+        {
+            var listTeachingFromDb = _mapper.Map<ICollection<GetTeachingDto>>(await _unitOfWork.Teachings.FindAllAsync(expression, orderBy, includes));
+            if (listTeachingFromDb != null)
+            {
+                return new() { Success = true, Message = "Get list Teaching Success", Data = listTeachingFromDb };
+            }
+            return new() { Message = "List Teaching is not exist", Success = false };
+        }
 
-
-        public async Task<ICollection<GetTeachingDto>> FindAll(Expression<Func<Teaching, bool>> expression = null, Func<IQueryable<Teaching>, IOrderedQueryable<Teaching>> orderBy = null, List<string> includes = null)
-        => _mapper.Map<ICollection<GetTeachingDto>>(await _unitOfWork.Teachings.FindAllAsync(expression, orderBy, includes));
+        public async Task<ServiceResponse<GetTeachingDto>> GetTeachingByCondition(Expression<Func<Teaching, bool>> expression = null, List<string> includes = null)
+        {
+            var teachingFromDb = _mapper.Map<GetTeachingDto>(await _unitOfWork.Teachings.FindByConditionAsync(expression, includes));
+            if (teachingFromDb != null)
+            {
+                return new() { Success = true, Message = "Get Teaching Success", Data = teachingFromDb };
+            }
+            return new() { Message = "Teaching is not exist", Success = false };
+        }
 
         public async Task<bool> IsExisted(Expression<Func<Teaching, bool>> expression = null)
         {
@@ -85,30 +90,21 @@ namespace LecturerManagement.Services.TeachingService
 
         public async Task<bool> SaveChange()
         => await _unitOfWork.Teachings.Save();
-
-        public async Task<ServiceResponse<UpdateTeachingDto>> Update(UpdateTeachingDto updateTeaching)
+        public async Task<ServiceResponse<GetTeachingDto>> UpdateTeaching(UpdateTeachingDto updateTeaching)
         {
             try
             {
-                var teachingFromDB = await Find(x => x.Id == 1);
-                if (teachingFromDB != null)
+                var task = _mapper.Map<Teaching>(updateTeaching);
+                _unitOfWork.Teachings.Update(task);
+                if (!await SaveChange())
                 {
-                    var task = _mapper.Map<Teaching>(updateTeaching);
-                    _unitOfWork.Teachings.Update(task);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<UpdateTeachingDto> { Success = false, Message = "Error when update Teaching" };
-                    }
-                    return new ServiceResponse<UpdateTeachingDto> { Success = true, Message = "Update Teaching Success" };
+                    return new ServiceResponse<GetTeachingDto> { Success = false, Message = "Error when update Teaching" };
                 }
-                else
-                {
-                    return new ServiceResponse<UpdateTeachingDto> { Success = false, Message = "Not Found Teaching" };
-                }
+                return new ServiceResponse<GetTeachingDto> { Success = true, Message = "Update Teaching Success" };
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<UpdateTeachingDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetTeachingDto> { Success = false, Message = ex.Message };
             }
         }
     }

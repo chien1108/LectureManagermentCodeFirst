@@ -1,9 +1,10 @@
-﻿using LecturerManagement.Core.Data;
+﻿using AutoMapper;
+using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
+using LecturerManagement.DTOS.AdvancedLearning;
+using LecturerManagement.Services.AdvancedLearningService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
@@ -12,95 +13,75 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class AdvancedLearningsController : ControllerBase
     {
-        private readonly LecturerManagementSystemDbContext _context;
+        private readonly IAdvancedLearningService _service;
+        private readonly IMapper _mapper;
 
-        public AdvancedLearningsController(LecturerManagementSystemDbContext context)
+        public AdvancedLearningsController(IAdvancedLearningService service, IMapper mapper)
         {
-            _context = context;
+            _service = service;
+            _mapper = mapper;
         }
 
         // GET: api/AdvancedLearnings
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AdvancedLearning>>> GetAdvancedLearnings()
+        public async Task<ActionResult<ServiceResponse<ICollection<GetAdvancedLearningDto>>>> GetListAdvancedLearning()
         {
-            return await _context.AdvancedLearnings.ToListAsync();
+            return Ok(await _service.GetAllAdvancedLearning());
         }
 
         // GET: api/AdvancedLearnings/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<AdvancedLearning>> GetAdvancedLearning(int id)
+        public async Task<ActionResult<ServiceResponse<GetAdvancedLearningDto>>> GetAdvancedLearning(int id)
         {
-            var advancedLearning = await _context.AdvancedLearnings.FindAsync(id);
-
-            if (advancedLearning == null)
-            {
-                return NotFound();
-            }
-
-            return advancedLearning;
+            return Ok(await _service.GetAdvancedLearningByCondition(x => x.Id == id));
         }
 
         // PUT: api/AdvancedLearnings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAdvancedLearning(int id, AdvancedLearning advancedLearning)
+        public async Task<ActionResult<ServiceResponse<GetAdvancedLearningDto>>> UpdateAdvancedLearning(UpdateAdvancedLearningDto updateAdvancedLearning)
         {
-            if (id != advancedLearning.Id)
+            var response = await _service.UpdateAdvancedLearning(updateAdvancedLearning);
+            if (response.Data == null)
             {
-                return BadRequest();
+                return NotFound(response);
             }
-
-            _context.Entry(advancedLearning).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AdvancedLearningExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(response);
         }
 
         // POST: api/AdvancedLearnings
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<AdvancedLearning>> PostAdvancedLearning(AdvancedLearning advancedLearning)
+        public async Task<ActionResult<ServiceResponse<List<GetAdvancedLearningDto>>>> AddAdvancedLearning(AddAdvancedLearningDto newAdvancedLearning)
         {
-            _context.AdvancedLearnings.Add(advancedLearning);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetAdvancedLearning", new { id = advancedLearning.Id }, advancedLearning);
+            return Ok(await _service.AddAdvancedLearning(newAdvancedLearning));
         }
 
         // DELETE: api/AdvancedLearnings/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAdvancedLearning(int id)
+        public async Task<ActionResult<ServiceResponse<GetAdvancedLearningDto>>> DeleteAdvancedLearning(int id)
         {
-            var advancedLearning = await _context.AdvancedLearnings.FindAsync(id);
-            if (advancedLearning == null)
+            var data = _mapper.Map<AdvancedLearning>(await _service.GetAdvancedLearningByCondition(x => x.Id == id));
+            var response = await _service.DeleteAdvancedLearning(data);
+            if (response.Data == null)
             {
-                return NotFound();
+                return NotFound(response);
             }
-
-            _context.AdvancedLearnings.Remove(advancedLearning);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(response);
         }
 
-        private bool AdvancedLearningExists(int id)
-        {
-            return _context.AdvancedLearnings.Any(e => e.Id == id);
-        }
+        ////private async Task<ActionResult<ServiceResponse<AdvancedLearning>>> AdvancedLearningExists(int id)
+        ////{
+        ////    var response = await _service.IsExisted(x => x.Id == id);
+
+        ////    if (response.Data != null)
+        ////    {
+        ////        return Ok(response);
+        ////    }
+        ////    else
+        ////    {
+        ////        return BadRequest(response);
+        ////    }
+        ////}
     }
 }

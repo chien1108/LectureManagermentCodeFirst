@@ -12,17 +12,17 @@ namespace LecturerManagement.Services.PositionService
     public interface IPositionService
     {
         //CRUD
-        Task<ServiceResponse<AddPositionDto>> Create(AddPositionDto createPosition);
+        Task<ServiceResponse<GetPositionDto>> AddPosition(AddPositionDto newPosition);
 
-        Task<ServiceResponse<Position>> Delete(Position deletePosition);
-        Task<ServiceResponse<UpdatePositionDto>> Update(UpdatePositionDto updatePosition);
+        Task<ServiceResponse<GetPositionDto>> DeletePosition(Position deletePosition);
+        Task<ServiceResponse<GetPositionDto>> UpdatePosition(UpdatePositionDto updatePosition);
         Task<bool> IsExisted(Expression<Func<Position, bool>> expression = null);
-        Task<ICollection<GetPositionDto>> FindAll(Expression<Func<Position,
+        Task<ServiceResponse<ICollection<GetPositionDto>>> GetAllPosition(Expression<Func<Position,
                                 bool>> expression = null,
                                 Func<IQueryable<Position>,
                                IOrderedQueryable<Position>> orderBy = null,
                                 List<string> includes = null);
-        Task<GetPositionDto> Find(Expression<Func<Position, bool>> expression = null, List<string> includes = null);
+        Task<ServiceResponse<GetPositionDto>> GetPositionByCondition(Expression<Func<Position, bool>> expression = null, List<string> includes = null);
         Task<bool> SaveChange();
     }
 }

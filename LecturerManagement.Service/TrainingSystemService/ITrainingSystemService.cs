@@ -12,17 +12,17 @@ namespace LecturerManagement.Services.TrainingSystemService
     public interface ITrainingSystemService
     {
         //CRUD
-        Task<ServiceResponse<AddTrainingSystemDto>> Create(AddTrainingSystemDto createTrainingSystem);
+        Task<ServiceResponse<GetTrainingSystemDto>> AddTrainingSystem(AddTrainingSystemDto createTrainingSystem);
 
-        Task<ServiceResponse<TrainingSystem>> Delete(TrainingSystem deleteTrainingSystem);
-        Task<ServiceResponse<UpdateTrainingSystemDto>> Update(UpdateTrainingSystemDto updateTrainingSystem);
+        Task<ServiceResponse<GetTrainingSystemDto>> DeleteTrainingSystem(TrainingSystem deleteTrainingSystem);
+        Task<ServiceResponse<GetTrainingSystemDto>> UpdateTrainingSystem(UpdateTrainingSystemDto updateTrainingSystem);
         Task<bool> IsExisted(Expression<Func<TrainingSystem, bool>> expression = null);
-        Task<ICollection<GetTrainingSystemDto>> FindAll(Expression<Func<TrainingSystem,
+        Task<ServiceResponse<ICollection<GetTrainingSystemDto>>> GetAllTrainingSystem(Expression<Func<TrainingSystem,
                                 bool>> expression = null,
                                 Func<IQueryable<TrainingSystem>,
                                IOrderedQueryable<TrainingSystem>> orderBy = null,
                                 List<string> includes = null);
-        Task<GetTrainingSystemDto> Find(Expression<Func<TrainingSystem, bool>> expression = null, List<string> includes = null);
+        Task<ServiceResponse<GetTrainingSystemDto>> GetTrainingSystemByCondition(Expression<Func<TrainingSystem, bool>> expression = null, List<string> includes = null);
         Task<bool> SaveChange();
     }
 }

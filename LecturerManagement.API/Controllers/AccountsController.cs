@@ -1,4 +1,5 @@
-﻿using LecturerManagement.DTOS.Account;
+﻿using LecturerManagement.Core.Models;
+using LecturerManagement.DTOS.Account;
 using LecturerManagement.Services.AccountService;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace LecturerManagement.API.Controllers
         }
 
         [HttpGet("{username}")]
-        public async Task<IActionResult> GetAccountByUsername(string username)
+        public async Task<ActionResult<ServiceResponse<GetAccountDto>>> GetAccountByUsername(string username)
         {
             var response = await _accountService.GetAccountByUsername(username);
             if (!response.Success)

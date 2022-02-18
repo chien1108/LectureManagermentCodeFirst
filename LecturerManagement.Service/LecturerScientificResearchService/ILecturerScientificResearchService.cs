@@ -12,17 +12,17 @@ namespace LecturerManagement.Services.LecturerScientificResearchService
     public interface ILecturerScientificResearchService
     {
         //CRUD
-        Task<ServiceResponse<AddLecturerScientificResearchDto>> Create(AddLecturerScientificResearchDto createLecturerScientificResearch);
+        Task<ServiceResponse<GetLecturerScientificResearchDto>> AddLecturerScientificResearch(AddLecturerScientificResearchDto newLecturerScientificResearch);
 
-        Task<ServiceResponse<LecturerScientificResearch>> Delete(LecturerScientificResearch deleteLecturerScientificResearch);
-        Task<ServiceResponse<UpdateLecturerScientificResearchDto>> Update(UpdateLecturerScientificResearchDto updateLecturerScientificResearch);
+        Task<ServiceResponse<GetLecturerScientificResearchDto>> DeleteLecturerScientificResearch(LecturerScientificResearch deleteLecturerScientificResearch);
+        Task<ServiceResponse<GetLecturerScientificResearchDto>> UpdateLecturerScientificResearch(UpdateLecturerScientificResearchDto updatedLecturerScientificResearch);
         Task<bool> IsExisted(Expression<Func<LecturerScientificResearch, bool>> expression = null);
-        Task<ICollection<GetLecturerScientificResearchDto>> FindAll(Expression<Func<LecturerScientificResearch,
+        Task<ServiceResponse<ICollection<GetLecturerScientificResearchDto>>> GetAllLecturerScientificResearch(Expression<Func<LecturerScientificResearch,
                                 bool>> expression = null,
                                 Func<IQueryable<LecturerScientificResearch>,
                                IOrderedQueryable<LecturerScientificResearch>> orderBy = null,
                                 List<string> includes = null);
-        Task<GetLecturerScientificResearchDto> Find(Expression<Func<LecturerScientificResearch, bool>> expression = null, List<string> includes = null);
+        Task<ServiceResponse<GetLecturerScientificResearchDto>> GetLecturerScientificResearchByCondition(Expression<Func<LecturerScientificResearch, bool>> expression = null, List<string> includes = null);
         Task<bool> SaveChange();
     }
 }

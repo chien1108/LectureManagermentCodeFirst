@@ -12,17 +12,17 @@ namespace LecturerManagement.Services.StandardTimeService
     public interface IStandardTimeService
     {
         //CRUD
-        Task<ServiceResponse<AddStandardTimeDto>> Create(AddStandardTimeDto createStandardTime);
+        Task<ServiceResponse<GetStandardTimeDto>> AddStandardTime(AddStandardTimeDto createStandardTime);
 
-        Task<ServiceResponse<StandardTime>> Delete(StandardTime deleteStandardTime);
-        Task<ServiceResponse<UpdateStandardTimeDto>> Update(UpdateStandardTimeDto updateStandardTime);
-        Task<bool> IsExisted(Expression<Func<StandardTime, bool>> expression = null);
-        Task<ICollection<GetStandardTimeDto>> FindAll(Expression<Func<StandardTime,
+        Task<ServiceResponse<GetStandardTimeDto>> DeleteStandardTime(StandardTime deleteStandardTime);
+        Task<ServiceResponse<GetStandardTimeDto>> UpdateStandardTime(UpdateStandardTimeDto updateStandardTime);
+        Task<ServiceResponse<GetStandardTimeDto>> IsExisted(Expression<Func<StandardTime, bool>> expression = null);
+        Task<ServiceResponse<ICollection<GetStandardTimeDto>>> GetAllStandardTime(Expression<Func<StandardTime,
                                 bool>> expression = null,
                                 Func<IQueryable<StandardTime>,
                                IOrderedQueryable<StandardTime>> orderBy = null,
                                 List<string> includes = null);
-        Task<GetStandardTimeDto> Find(Expression<Func<StandardTime, bool>> expression = null, List<string> includes = null);
+        Task<ServiceResponse<GetStandardTimeDto>> GetStandardTimeByCondition(Expression<Func<StandardTime, bool>> expression = null, List<string> includes = null);
         Task<bool> SaveChange();
     }
 }

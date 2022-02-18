@@ -23,94 +23,107 @@ namespace LecturerManagement.Services.AdvancedLearningService
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<AddAdvancedLearningDto>> Create(AddAdvancedLearningDto createAdvancedLearning)
+        public async Task<ServiceResponse<GetAdvancedLearningDto>> AddAdvancedLearning(AddAdvancedLearningDto createAdvancedLearning)
         {
+            var response = new ServiceResponse<GetAdvancedLearningDto>();
             try
             {
                 await _unitOfWork.AdvancedLearnings.Create(_mapper.Map<AdvancedLearning>(createAdvancedLearning));
-                if (await SaveChange())
+
+                if (!await SaveChange())
                 {
-                    return new ServiceResponse<AddAdvancedLearningDto> { Success = true, Message = "Add Advanced Learning Success" };
+                    return new ServiceResponse<GetAdvancedLearningDto> { Success = false, Message = "Error when create new Advanced Learning" };
+
                 }
-                else
-                {
-                    return new ServiceResponse<AddAdvancedLearningDto> { Success = false, Message = "Error when create new Advanced Learning" };
-                }
+                return new ServiceResponse<GetAdvancedLearningDto> { Success = true, Message = "Add Advanced Learning Success" };
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<AddAdvancedLearningDto> { Success = false, Message = ex.Message };
+                response.Success = false;
+                response.Message = ex.Message;
             }
+            return response;
         }
 
-        public async Task<ServiceResponse<AdvancedLearning>> Delete(AdvancedLearning deleteAdvancedLearning)
+        public async Task<ServiceResponse<ICollection<GetAdvancedLearningDto>>> DeleteAdvancedLearning(AdvancedLearning deletedAdvancedLearning)
         {
             try
             {
-                var advanceLearningFromDB = await Find(x => x.Id == deleteAdvancedLearning.Id);
-                if (advanceLearningFromDB != null)
+                _unitOfWork.AdvancedLearnings.Delete(deletedAdvancedLearning);
+                if (!await SaveChange())
                 {
-                    _unitOfWork.AdvancedLearnings.Delete(deleteAdvancedLearning);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<AdvancedLearning> { Success = false, Message = "Error when delete Advanced Learning" };
-                    }
-                    return new ServiceResponse<AdvancedLearning> { Success = true, Message = "Delete Advanced Learning Success" };
+                    return new ServiceResponse<ICollection<GetAdvancedLearningDto>> { Success = false, Message = "Error when delete Advanced Learning" };
                 }
-                else
-                {
-                    return new ServiceResponse<AdvancedLearning> { Success = false, Message = "Not Found Advanced Learning" };
-                }
+                return new ServiceResponse<ICollection<GetAdvancedLearningDto>> { Success = true, Message = "Delete Advanced Learning Success" };
             }
             catch (Exception ex)
             {
-
-                return new ServiceResponse<AdvancedLearning> { Success = false, Message = ex.Message };
+                return new ServiceResponse<ICollection<GetAdvancedLearningDto>> { Success = false, Message = ex.Message };
             }
+
         }
 
-        public async Task<GetAdvancedLearningDto> Find(Expression<Func<AdvancedLearning, bool>> expression = null, List<string> includes = null)
-        => _mapper.Map<GetAdvancedLearningDto>(await _unitOfWork.AdvancedLearnings.FindByConditionAsync(expression, includes));
 
-        public async Task<ICollection<GetAdvancedLearningDto>> FindAll(Expression<Func<AdvancedLearning, bool>> expression = null, Func<IQueryable<AdvancedLearning>, IOrderedQueryable<AdvancedLearning>> orderBy = null, List<string> includes = null)
-        => _mapper.Map<ICollection<GetAdvancedLearningDto>>(await _unitOfWork.AdvancedLearnings.FindAllAsync(expression, orderBy, includes));
-
-        public async Task<bool> IsExisted(Expression<Func<AdvancedLearning, bool>> expression = null)
+        public async Task<ServiceResponse<GetAdvancedLearningDto>> GetAdvancedLearningByCondition(Expression<Func<AdvancedLearning, bool>> expression = null, List<string> includes = null)
         {
-            var isExist = await _unitOfWork.AdvancedLearnings.FindByConditionAsync(expression);
-            if (isExist == null)
+            var dbAdvancedLearning = _mapper.Map<GetAdvancedLearningDto>(await _unitOfWork.AdvancedLearnings.FindByConditionAsync(expression, includes));
+            if (dbAdvancedLearning != null)
             {
-                return false;
+                return new() { Success = true, Message = "Get Advanced Learning from DB Success", Data = dbAdvancedLearning };
             }
-            return true;
+
+            return new() { Message = "Advanced Learning is not exist", Success = false };
+        }
+
+
+        public async Task<ServiceResponse<ICollection<GetAdvancedLearningDto>>> GetAllAdvancedLearning(Expression<Func<AdvancedLearning, bool>> expression = null, Func<IQueryable<AdvancedLearning>, IOrderedQueryable<AdvancedLearning>> orderBy = null, List<string> includes = null)
+        {
+            var dbAdvancedLearning = _mapper.Map<ICollection<GetAdvancedLearningDto>>(await _unitOfWork.AdvancedLearnings.FindAllAsync(expression, orderBy, includes));
+
+            if (dbAdvancedLearning != null)
+            {
+                return new() { Success = true, Message = "Get list Advanced Learning Success", Data = dbAdvancedLearning };
+            }
+            return new() { Message = "lits Advanced Learninge is not availble", Success = false };
+        }
+
+
+        public async Task<ServiceResponse<GetAdvancedLearningDto>> IsExisted(Expression<Func<AdvancedLearning, bool>> expression = null)
+        {
+            var isExist = _mapper.Map<GetAdvancedLearningDto>(await _unitOfWork.AdvancedLearnings.FindByConditionAsync(expression));
+            if (isExist != null)
+            {
+                return new ServiceResponse<GetAdvancedLearningDto>() { Data = isExist, Success = true, Message = "Advanced Learning is Exist" };
+            }
+            return new ServiceResponse<GetAdvancedLearningDto>() { Success = false, Message = "Advanced Learning is not exist" };
         }
 
         public async Task<bool> SaveChange()
              => await _unitOfWork.AdvancedLearnings.Save();
 
-        public async Task<ServiceResponse<UpdateAdvancedLearningDto>> Update(UpdateAdvancedLearningDto updateAdvanceLearning)
+        public async Task<ServiceResponse<GetAdvancedLearningDto>> UpdateAdvancedLearning(UpdateAdvancedLearningDto updateAdvanceLearning)
         {
             try
             {
-                var advanceLearningFromDB = await Find(x => x.Id == 1);
-                if (advanceLearningFromDB != null)
+                var advanceLearningFromDB = await GetAdvancedLearningByCondition(x => x.Id == updateAdvanceLearning.Id);
+                if (advanceLearningFromDB.Data != null)
                 {
                     var task = _mapper.Map<AdvancedLearning>(updateAdvanceLearning);
                     _unitOfWork.AdvancedLearnings.Update(task);
                     if (!await SaveChange())
                     {
-                        return new ServiceResponse<UpdateAdvancedLearningDto> { Success = false, Message = "Error when update Advanced Learning" };
+                        return new ServiceResponse<GetAdvancedLearningDto> { Success = false, Message = "Error when update Advanced Learning" };
                     }
-                    return new ServiceResponse<UpdateAdvancedLearningDto> { Success = true, Message = "Update Advanced Learning Success" };
+                    return new ServiceResponse<GetAdvancedLearningDto> { Data = _mapper.Map<GetAdvancedLearningDto>(updateAdvanceLearning), Success = true, Message = "Update Advanced Learning Success" };
                 }
                 else
                 {
-                    return new ServiceResponse<UpdateAdvancedLearningDto> { Success = false, Message = "Not Found Advanced Learning" };
+                    return new ServiceResponse<GetAdvancedLearningDto> { Success = false, Message = "Not Found Advanced Learning" };
                 }
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<UpdateAdvancedLearningDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetAdvancedLearningDto> { Success = false, Message = ex.Message };
             }
         }
     }

@@ -12,17 +12,17 @@ namespace LecturerManagement.Services.ScientificResearchGuideService
     public interface IScientificResearchGuideService
     {
         //CRUD
-        Task<ServiceResponse<AddScientificResearchGuideDto>> Create(AddScientificResearchGuideDto createScientificResearchGuide);
+        Task<ServiceResponse<GetScientificResearchGuideDto>> AddScientificResearchGuide(AddScientificResearchGuideDto newScientificResearchGuide);
 
-        Task<ServiceResponse<ScientificResearchGuide>> Delete(ScientificResearchGuide deleteScientificResearchGuide);
-        Task<ServiceResponse<UpdateScientificResearchGuideDto>> Update(UpdateScientificResearchGuideDto updateScientificResearchGuide);
+        Task<ServiceResponse<GetScientificResearchGuideDto>> DeleteScientificResearchGuide(ScientificResearchGuide deleteScientificResearchGuide);
+        Task<ServiceResponse<GetScientificResearchGuideDto>> UpdateScientificResearchGuide(UpdateScientificResearchGuideDto updateScientificResearchGuide);
         Task<bool> IsExisted(Expression<Func<ScientificResearchGuide, bool>> expression = null);
-        Task<ICollection<GetScientificResearchGuideDto>> FindAll(Expression<Func<ScientificResearchGuide,
+        Task<ServiceResponse<ICollection<GetScientificResearchGuideDto>>> GetAllScientificResearchGuide(Expression<Func<ScientificResearchGuide,
                                 bool>> expression = null,
                                 Func<IQueryable<ScientificResearchGuide>,
                                IOrderedQueryable<ScientificResearchGuide>> orderBy = null,
                                 List<string> includes = null);
-        Task<GetScientificResearchGuideDto> Find(Expression<Func<ScientificResearchGuide, bool>> expression = null, List<string> includes = null);
+        Task<ServiceResponse<GetScientificResearchGuideDto>> GetScientificResearchGuideByCondition(Expression<Func<ScientificResearchGuide, bool>> expression = null, List<string> includes = null);
         Task<bool> SaveChange();
     }
 }

@@ -78,7 +78,6 @@ namespace LecturerManagement.Core.Repositories.GenericRepo
         public void Update(T entity)
         {
             _db.Update(entity);
-
         }
 
         public async Task<bool> Save()

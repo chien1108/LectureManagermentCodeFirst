@@ -12,17 +12,17 @@ namespace LecturerManagement.Services.AdvancedLearningService
     public interface IAdvancedLearningService
     {
         //CRUD
-        Task<ServiceResponse<AddAdvancedLearningDto>> Create(AddAdvancedLearningDto createAdvancedLearning);
+        Task<ServiceResponse<GetAdvancedLearningDto>> AddAdvancedLearning(AddAdvancedLearningDto createAdvancedLearning);
 
-        Task<ServiceResponse<AdvancedLearning>> Delete(AdvancedLearning deleteAdvancedLearning);
-        Task<ServiceResponse<UpdateAdvancedLearningDto>> Update(UpdateAdvancedLearningDto updateAdvanceLearning);
-        Task<bool> IsExisted(Expression<Func<AdvancedLearning, bool>> expression = null);
-        Task<ICollection<GetAdvancedLearningDto>> FindAll(Expression<Func<AdvancedLearning,
+        Task<ServiceResponse<ICollection<GetAdvancedLearningDto>>> DeleteAdvancedLearning(AdvancedLearning deletedAdvancedLearning);
+        Task<ServiceResponse<GetAdvancedLearningDto>> UpdateAdvancedLearning(UpdateAdvancedLearningDto updateAdvanceLearning);
+        Task<ServiceResponse<GetAdvancedLearningDto>> IsExisted(Expression<Func<AdvancedLearning, bool>> expression = null);
+        Task<ServiceResponse<ICollection<GetAdvancedLearningDto>>> GetAllAdvancedLearning(Expression<Func<AdvancedLearning,
                                 bool>> expression = null,
                                 Func<IQueryable<AdvancedLearning>,
                                IOrderedQueryable<AdvancedLearning>> orderBy = null,
                                 List<string> includes = null);
-        Task<GetAdvancedLearningDto> Find(Expression<Func<AdvancedLearning, bool>> expression = null, List<string> includes = null);
+        Task<ServiceResponse<GetAdvancedLearningDto>> GetAdvancedLearningByCondition(Expression<Func<AdvancedLearning, bool>> expression = null, List<string> includes = null);
         Task<bool> SaveChange();
     }
 }

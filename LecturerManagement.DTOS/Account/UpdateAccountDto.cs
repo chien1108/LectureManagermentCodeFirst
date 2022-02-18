@@ -1,16 +1,17 @@
-﻿using LecturerManagement.DTOS.Modules.Enums;
+﻿using LecturerManagement.DTOS.Models.Base;
+using LecturerManagement.DTOS.Modules.Enums;
 using System;
 
 namespace LecturerManagement.DTOS.Account
 {
-    public class UpdateAccountDto
+    public class UpdateAccountDto : BaseEntity<int>
     {
         public string Username { get; set; }
         public string Password { get; set; }
         public Permission Permission { get; set; }
         public string FullName { get; set; }
         public string Gender { get; set; }
-        public Status Status { get; set; }
+        ///public Status Status { get; set; }
         public DateTime? BirthDate { get; set; }
         public string IdentityCardNumber { get; set; }
         public string Portrait { get; set; }

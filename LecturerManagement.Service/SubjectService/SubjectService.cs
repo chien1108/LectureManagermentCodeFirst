@@ -21,57 +21,61 @@ namespace LecturerManagement.Services.SubjectService
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<AddSubjectDto>> Create(AddSubjectDto createSubject)
+        public async Task<ServiceResponse<GetSubjectDto>> AddSubject(AddSubjectDto createSubject)
         {
             try
             {
                 await _unitOfWork.Subjects.Create(_mapper.Map<Subject>(createSubject));
                 if (await SaveChange())
                 {
-                    return new ServiceResponse<AddSubjectDto> { Success = true, Message = "Add Subject Success" };
+                    return new ServiceResponse<GetSubjectDto> { Success = true, Message = "Add Subject Success" };
                 }
                 else
                 {
-                    return new ServiceResponse<AddSubjectDto> { Success = false, Message = "Error when create new Subject" };
+                    return new ServiceResponse<GetSubjectDto> { Success = false, Message = "Error when create new Subject" };
                 }
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<AddSubjectDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetSubjectDto> { Success = false, Message = ex.Message };
             }
         }
-
-        public async Task<ServiceResponse<Subject>> Delete(Subject deleteSubject)
+        public async Task<ServiceResponse<GetSubjectDto>> DeleteSubject(Subject deleteSubject)
         {
             try
             {
-                var subjectFromDB = await Find(x => x.Id == 1.ToString());
-                if (subjectFromDB != null)
+                _unitOfWork.Subjects.Delete(deleteSubject);
+                if (!await SaveChange())
                 {
-                    _unitOfWork.Subjects.Delete(deleteSubject);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<Subject> { Success = false, Message = "Error when delete Subject" };
-                    }
-                    return new ServiceResponse<Subject> { Success = true, Message = "Delete Subject Success" };
+                    return new ServiceResponse<GetSubjectDto> { Success = false, Message = "Error when delete Subject" };
                 }
-                else
-                {
-                    return new ServiceResponse<Subject> { Success = false, Message = "Not Found Subject" };
-                }
+                return new ServiceResponse<GetSubjectDto> { Success = true, Message = "Delete Subject Success" };
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<Subject> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetSubjectDto> { Success = false, Message = ex.Message };
             }
         }
 
-        public async Task<GetSubjectDto> Find(Expression<Func<Subject, bool>> expression = null, List<string> includes = null)
-        => _mapper.Map<GetSubjectDto>(await _unitOfWork.Subjects.FindByConditionAsync(expression, includes));
+        public async Task<ServiceResponse<ICollection<GetSubjectDto>>> GetAllSubject(Expression<Func<Subject, bool>> expression = null, Func<IQueryable<Subject>, IOrderedQueryable<Subject>> orderBy = null, List<string> includes = null)
+        {
+            var listSubjectFromDb = _mapper.Map<ICollection<GetSubjectDto>>(await _unitOfWork.Subjects.FindAllAsync(expression, orderBy, includes));
+            if (listSubjectFromDb != null)
+            {
+                return new() { Success = true, Message = "Get list Subject Success", Data = listSubjectFromDb };
+            }
+            return new() { Message = "List Subject is not exist", Success = false };
+        }
 
-        public async Task<ICollection<GetSubjectDto>> FindAll(Expression<Func<Subject, bool>> expression = null, Func<IQueryable<Subject>, IOrderedQueryable<Subject>> orderBy = null, List<string> includes = null)
-        => _mapper.Map<ICollection<GetSubjectDto>>(await _unitOfWork.Subjects.FindAllAsync(expression, orderBy, includes));
-
+        public async Task<ServiceResponse<GetSubjectDto>> GetSubjectByCondition(Expression<Func<Subject, bool>> expression = null, List<string> includes = null)
+        {
+            var subjectFromDb = _mapper.Map<GetSubjectDto>(await _unitOfWork.Subjects.FindByConditionAsync(expression, includes));
+            if (subjectFromDb != null)
+            {
+                return new() { Success = true, Message = "Get Subject Success", Data = subjectFromDb };
+            }
+            return new() { Message = "Subject is not exist", Success = false };
+        }
 
         public async Task<bool> IsExisted(Expression<Func<Subject, bool>> expression = null)
         {
@@ -86,29 +90,21 @@ namespace LecturerManagement.Services.SubjectService
         public async Task<bool> SaveChange()
         => await _unitOfWork.Subjects.Save();
 
-        public async Task<ServiceResponse<UpdateSubjectDto>> Update(UpdateSubjectDto updateSubject)
+        public async Task<ServiceResponse<GetSubjectDto>> UpdateSubject(UpdateSubjectDto updateSubject)
         {
             try
             {
-                var subjectFromDB = await Find(x => x.Id == 1.ToString());
-                if (subjectFromDB != null)
+                var task = _mapper.Map<Subject>(updateSubject);
+                _unitOfWork.Subjects.Update(task);
+                if (!await SaveChange())
                 {
-                    var task = _mapper.Map<Subject>(updateSubject);
-                    _unitOfWork.Subjects.Update(task);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<UpdateSubjectDto> { Success = false, Message = "Error when update Subject" };
-                    }
-                    return new ServiceResponse<UpdateSubjectDto> { Success = true, Message = "Update Subject Success" };
+                    return new ServiceResponse<GetSubjectDto> { Success = false, Message = "Error when update Subject" };
                 }
-                else
-                {
-                    return new ServiceResponse<UpdateSubjectDto> { Success = false, Message = "Not Found Subject" };
-                }
+                return new ServiceResponse<GetSubjectDto> { Success = true, Message = "Update Subject Success" };
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<UpdateSubjectDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetSubjectDto> { Success = false, Message = ex.Message };
             }
         }
     }

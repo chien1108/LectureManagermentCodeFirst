@@ -12,17 +12,17 @@ namespace LecturerManagement.Services.GraduationThesisService
     public interface IGraduationThesisService
     {
         //CRUD
-        Task<ServiceResponse<AddGraduationThesisDto>> Create(AddGraduationThesisDto createGraduationThesis);
+        Task<ServiceResponse<GetGraduationThesisDto>> AddGraduationThesis(AddGraduationThesisDto newGraduationThesis);
 
-        Task<ServiceResponse<GraduationThesis>> Delete(GraduationThesis deleteGraduationThesis);
-        Task<ServiceResponse<UpdateGraduationThesisDto>> Update(UpdateGraduationThesisDto updateGraduationThesis);
+        Task<ServiceResponse<GetGraduationThesisDto>> DeleteGraduationThesis(GraduationThesis deleteGraduationThesis);
+        Task<ServiceResponse<GetGraduationThesisDto>> UpdateGraduationThesis(UpdateGraduationThesisDto updateGraduationThesis);
         Task<bool> IsExisted(Expression<Func<GraduationThesis, bool>> expression = null);
-        Task<ICollection<GetGraduationThesisDto>> FindAll(Expression<Func<GraduationThesis,
+        Task<ServiceResponse<IEnumerable<GetGraduationThesisDto>>> GetAllGraduationThesis(Expression<Func<GraduationThesis,
                                 bool>> expression = null,
                                 Func<IQueryable<GraduationThesis>,
                                IOrderedQueryable<GraduationThesis>> orderBy = null,
                                 List<string> includes = null);
-        Task<GetGraduationThesisDto> Find(Expression<Func<GraduationThesis, bool>> expression = null, List<string> includes = null);
+        Task<ServiceResponse<GetGraduationThesisDto>> GetGraduationThesisByCondition(Expression<Func<GraduationThesis, bool>> expression = null, List<string> includes = null);
         Task<bool> SaveChange();
     }
 }

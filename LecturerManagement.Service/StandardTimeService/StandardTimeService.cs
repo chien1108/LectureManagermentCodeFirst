@@ -21,94 +21,107 @@ namespace LecturerManagement.Services.StandardTimeService
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<AddStandardTimeDto>> Create(AddStandardTimeDto createStandardTime)
+        public async Task<ServiceResponse<GetStandardTimeDto>> AddStandardTime(AddStandardTimeDto createStandardTime)
         {
             try
             {
                 await _unitOfWork.StandardTimes.Create(_mapper.Map<StandardTime>(createStandardTime));
-                if (await SaveChange())
+                if (!await SaveChange())
                 {
-                    return new ServiceResponse<AddStandardTimeDto> { Success = true, Message = "Add Standard Time Success" };
+                    return new ServiceResponse<GetStandardTimeDto> { Success = false, Message = "Error when create new Standard Time" };
+
                 }
-                else
-                {
-                    return new ServiceResponse<AddStandardTimeDto> { Success = false, Message = "Error when create new Standard Time" };
-                }
+                return new ServiceResponse<GetStandardTimeDto> { Success = true, Message = "Add Standard Time Success" };
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<AddStandardTimeDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetStandardTimeDto> { Success = false, Message = ex.Message };
             }
         }
 
-        public async Task<ServiceResponse<StandardTime>> Delete(StandardTime deleteStandardTime)
+        public async Task<ServiceResponse<GetStandardTimeDto>> DeleteStandardTime(StandardTime deleteStandardTime)
         {
             try
             {
-                var standardTimeFromDB = await Find(x => x.Id == 1.ToString());
-                if (standardTimeFromDB != null)
+                _unitOfWork.StandardTimes.Delete(deleteStandardTime);
+                if (!await SaveChange())
                 {
-                    _unitOfWork.StandardTimes.Delete(deleteStandardTime);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<StandardTime> { Success = false, Message = "Error when delete Standard Time" };
-                    }
-                    return new ServiceResponse<StandardTime> { Success = true, Message = "Delete Standard Time Success" };
+                    return new ServiceResponse<GetStandardTimeDto> { Success = false, Message = "Error when delete Standard Time" };
                 }
-                else
-                {
-                    return new ServiceResponse<StandardTime> { Success = false, Message = "Not Found Standard Time" };
-                }
+                return new ServiceResponse<GetStandardTimeDto> { Success = true, Message = "Delete Standard Time Success" };
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<StandardTime> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetStandardTimeDto> { Success = false, Message = ex.Message };
             }
         }
 
-        public async Task<GetStandardTimeDto> Find(Expression<Func<StandardTime, bool>> expression = null, List<string> includes = null)
-        => _mapper.Map<GetStandardTimeDto>(await _unitOfWork.StandardTimes.FindByConditionAsync(expression, includes));
+        public async Task<ServiceResponse<GetStandardTimeDto>> GetStandardTimeByCondition(Expression<Func<StandardTime, bool>> expression = null, List<string> includes = null)
+        {
+            var standardTime = _mapper.Map<GetStandardTimeDto>(await _unitOfWork.StandardTimes.FindByConditionAsync(expression, includes));
 
-        public async Task<ICollection<GetStandardTimeDto>> FindAll(Expression<Func<StandardTime, bool>> expression = null, Func<IQueryable<StandardTime>, IOrderedQueryable<StandardTime>> orderBy = null, List<string> includes = null)
-        => _mapper.Map<ICollection<GetStandardTimeDto>>(await _unitOfWork.StandardTimes.FindAllAsync(expression, orderBy, includes));
+            if (standardTime != null)
+            {
+                return new() { Success = true, Message = "Get Standard Time Success", Data = standardTime };
+            }
 
-        public async Task<bool> IsExisted(Expression<Func<StandardTime, bool>> expression = null)
+            return new() { Message = "Standard Time is not exist", Success = false };
+
+        }
+
+        public async Task<ServiceResponse<ICollection<GetStandardTimeDto>>> GetAllStandardTime(Expression<Func<StandardTime, bool>> expression = null,
+                                                                            Func<IQueryable<StandardTime>, IOrderedQueryable<StandardTime>> orderBy = null,
+                                                                            List<string> includes = null)
+        {
+            var standardTime = _mapper.Map<ICollection<GetStandardTimeDto>>(await _unitOfWork.StandardTimes.FindAllAsync(expression, orderBy, includes));
+
+            if (standardTime != null)
+            {
+                return new() { Success = true, Message = "Get Standard Time Success", Data = standardTime };
+            }
+            return new() { Message = "Standard Time is not exist", Success = false };
+        }
+
+
+        public async Task<ServiceResponse<GetStandardTimeDto>> IsExisted(Expression<Func<StandardTime, bool>> expression = null)
         {
             var isExist = await _unitOfWork.StandardTimes.FindByConditionAsync(expression);
-            if (isExist == null)
+            if (isExist != null)
             {
-                return false;
+                return new ServiceResponse<GetStandardTimeDto>() { Data = _mapper.Map<GetStandardTimeDto>(isExist), Success = true, Message = "Standard Time is exist" };
             }
-            return true;
+
+            return new ServiceResponse<GetStandardTimeDto>() { Success = false, Message = "Standard Time is not exist" };
         }
 
         public async Task<bool> SaveChange()
         => await _unitOfWork.StandardTimes.Save();
 
-        public async Task<ServiceResponse<UpdateStandardTimeDto>> Update(UpdateStandardTimeDto updateStandardTime)
+        public async Task<ServiceResponse<GetStandardTimeDto>> UpdateStandardTime(UpdateStandardTimeDto updateStandardTime)
         {
             try
             {
-                var standardTimeFromDB = await Find(x => x.Id == 1.ToString());
-                if (standardTimeFromDB != null)
+                ////var standardTimeFromDB = await _unitOfWork.StandardTimes.FindByConditionAsync(x => x.Id == updateStandardTime.Id);
+                ////if (standardTimeFromDB != null)
+                ////{
+                var task = _mapper.Map<StandardTime>(updateStandardTime);
+                _unitOfWork.StandardTimes.Update(task);
+                if (!await SaveChange())
                 {
-                    var task = _mapper.Map<StandardTime>(updateStandardTime);
-                    _unitOfWork.StandardTimes.Update(task);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<UpdateStandardTimeDto> { Success = false, Message = "Error when update Standard Time" };
-                    }
-                    return new ServiceResponse<UpdateStandardTimeDto> { Success = true, Message = "Update Standard Time Success" };
+                    return new ServiceResponse<GetStandardTimeDto> { Success = false, Message = "Error when update Standard Time" };
                 }
-                else
-                {
-                    return new ServiceResponse<UpdateStandardTimeDto> { Success = false, Message = "Not Found Standard Time" };
-                }
+                return new ServiceResponse<GetStandardTimeDto> { Success = true, Message = "Update Standard Time Success" };
+                ////}
+                ////else
+                ////{
+                ////    return new ServiceResponse<GetStandardTimeDto> { Success = false, Message = "Not Found Standard Time" };
+                ////}
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<UpdateStandardTimeDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetStandardTimeDto> { Success = false, Message = ex.Message };
             }
         }
+
     }
 }

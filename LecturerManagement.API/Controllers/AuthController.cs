@@ -19,6 +19,11 @@ namespace LecturerManagement.API.Controllers
 
         }
 
+        /// <summary>
+        /// Đăng Ký Tài Khoản
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("Register")]
         public async Task<IActionResult> Register(AccountResgisterDto request)
         {
@@ -32,6 +37,12 @@ namespace LecturerManagement.API.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Đăng Nhập
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("Login")]
         public async Task<ActionResult<ServiceResponse<string>>> Login(AccountLoginDto request)
         {
@@ -47,7 +58,12 @@ namespace LecturerManagement.API.Controllers
             return Ok(response);
         }
 
-
+        /// <summary>
+        /// Đổi Mật Khẩu
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="newPassword"></param>
+        /// <returns></returns>
         [HttpPatch("ChangePassword")]
         public async Task<ActionResult<ServiceResponse<string>>> ChangePassword(string userName, string newPassword)
         {

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LecturerManagement.API</name>
+    </assembly>
+    <members>
+        <member name="M:LecturerManagement.API.Controllers.AuthController.Register(LecturerManagement.DTOS.Account.AccountResgisterDto)">
+            <summary>
+            Đăng Ký Tài Khoản
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.AuthController.Login(LecturerManagement.DTOS.Account.AccountLoginDto)">
+            <summary>
+            Đăng Nhập
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.AuthController.ChangePassword(System.String,System.String)">
+            <summary>
+            Đổi Mật Khẩu
+            </summary>
+            <param name="userName"></param>
+            <param name="newPassword"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.ClassesController.GetClasses">
+            <summary>
+            Get All Class
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.ClassesController.GetClass(System.String)">
+            <summary>
+            Get Class By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.ClassesController.UpdateClass(System.String,LecturerManagement.DTOS.Class.UpdateClassDto)">
+            <summary>
+            Update Class
+            </summary>
+            <param name="id"></param>
+            <param name="class"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.ClassesController.AddNewClass(LecturerManagement.DTOS.Class.AddClassDto)">
+            <summary>
+            Add New Class 
+            </summary>
+            <param name="class"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.ClassesController.DeleteClass(System.String)">
+            <summary>
+            Delete Class By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.GraduationThesisController.UpdateGraduationThesis(System.Int32,LecturerManagement.DTOS.GraduationThesis.UpdateGraduationThesisDto)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="graduationThesis"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.GraduationThesisController.AddGraduationThesis(LecturerManagement.DTOS.GraduationThesis.AddGraduationThesisDto)">
+            <summary>
+            
+            </summary>
+            <param name="graduationThesis"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.GraduationThesisController.DeleteGraduationThesis(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.StandardTimesController.GetStandardTimes">
+            <summary>
+            Get All StandardTime
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.StandardTimesController.GetStandardTime(System.String)">
+            <summary>
+            Get Single Standard Time
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.StandardTimesController.UpdateStandardTime(System.String,LecturerManagement.DTOS.StandardTime.UpdateStandardTimeDto)">
+            <summary>
+            Update Standard Time
+            </summary>
+            <param name="id"></param>
+            <param name="updatedStandardTime"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.StandardTimesController.AddStandardTime(LecturerManagement.DTOS.StandardTime.AddStandardTimeDto)">
+            <summary>
+            Add Standard Time
+            </summary>
+            <param name="newStandardTime"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.StandardTimesController.DeleteStandardTime(System.String)">
+            <summary>
+            Delete Standard Time By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

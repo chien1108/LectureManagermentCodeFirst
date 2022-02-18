@@ -12,17 +12,17 @@ namespace LecturerManagement.Services.LecturerService
     public interface ILecturerService
     {
         //CRUD
-        Task<ServiceResponse<AddLecturerDto>> Create(AddLecturerDto createLecturer);
+        Task<ServiceResponse<GetLecturerDto>> AddLecturer(AddLecturerDto createLecturer);
 
-        Task<ServiceResponse<Lecturer>> Delete(Lecturer deleteLecturer);
-        Task<ServiceResponse<UpdateLecturerDto>> Update(UpdateLecturerDto updateLecturer);
+        Task<ServiceResponse<GetLecturerDto>> DeleteLecturer(Lecturer deleteLecturer);
+        Task<ServiceResponse<GetLecturerDto>> UpdateLecturer(UpdateLecturerDto updateLecturer);
         Task<bool> IsExisted(Expression<Func<Lecturer, bool>> expression = null);
-        Task<ICollection<GetLecturerDto>> FindAll(Expression<Func<Lecturer,
+        Task<ServiceResponse<ICollection<GetLecturerDto>>> GetAllLecturer(Expression<Func<Lecturer,
                                 bool>> expression = null,
                                 Func<IQueryable<Lecturer>,
                                IOrderedQueryable<Lecturer>> orderBy = null,
                                 List<string> includes = null);
-        Task<GetLecturerDto> Find(Expression<Func<Lecturer, bool>> expression = null, List<string> includes = null);
+        Task<ServiceResponse<GetLecturerDto>> GetLecturerByCondition(Expression<Func<Lecturer, bool>> expression = null, List<string> includes = null);
         Task<bool> SaveChange();
     }
 }

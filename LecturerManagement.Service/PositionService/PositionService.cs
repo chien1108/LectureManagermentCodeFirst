@@ -21,56 +21,61 @@ namespace LecturerManagement.Services.PositionService
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<AddPositionDto>> Create(AddPositionDto createPosition)
+        public async Task<ServiceResponse<GetPositionDto>> AddPosition(AddPositionDto newPosition)
         {
             try
             {
-                await _unitOfWork.Positions.Create(_mapper.Map<Position>(createPosition));
+                await _unitOfWork.Positions.Create(_mapper.Map<Position>(newPosition));
                 if (await SaveChange())
                 {
-                    return new ServiceResponse<AddPositionDto> { Success = true, Message = "Add Position Success" };
+                    return new ServiceResponse<GetPositionDto> { Success = true, Message = "Add Position Success" };
                 }
                 else
                 {
-                    return new ServiceResponse<AddPositionDto> { Success = false, Message = "Error when create new Position" };
+                    return new ServiceResponse<GetPositionDto> { Success = false, Message = "Error when create new Position" };
                 }
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<AddPositionDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetPositionDto> { Success = false, Message = ex.Message };
             }
         }
-
-        public async Task<ServiceResponse<Position>> Delete(Position deletePosition)
+        public async Task<ServiceResponse<GetPositionDto>> DeletePosition(Position deletePosition)
         {
             try
             {
-                var positionFromDB = await Find(x => x.Id == 1.ToString());
-                if (positionFromDB != null)
+                _unitOfWork.Positions.Delete(deletePosition);
+                if (!await SaveChange())
                 {
-                    _unitOfWork.Positions.Delete(deletePosition);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<Position> { Success = false, Message = "Error when delete Position" };
-                    }
-                    return new ServiceResponse<Position> { Success = true, Message = "Delete Position Success" };
+                    return new ServiceResponse<GetPositionDto> { Success = false, Message = "Error when delete Position" };
                 }
-                else
-                {
-                    return new ServiceResponse<Position> { Success = false, Message = "Not Found Position" };
-                }
+                return new ServiceResponse<GetPositionDto> { Success = true, Message = "Delete Position Success" };
+
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<Position> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetPositionDto> { Success = false, Message = ex.Message };
             }
         }
+        public async Task<ServiceResponse<ICollection<GetPositionDto>>> GetAllPosition(Expression<Func<Position, bool>> expression = null, Func<IQueryable<Position>, IOrderedQueryable<Position>> orderBy = null, List<string> includes = null)
+        {
+            var listPositionFromDB = _mapper.Map<ICollection<GetPositionDto>>(await _unitOfWork.Positions.FindAllAsync(expression, orderBy, includes));
+            if (listPositionFromDB != null)
+            {
+                return new() { Success = true, Message = "Get list Position Success", Data = listPositionFromDB };
+            }
+            return new() { Message = "List Position is not exist", Success = false };
+        }
 
-        public async Task<GetPositionDto> Find(Expression<Func<Position, bool>> expression = null, List<string> includes = null)
-        => _mapper.Map<GetPositionDto>(await _unitOfWork.Positions.FindByConditionAsync(expression, includes));
-
-        public async Task<ICollection<GetPositionDto>> FindAll(Expression<Func<Position, bool>> expression = null, Func<IQueryable<Position>, IOrderedQueryable<Position>> orderBy = null, List<string> includes = null)
-        => _mapper.Map<ICollection<GetPositionDto>>(await _unitOfWork.Positions.FindAllAsync(expression, orderBy, includes));
+        public async Task<ServiceResponse<GetPositionDto>> GetPositionByCondition(Expression<Func<Position, bool>> expression = null, List<string> includes = null)
+        {
+            var positionFromDB = _mapper.Map<GetPositionDto>(await _unitOfWork.Positions.FindByConditionAsync(expression, includes));
+            if (positionFromDB != null)
+            {
+                return new() { Success = true, Message = "Get list Position Success", Data = positionFromDB };
+            }
+            return new() { Message = "List Position is not exist", Success = false };
+        }
 
         public async Task<bool> IsExisted(Expression<Func<Position, bool>> expression = null)
         {
@@ -85,29 +90,24 @@ namespace LecturerManagement.Services.PositionService
         public async Task<bool> SaveChange()
         => await _unitOfWork.Positions.Save();
 
-        public async Task<ServiceResponse<UpdatePositionDto>> Update(UpdatePositionDto updatePosition)
+
+        public async Task<ServiceResponse<GetPositionDto>> UpdatePosition(UpdatePositionDto updatePosition)
         {
             try
             {
-                var positionFromDB = await Find(x => x.Id == 1.ToString());
-                if (positionFromDB != null)
+
+                var task = _mapper.Map<Position>(updatePosition);
+                _unitOfWork.Positions.Update(task);
+                if (!await SaveChange())
                 {
-                    var task = _mapper.Map<Position>(updatePosition);
-                    _unitOfWork.Positions.Update(task);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<UpdatePositionDto> { Success = false, Message = "Error when update Position" };
-                    }
-                    return new ServiceResponse<UpdatePositionDto> { Success = true, Message = "Update Position Success" };
+                    return new ServiceResponse<GetPositionDto> { Success = false, Message = "Error when update Position" };
                 }
-                else
-                {
-                    return new ServiceResponse<UpdatePositionDto> { Success = false, Message = "Not Found Position" };
-                }
+                return new ServiceResponse<GetPositionDto> { Success = true, Message = "Update Position Success" };
+
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<UpdatePositionDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetPositionDto> { Success = false, Message = ex.Message };
             }
         }
     }

@@ -12,17 +12,17 @@ namespace LecturerManagement.Services.SubjectService
     public interface ISubjectService
     {
         //CRUD
-        Task<ServiceResponse<AddSubjectDto>> Create(AddSubjectDto createSubject);
+        Task<ServiceResponse<GetSubjectDto>> AddSubject(AddSubjectDto createSubject);
 
-        Task<ServiceResponse<Subject>> Delete(Subject deleteSubject);
-        Task<ServiceResponse<UpdateSubjectDto>> Update(UpdateSubjectDto updateSubject);
+        Task<ServiceResponse<GetSubjectDto>> DeleteSubject(Subject deleteSubject);
+        Task<ServiceResponse<GetSubjectDto>> UpdateSubject(UpdateSubjectDto updateSubject);
         Task<bool> IsExisted(Expression<Func<Subject, bool>> expression = null);
-        Task<ICollection<GetSubjectDto>> FindAll(Expression<Func<Subject,
+        Task<ServiceResponse<ICollection<GetSubjectDto>>> GetAllSubject(Expression<Func<Subject,
                                 bool>> expression = null,
                                 Func<IQueryable<Subject>,
                                IOrderedQueryable<Subject>> orderBy = null,
                                 List<string> includes = null);
-        Task<GetSubjectDto> Find(Expression<Func<Subject, bool>> expression = null, List<string> includes = null);
+        Task<ServiceResponse<GetSubjectDto>> GetSubjectByCondition(Expression<Func<Subject, bool>> expression = null, List<string> includes = null);
         Task<bool> SaveChange();
     }
 }

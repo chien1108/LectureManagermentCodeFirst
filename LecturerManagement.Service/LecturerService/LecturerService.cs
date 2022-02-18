@@ -22,58 +22,67 @@ namespace LecturerManagement.Services.LecturerService
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<AddLecturerDto>> Create(AddLecturerDto createLecturer)
+        public async Task<ServiceResponse<GetLecturerDto>> AddLecturer(AddLecturerDto createLecturer)
         {
             try
             {
                 await _unitOfWork.Lecturers.Create(_mapper.Map<Lecturer>(createLecturer));
                 if (await SaveChange())
                 {
-                    return new ServiceResponse<AddLecturerDto> { Success = true, Message = "Add Lecturer Success" };
+                    return new ServiceResponse<GetLecturerDto> { Success = true, Message = "Add Lecturer Success" };
                 }
                 else
                 {
-                    return new ServiceResponse<AddLecturerDto> { Success = false, Message = "Error when create new Lecturer" };
+                    return new ServiceResponse<GetLecturerDto> { Success = false, Message = "Error when create new Lecturer" };
                 }
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<AddLecturerDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetLecturerDto> { Success = false, Message = ex.Message };
             }
         }
 
-        public async Task<ServiceResponse<Lecturer>> Delete(Lecturer deleteLecturer)
+
+
+        public async Task<ServiceResponse<GetLecturerDto>> DeleteLecturer(Lecturer deleteLecturer)
         {
             try
             {
-                var lecturerFromDB = await Find(x => x.Id == 1.ToString());
-                if (lecturerFromDB != null)
+                _unitOfWork.Lecturers.Delete(deleteLecturer);
+                if (!await SaveChange())
                 {
-                    _unitOfWork.Lecturers.Delete(deleteLecturer);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<Lecturer> { Success = false, Message = "Error when delete Lecturer" };
-                    }
-                    return new ServiceResponse<Lecturer> { Success = true, Message = "Delete Lecturer Success" };
+                    return new ServiceResponse<GetLecturerDto> { Success = false, Message = "Error when delete Lecturer" };
                 }
-                else
-                {
-                    return new ServiceResponse<Lecturer> { Success = false, Message = "Not Found Lecturer" };
-                }
+                return new ServiceResponse<GetLecturerDto> { Success = true, Message = "Delete Lecturer Success" };
+
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<Lecturer> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetLecturerDto> { Success = false, Message = ex.Message };
             }
         }
 
-        public async Task<GetLecturerDto> Find(Expression<Func<Lecturer, bool>> expression = null, List<string> includes = null)
-            => _mapper.Map<GetLecturerDto>(await _unitOfWork.Lecturers.FindByConditionAsync(expression, includes));
+        public async Task<ServiceResponse<ICollection<GetLecturerDto>>> GetAllLecturer(Expression<Func<Lecturer, bool>> expression = null, Func<IQueryable<Lecturer>, IOrderedQueryable<Lecturer>> orderBy = null, List<string> includes = null)
+        {
+            var listLecturerFromDB = _mapper.Map<ICollection<GetLecturerDto>>(await _unitOfWork.Lecturers.FindAllAsync(expression, orderBy, includes));
 
-        public async Task<ICollection<GetLecturerDto>> FindAll(Expression<Func<Lecturer, bool>> expression = null,
-                                                                Func<IQueryable<Lecturer>, IOrderedQueryable<Lecturer>> orderBy = null,
-                                                                List<string> includes = null)
-            => _mapper.Map<ICollection<GetLecturerDto>>(await _unitOfWork.Lecturers.FindAllAsync(expression, orderBy, includes));
+            if (listLecturerFromDB != null)
+            {
+                return new ServiceResponse<ICollection<GetLecturerDto>>() { Success = true, Message = "Get Lecturer Success", Data = listLecturerFromDB };
+            }
+            return new() { Message = "Lecturer is not exist", Success = false };
+        }
+
+        public async Task<ServiceResponse<GetLecturerDto>> GetLecturerByCondition(Expression<Func<Lecturer, bool>> expression = null, List<string> includes = null)
+        {
+            var lecturerFromDB = _mapper.Map<GetLecturerDto>(await _unitOfWork.Lecturers.FindByConditionAsync(expression, includes));
+
+            if (lecturerFromDB != null)
+            {
+                return new ServiceResponse<GetLecturerDto>() { Success = true, Message = "Get Lecturer Success", Data = lecturerFromDB };
+            }
+            return new() { Message = "Lecturer is not exist", Success = false };
+        }
 
         public async Task<bool> IsExisted(Expression<Func<Lecturer, bool>> expression = null)
         {
@@ -88,29 +97,24 @@ namespace LecturerManagement.Services.LecturerService
         public async Task<bool> SaveChange()
             => await _unitOfWork.Lecturers.Save();
 
-        public async Task<ServiceResponse<UpdateLecturerDto>> Update(UpdateLecturerDto updateLecturer)
+
+
+        public async Task<ServiceResponse<GetLecturerDto>> UpdateLecturer(UpdateLecturerDto updateLecturer)
         {
             try
             {
-                var lecturerFromDB = await Find(x => x.Id == 1.ToString());
-                if (lecturerFromDB != null)
+                var task = _mapper.Map<Lecturer>(updateLecturer);
+                _unitOfWork.Lecturers.Update(task);
+                if (!await SaveChange())
                 {
-                    var task = _mapper.Map<Lecturer>(updateLecturer);
-                    _unitOfWork.Lecturers.Update(task);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<UpdateLecturerDto> { Success = false, Message = "Error when update Lecturer" };
-                    }
-                    return new ServiceResponse<UpdateLecturerDto> { Success = true, Message = "Update Lecturer Success" };
+                    return new ServiceResponse<GetLecturerDto> { Success = false, Message = "Error when update Lecturer" };
                 }
-                else
-                {
-                    return new ServiceResponse<UpdateLecturerDto> { Success = false, Message = "Not Found Lecturer" };
-                }
+                return new ServiceResponse<GetLecturerDto> { Success = true, Message = "Update Lecturer Success", Data = _mapper.Map<GetLecturerDto>(await _unitOfWork.Lecturers.FindByConditionAsync(x => x.Id == task.Id)) };
+
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<UpdateLecturerDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetLecturerDto> { Success = false, Message = ex.Message };
             }
         }
     }

@@ -22,56 +22,61 @@ namespace LecturerManagement.Services.ClassService
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<AddClassDto>> Create(AddClassDto createClass)
+        public async Task<ServiceResponse<GetClassDto>> AddNewClass(AddClassDto createClass)
         {
             try
             {
                 await _unitOfWork.Classes.Create(_mapper.Map<Class>(createClass));
-                if (await SaveChange())
+                if (!await SaveChange())
                 {
-                    return new ServiceResponse<AddClassDto> { Success = true, Message = "Add Class Success" };
+                    return new ServiceResponse<GetClassDto> { Success = false, Message = "Error when create new Class" };
                 }
-                else
-                {
-                    return new ServiceResponse<AddClassDto> { Success = false, Message = "Error when create new Class" };
-                }
+                return new ServiceResponse<GetClassDto> { Success = true, Message = "Add Class Success" };
+                ///, Data = _mapper.Map<GetClassDto>(await _unitOfWork.Classes.FindAllAsync())
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<AddClassDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetClassDto> { Success = false, Message = ex.Message };
             }
         }
 
-        public async Task<ServiceResponse<Class>> Delete(Class deleteClass)
+        public async Task<ServiceResponse<GetClassDto>> DeleteClass(Class deleteClass)
         {
             try
             {
-                var classFromDB = await Find(x => x.Id == 1.ToString());
-                if (classFromDB != null)
+                _unitOfWork.Classes.Delete(deleteClass);
+                if (!await SaveChange())
                 {
-                    _unitOfWork.Classes.Delete(deleteClass);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<Class> { Success = false, Message = "Error when delete Class" };
-                    }
-                    return new ServiceResponse<Class> { Success = true, Message = "Delete Class Success" };
+                    return new ServiceResponse<GetClassDto> { Success = false, Message = "Error when delete Class" };
                 }
-                else
-                {
-                    return new ServiceResponse<Class> { Success = false, Message = "Not Found Class" };
-                }
+                return new ServiceResponse<GetClassDto> { Success = true, Message = "Delete Class Success" };
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<Class> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetClassDto> { Success = false, Message = ex.Message };
             }
         }
 
-        public async Task<GetClassDto> Find(Expression<Func<Class, bool>> expression = null, List<string> includes = null)
-        => _mapper.Map<GetClassDto>(await _unitOfWork.Classes.FindByConditionAsync(expression, includes));
+        public async Task<ServiceResponse<ICollection<GetClassDto>>> GetAllClass(Expression<Func<Class, bool>> expression = null, Func<IQueryable<Class>, IOrderedQueryable<Class>> orderBy = null, List<string> includes = null)
+        {
+            var classes = _mapper.Map<ICollection<GetClassDto>>(await _unitOfWork.Classes.FindAllAsync(expression, orderBy, includes));
+            if (classes != null)
+            {
+                return new() { Success = true, Message = "Get list Classe Success", Data = classes };
+            }
+            return new() { Message = "List Class is not exist", Success = false };
+        }
 
-        public async Task<ICollection<GetClassDto>> FindAll(Expression<Func<Class, bool>> expression = null, Func<IQueryable<Class>, IOrderedQueryable<Class>> orderBy = null, List<string> includes = null)
-        => _mapper.Map<ICollection<GetClassDto>>(await _unitOfWork.Classes.FindAllAsync(expression, orderBy, includes));
+        public async Task<ServiceResponse<GetClassDto>> GetClassByCondition(Expression<Func<Class, bool>> expression = null, List<string> includes = null)
+        {
+            var classFromDB = _mapper.Map<GetClassDto>(await _unitOfWork.Classes.FindByConditionAsync(expression, includes));
+
+            if (classFromDB != null)
+            {
+                return new ServiceResponse<GetClassDto>() { Success = true, Message = "Get Class Success", Data = classFromDB };
+            }
+            return new() { Message = "Class is not exist", Success = false };
+        }
 
         public async Task<bool> IsExisted(Expression<Func<Class, bool>> expression = null)
         {
@@ -86,29 +91,29 @@ namespace LecturerManagement.Services.ClassService
         public async Task<bool> SaveChange()
              => await _unitOfWork.Classes.Save();
 
-        public async Task<ServiceResponse<UpdateClassDto>> Update(UpdateClassDto updateClass)
+        public async Task<ServiceResponse<GetClassDto>> UpdateClass(UpdateClassDto updateClass)
         {
             try
             {
-                var classFromDB = await Find(x => x.Id == 1.ToString());
+                var classFromDB = await _unitOfWork.Classes.FindByConditionAsync(x => x.Id == updateClass.Id);
                 if (classFromDB != null)
                 {
                     var task = _mapper.Map<Class>(updateClass);
                     _unitOfWork.Classes.Update(task);
                     if (!await SaveChange())
                     {
-                        return new ServiceResponse<UpdateClassDto> { Success = false, Message = "Error when update Class" };
+                        return new ServiceResponse<GetClassDto> { Success = false, Message = "Error when update Class" };
                     }
-                    return new ServiceResponse<UpdateClassDto> { Success = true, Message = "Update Class Success" };
+                    return new ServiceResponse<GetClassDto> { Success = true, Message = "Update Class Success", Data = _mapper.Map<GetClassDto>(task) };
                 }
                 else
                 {
-                    return new ServiceResponse<UpdateClassDto> { Success = false, Message = "Not Found Class" };
+                    return new ServiceResponse<GetClassDto> { Success = false, Message = "Not Found Class" };
                 }
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<UpdateClassDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetClassDto> { Success = false, Message = ex.Message };
             }
         }
     }

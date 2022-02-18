@@ -1,11 +1,11 @@
-﻿using LecturerManagement.Core.Data;
+﻿using AutoMapper;
+using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.StandardTime;
 using LecturerManagement.Services.StandardTimeService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
@@ -14,111 +14,101 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class StandardTimesController : ControllerBase
     {
-        private readonly LecturerManagementSystemDbContext _context;
         private readonly IStandardTimeService _service;
+        private readonly IMapper _mapper;
 
-        public StandardTimesController(LecturerManagementSystemDbContext context, IStandardTimeService service)
+        public StandardTimesController(IStandardTimeService service, IMapper mapper)
         {
-            _context = context;
             _service = service;
+            _mapper = mapper;
         }
 
         // GET: api/StandardTimes
-        [HttpGet]
+        /// <summary>
+        /// Get All StandardTime
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAllStandardTime")]
         public async Task<ActionResult<IEnumerable<GetStandardTimeDto>>> GetStandardTimes()
         {
-            return Ok(await _service.FindAll());
+            return Ok(await _service.GetAllStandardTime());
         }
 
         // GET: api/StandardTimes/5
+        /// <summary>
+        /// Get Single Standard Time
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<StandardTime>> GetStandardTime(string id)
+        public async Task<ActionResult<ServiceResponse<GetStandardTimeDto>>> GetStandardTime(string id)
         {
-            var standardTime = await _context.StandardTimes.FindAsync(id);
+            var response = await _service.GetStandardTimeByCondition(x => x.Id == id);
 
-            if (standardTime == null)
+            if (response == null)
             {
-                return NotFound();
+                return NotFound(response);
             }
 
-            return standardTime;
+            return Ok(response);
         }
 
         // PUT: api/StandardTimes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update Standard Time
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updatedStandardTime"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStandardTime(string id, StandardTime standardTime)
+        public async Task<ActionResult<ServiceResponse<GetStandardTimeDto>>> UpdateStandardTime(string id, UpdateStandardTimeDto updatedStandardTime)
         {
-            if (id != standardTime.Id)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(standardTime).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StandardTimeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/StandardTimes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<StandardTime>> PostStandardTime(StandardTime standardTime)
-        {
-            _context.StandardTimes.Add(standardTime);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (StandardTimeExists(standardTime.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetStandardTime", new { id = standardTime.Id }, standardTime);
-        }
-
-        // DELETE: api/StandardTimes/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStandardTime(string id)
-        {
-            var standardTime = await _context.StandardTimes.FindAsync(id);
-            if (standardTime == null)
+            if (!await StandardTimeExists(id))
             {
                 return NotFound();
             }
-
-            _context.StandardTimes.Remove(standardTime);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            updatedStandardTime.Id = id;
+            updatedStandardTime.ModifiedDate = DateTime.Now;
+            updatedStandardTime.Status = DTOS.Modules.Enums.Status.IsActive;
+            var response = await _service.UpdateStandardTime(updatedStandardTime);
+            return Ok(response);
         }
 
-        private bool StandardTimeExists(string id)
+        // POST: api/StandardTimes
+        /// <summary>
+        /// Add Standard Time
+        /// </summary>
+        /// <param name="newStandardTime"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<ServiceResponse<GetStandardTimeDto>>> AddStandardTime(AddStandardTimeDto newStandardTime)
         {
-            return _context.StandardTimes.Any(e => e.Id == id);
+            return Ok(await _service.AddStandardTime(newStandardTime));
+        }
+
+        // DELETE: api/StandardTimes/5
+        /// <summary>
+        /// Delete Standard Time By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ServiceResponse<GetStandardTimeDto>>> DeleteStandardTime(string id)
+        {
+
+            var responseStandardTime = await _service.GetStandardTimeByCondition(x => x.Id == id);
+            if (responseStandardTime.Data == null)
+            {
+                return NotFound(responseStandardTime);
+            }
+            return Ok(_service.DeleteStandardTime(_mapper.Map<StandardTime>(responseStandardTime.Data)));
+        }
+
+        private async Task<bool> StandardTimeExists(string id)
+        {
+            var response = await _service.IsExisted(x => x.Id == id);
+            return response.Success;
         }
     }
 }

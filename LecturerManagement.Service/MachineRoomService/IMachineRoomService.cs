@@ -12,17 +12,17 @@ namespace LecturerManagement.Services.MachineRoomService
     public interface IMachineRoomService
     {
         //CRUD
-        Task<ServiceResponse<AddMachineRoomDto>> Create(AddMachineRoomDto createMachineRoom);
+        Task<ServiceResponse<GetMachineRoomDto>> AddMachineRoom(AddMachineRoomDto createMachineRoom);
 
-        Task<ServiceResponse<MachineRoom>> Delete(MachineRoom deleteMachineRoom);
-        Task<ServiceResponse<UpdateMachineRoomDto>> Update(UpdateMachineRoomDto updateMachineRoom);
+        Task<ServiceResponse<GetMachineRoomDto>> DeleteMachineRoom(MachineRoom deleteMachineRoom);
+        Task<ServiceResponse<GetMachineRoomDto>> UpdateMachineRoom(UpdateMachineRoomDto updateMachineRoom);
         Task<bool> IsExisted(Expression<Func<MachineRoom, bool>> expression = null);
-        Task<ICollection<GetMachineRoomDto>> FindAll(Expression<Func<MachineRoom,
+        Task<ServiceResponse<ICollection<GetMachineRoomDto>>> GetAllMachineRoom(Expression<Func<MachineRoom,
                                 bool>> expression = null,
                                 Func<IQueryable<MachineRoom>,
                                IOrderedQueryable<MachineRoom>> orderBy = null,
                                 List<string> includes = null);
-        Task<GetMachineRoomDto> Find(Expression<Func<MachineRoom, bool>> expression = null, List<string> includes = null);
+        Task<ServiceResponse<GetMachineRoomDto>> GetMachineRoomByCondition(Expression<Func<MachineRoom, bool>> expression = null, List<string> includes = null);
         Task<bool> SaveChange();
     }
 }

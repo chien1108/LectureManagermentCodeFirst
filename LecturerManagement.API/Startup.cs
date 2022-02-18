@@ -43,11 +43,15 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System;
+using System.IO;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace LecturerManagement.API
 {
     public class Startup
+
     {
         public Startup(IConfiguration configuration)
         {
@@ -90,7 +94,7 @@ namespace LecturerManagement.API
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IAdvancedLearningService, AdvancedLearningService>();
             services.AddScoped<IClassService, ClassService>();
-            ///services.AddScoped<IDynamicClassFactorService, DynamicClassFactorRepository>();
+            ////services.AddScoped<IDynamicClassFactorService, DynamicClassFactorRepository>();
             services.AddScoped<IGraduationThesisService, GraduationThesisService>();
             services.AddScoped<ILecturerService, LecturerService>();
             services.AddScoped<ILecturerScientificResearchService, LecturerScientificResearchService>();
@@ -106,20 +110,26 @@ namespace LecturerManagement.API
 
 
             services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
-            ///services.AddControllers();
+            /////services.AddControllers();
 
 
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "LecturerManagermentCodeFirst.API", Version = "v1" });
-                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "LecturerManagermentCodeFirst.API", Version = "v1" });
+
+                var xmlCommentFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var cmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentFile);
+                options.IncludeXmlComments(cmlCommentsFullPath);
+
+                //bearer token
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Description = "Standard Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
                     In = ParameterLocation.Header,
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey
                 });
-                c.OperationFilter<SecurityRequirementsOperationFilter>();
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
             services.AddAutoMapper(typeof(AutoMapperProfile));
@@ -145,7 +155,11 @@ namespace LecturerManagement.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LecturerManagement.API v1"));
+                app.UseSwaggerUI(options =>
+                    {
+                        options.SwaggerEndpoint("/swagger/v1/swagger.json", "LecturerManagement.API v1");
+                        /////options.RoutePrefix = "";
+                    });
             }
 
             app.UseHttpsRedirection();

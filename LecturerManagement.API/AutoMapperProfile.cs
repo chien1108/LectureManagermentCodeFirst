@@ -22,13 +22,15 @@ namespace LecturerManagement.API
         public AutoMapperProfile()
         {
             // Account
-            //CreateMap<AccountResgisterDto, Lecturer>().ReverseMap();
+            ////CreateMap<AccountResgisterDto, Lecturer>().ReverseMap();
             CreateMap<Account, GetAccountDto>().ReverseMap();
 
 
             //AdvancedLearning
             CreateMap<AdvancedLearning, AddAdvancedLearningDto>().ReverseMap();
             CreateMap<AdvancedLearning, UpdateAdvancedLearningDto>().ReverseMap();
+            CreateMap<GetAdvancedLearningDto, AddAdvancedLearningDto>().ReverseMap();
+            CreateMap<GetAdvancedLearningDto, UpdateAdvancedLearningDto>().ReverseMap();
 
             //Class
             CreateMap<Class, GetClassDto>().ReverseMap();
@@ -55,6 +57,7 @@ namespace LecturerManagement.API
             //StandardTime
             CreateMap<AddStandardTimeDto, StandardTime>().ReverseMap();
             CreateMap<StandardTime, GetStandardTimeDto>().ReverseMap();
+            CreateMap<UpdateStandardTimeDto, GetStandardTimeDto>().ReverseMap();
 
             //SubjectDepartment
             CreateMap<SubjectDepartment, GetSubjectDepartmentDto>().ReverseMap();

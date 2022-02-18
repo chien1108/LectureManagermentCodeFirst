@@ -21,57 +21,63 @@ namespace LecturerManagement.Services.ScientificResearchGuideService
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<AddScientificResearchGuideDto>> Create(AddScientificResearchGuideDto createScientificResearchGuide)
+        public async Task<ServiceResponse<GetScientificResearchGuideDto>> AddScientificResearchGuide(AddScientificResearchGuideDto newScientificResearchGuide)
         {
             try
             {
-                await _unitOfWork.ScientificResearchGuides.Create(_mapper.Map<ScientificResearchGuide>(createScientificResearchGuide));
+                await _unitOfWork.ScientificResearchGuides.Create(_mapper.Map<ScientificResearchGuide>(newScientificResearchGuide));
                 if (await SaveChange())
                 {
-                    return new ServiceResponse<AddScientificResearchGuideDto> { Success = true, Message = "Add Scientific Research Guide Success" };
+                    return new ServiceResponse<GetScientificResearchGuideDto> { Success = true, Message = "Add Scientific Research Guide Success" };
                 }
                 else
                 {
-                    return new ServiceResponse<AddScientificResearchGuideDto> { Success = false, Message = "Error when create new Scientific Research Guide" };
+                    return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = "Error when create new Scientific Research Guide" };
                 }
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<AddScientificResearchGuideDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = ex.Message };
             }
         }
-
-        public async Task<ServiceResponse<ScientificResearchGuide>> Delete(ScientificResearchGuide deleteScientificResearchGuide)
+        public async Task<ServiceResponse<GetScientificResearchGuideDto>> DeleteScientificResearchGuide(ScientificResearchGuide deleteScientificResearchGuide)
         {
             try
             {
-                var scientificResearchGuidFromDB = await Find(x => x.Id == 1.ToString());
-                if (scientificResearchGuidFromDB != null)
+
+                _unitOfWork.ScientificResearchGuides.Delete(deleteScientificResearchGuide);
+                if (!await SaveChange())
                 {
-                    _unitOfWork.ScientificResearchGuides.Delete(deleteScientificResearchGuide);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<ScientificResearchGuide> { Success = false, Message = "Error when delete Scientific Research Guide" };
-                    }
-                    return new ServiceResponse<ScientificResearchGuide> { Success = true, Message = "Delete Lecturer Scientific Research Guide" };
+                    return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = "Error when delete Scientific Research Guide" };
                 }
-                else
-                {
-                    return new ServiceResponse<ScientificResearchGuide> { Success = false, Message = "Not Found Scientific Research Guide" };
-                }
+                return new ServiceResponse<GetScientificResearchGuideDto> { Success = true, Message = "Delete Lecturer Scientific Research Guide" };
+
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<ScientificResearchGuide> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = ex.Message };
             }
         }
 
-        public async Task<GetScientificResearchGuideDto> Find(Expression<Func<ScientificResearchGuide, bool>> expression = null, List<string> includes = null)
-        => _mapper.Map<GetScientificResearchGuideDto>(await _unitOfWork.ScientificResearchGuides.FindByConditionAsync(expression, includes));
+        public async Task<ServiceResponse<ICollection<GetScientificResearchGuideDto>>> GetAllScientificResearchGuide(Expression<Func<ScientificResearchGuide, bool>> expression = null, Func<IQueryable<ScientificResearchGuide>, IOrderedQueryable<ScientificResearchGuide>> orderBy = null, List<string> includes = null)
+        {
+            var listScientificResearchGuidFromDB = _mapper.Map<ICollection<GetScientificResearchGuideDto>>(await _unitOfWork.ScientificResearchGuides.FindAllAsync(expression, orderBy, includes));
+            if (listScientificResearchGuidFromDB != null)
+            {
+                return new() { Success = true, Message = "Get list Scientific Research Guide Success", Data = listScientificResearchGuidFromDB };
+            }
+            return new() { Message = "List Scientific Research Guide is not exist", Success = false };
+        }
 
-        public async Task<ICollection<GetScientificResearchGuideDto>> FindAll(Expression<Func<ScientificResearchGuide, bool>> expression = null, Func<IQueryable<ScientificResearchGuide>, IOrderedQueryable<ScientificResearchGuide>> orderBy = null, List<string> includes = null)
-            => _mapper.Map<ICollection<GetScientificResearchGuideDto>>(await _unitOfWork.ScientificResearchGuides.FindAllAsync(expression, orderBy, includes));
-
+        public async Task<ServiceResponse<GetScientificResearchGuideDto>> GetScientificResearchGuideByCondition(Expression<Func<ScientificResearchGuide, bool>> expression = null, List<string> includes = null)
+        {
+            var scientificResearchGuidFromDB = _mapper.Map<GetScientificResearchGuideDto>(await _unitOfWork.ScientificResearchGuides.FindByConditionAsync(expression, includes));
+            if (scientificResearchGuidFromDB != null)
+            {
+                return new() { Success = true, Message = "Get list Scientific Research Guide Success", Data = scientificResearchGuidFromDB };
+            }
+            return new() { Message = "List Scientific Research Guide is not exist", Success = false };
+        }
 
         public async Task<bool> IsExisted(Expression<Func<ScientificResearchGuide, bool>> expression = null)
         {
@@ -86,29 +92,23 @@ namespace LecturerManagement.Services.ScientificResearchGuideService
         public async Task<bool> SaveChange()
         => await _unitOfWork.ScientificResearchGuides.Save();
 
-        public async Task<ServiceResponse<UpdateScientificResearchGuideDto>> Update(UpdateScientificResearchGuideDto updateScientificResearchGuide)
+        public async Task<ServiceResponse<GetScientificResearchGuideDto>> UpdateScientificResearchGuide(UpdateScientificResearchGuideDto updateScientificResearchGuide)
         {
             try
             {
-                var scientificResearchGuidFromDB = await Find(x => x.Id == 1.ToString());
-                if (scientificResearchGuidFromDB != null)
+
+                var task = _mapper.Map<ScientificResearchGuide>(updateScientificResearchGuide);
+                _unitOfWork.ScientificResearchGuides.Update(task);
+                if (!await SaveChange())
                 {
-                    var task = _mapper.Map<ScientificResearchGuide>(updateScientificResearchGuide);
-                    _unitOfWork.ScientificResearchGuides.Update(task);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<UpdateScientificResearchGuideDto> { Success = false, Message = "Error when update Scientific Research Guide" };
-                    }
-                    return new ServiceResponse<UpdateScientificResearchGuideDto> { Success = true, Message = "Update Scientific Research Guide Success" };
+                    return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = "Error when update Scientific Research Guide" };
                 }
-                else
-                {
-                    return new ServiceResponse<UpdateScientificResearchGuideDto> { Success = false, Message = "Not Found Scientific Research Guide" };
-                }
+                return new ServiceResponse<GetScientificResearchGuideDto> { Success = true, Message = "Update Scientific Research Guide Success" };
+
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<UpdateScientificResearchGuideDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = ex.Message };
             }
         }
     }

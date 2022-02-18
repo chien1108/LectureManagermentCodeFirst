@@ -177,7 +177,7 @@ namespace LecturerManagement.Services.AccountService
         {
             try
             {
-                var accountFromDb = await Find(x => x.Id == 1);
+                var accountFromDb = await Find(x => x.Id == updateAccount.Id);
                 if (accountFromDb != null)
                 {
                     var task = _mapper.Map<AdvancedLearning>(updateAccount);

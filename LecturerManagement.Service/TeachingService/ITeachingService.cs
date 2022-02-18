@@ -12,17 +12,17 @@ namespace LecturerManagement.Services.TeachingService
     public interface ITeachingService
     {
         //CRUD
-        Task<ServiceResponse<AddTeachingDto>> Create(AddTeachingDto createTeaching);
+        Task<ServiceResponse<GetTeachingDto>> AddTeaching(AddTeachingDto createTeaching);
 
-        Task<ServiceResponse<Teaching>> Delete(Teaching deleteTeaching);
-        Task<ServiceResponse<UpdateTeachingDto>> Update(UpdateTeachingDto updateTeaching);
+        Task<ServiceResponse<GetTeachingDto>> DeleteTeaching(Teaching deleteTeaching);
+        Task<ServiceResponse<GetTeachingDto>> UpdateTeaching(UpdateTeachingDto updateTeaching);
         Task<bool> IsExisted(Expression<Func<Teaching, bool>> expression = null);
-        Task<ICollection<GetTeachingDto>> FindAll(Expression<Func<Teaching,
+        Task<ServiceResponse<ICollection<GetTeachingDto>>> GetAllTeaching(Expression<Func<Teaching,
                                 bool>> expression = null,
                                 Func<IQueryable<Teaching>,
                                IOrderedQueryable<Teaching>> orderBy = null,
                                 List<string> includes = null);
-        Task<GetTeachingDto> Find(Expression<Func<Teaching, bool>> expression = null, List<string> includes = null);
+        Task<ServiceResponse<GetTeachingDto>> GetTeachingByCondition(Expression<Func<Teaching, bool>> expression = null, List<string> includes = null);
         Task<bool> SaveChange();
     }
 }

@@ -21,23 +21,23 @@ namespace LecturerManagement.Services.TrainingSystemService
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<AddTrainingSystemDto>> Create(AddTrainingSystemDto createTrainingSystem)
+        public async Task<ServiceResponse<GetTrainingSystemDto>> AddTrainingSystem(AddTrainingSystemDto createTrainingSystem)
         {
             try
             {
                 await _unitOfWork.TrainingSystems.Create(_mapper.Map<TrainingSystem>(createTrainingSystem));
                 if (await SaveChange())
                 {
-                    return new ServiceResponse<AddTrainingSystemDto> { Success = true, Message = "Add Training System Success" };
+                    return new ServiceResponse<GetTrainingSystemDto> { Success = true, Message = "Add Training System Success" };
                 }
                 else
                 {
-                    return new ServiceResponse<AddTrainingSystemDto> { Success = false, Message = "Error when create new Training System" };
+                    return new ServiceResponse<GetTrainingSystemDto> { Success = false, Message = "Error when create new Training System" };
                 }
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<AddTrainingSystemDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetTrainingSystemDto> { Success = false, Message = ex.Message };
             }
         }
 
@@ -66,12 +66,50 @@ namespace LecturerManagement.Services.TrainingSystemService
             }
         }
 
+        public async Task<ServiceResponse<GetTrainingSystemDto>> DeleteTrainingSystem(TrainingSystem deleteTrainingSystem)
+        {
+            try
+            {
+                _unitOfWork.TrainingSystems.Delete(deleteTrainingSystem);
+                if (!await SaveChange())
+                {
+                    return new ServiceResponse<GetTrainingSystemDto> { Success = false, Message = "Error when delete Training System" };
+                }
+                return new ServiceResponse<GetTrainingSystemDto> { Success = true, Message = "Delete Training System Success" };
+
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<GetTrainingSystemDto> { Success = false, Message = ex.Message };
+            }
+        }
+
         public async Task<GetTrainingSystemDto> Find(Expression<Func<TrainingSystem, bool>> expression = null, List<string> includes = null)
         => _mapper.Map<GetTrainingSystemDto>(await _unitOfWork.TrainingSystems.FindByConditionAsync(expression, includes));
 
 
         public async Task<ICollection<GetTrainingSystemDto>> FindAll(Expression<Func<TrainingSystem, bool>> expression = null, Func<IQueryable<TrainingSystem>, IOrderedQueryable<TrainingSystem>> orderBy = null, List<string> includes = null)
          => _mapper.Map<ICollection<GetTrainingSystemDto>>(await _unitOfWork.TrainingSystems.FindAllAsync(expression, orderBy, includes));
+
+        public async Task<ServiceResponse<ICollection<GetTrainingSystemDto>>> GetAllTrainingSystem(Expression<Func<TrainingSystem, bool>> expression = null, Func<IQueryable<TrainingSystem>, IOrderedQueryable<TrainingSystem>> orderBy = null, List<string> includes = null)
+        {
+            var listTrainingFromDb = _mapper.Map<ICollection<GetTrainingSystemDto>>(await _unitOfWork.TrainingSystems.FindAllAsync(expression, orderBy, includes));
+            if (listTrainingFromDb != null)
+            {
+                return new() { Success = true, Message = "Get list Training System Success", Data = listTrainingFromDb };
+            }
+            return new() { Message = "List Training System is not exist", Success = false };
+        }
+
+        public async Task<ServiceResponse<GetTrainingSystemDto>> GetTrainingSystemByCondition(Expression<Func<TrainingSystem, bool>> expression = null, List<string> includes = null)
+        {
+            var trainingFromDb = _mapper.Map<GetTrainingSystemDto>(await _unitOfWork.TrainingSystems.FindByConditionAsync(expression, includes));
+            if (trainingFromDb != null)
+            {
+                return new() { Success = true, Message = "Get Training System Success", Data = trainingFromDb };
+            }
+            return new() { Message = "Training System is not exist", Success = false };
+        }
 
         public async Task<bool> IsExisted(Expression<Func<TrainingSystem, bool>> expression = null)
         {
@@ -109,6 +147,26 @@ namespace LecturerManagement.Services.TrainingSystemService
             catch (Exception ex)
             {
                 return new ServiceResponse<UpdateTrainingSystemDto> { Success = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<ServiceResponse<GetTrainingSystemDto>> UpdateTrainingSystem(UpdateTrainingSystemDto updateTrainingSystem)
+        {
+            try
+            {
+
+                var task = _mapper.Map<TrainingSystem>(updateTrainingSystem);
+                _unitOfWork.TrainingSystems.Update(task);
+                if (!await SaveChange())
+                {
+                    return new ServiceResponse<GetTrainingSystemDto> { Success = false, Message = "Error when update Training System" };
+                }
+                return new ServiceResponse<GetTrainingSystemDto> { Success = true, Message = "Update Training System Success" };
+
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<GetTrainingSystemDto> { Success = false, Message = ex.Message };
             }
         }
     }
