@@ -25,7 +25,6 @@ namespace LecturerManagement.Services.AdvancedLearningService
 
         public async Task<ServiceResponse<GetAdvancedLearningDto>> AddAdvancedLearning(AddAdvancedLearningDto createAdvancedLearning)
         {
-            var response = new ServiceResponse<GetAdvancedLearningDto>();
             try
             {
                 await _unitOfWork.AdvancedLearnings.Create(_mapper.Map<AdvancedLearning>(createAdvancedLearning));
@@ -39,10 +38,8 @@ namespace LecturerManagement.Services.AdvancedLearningService
             }
             catch (Exception ex)
             {
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ServiceResponse<GetAdvancedLearningDto> { Success = false, Message = ex.StackTrace };
             }
-            return response;
         }
 
         public async Task<ServiceResponse<ICollection<GetAdvancedLearningDto>>> DeleteAdvancedLearning(AdvancedLearning deletedAdvancedLearning)

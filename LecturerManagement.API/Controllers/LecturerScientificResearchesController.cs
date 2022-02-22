@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using LecturerManagement.Core.Data;
 using LecturerManagement.Core.Models.Entities;
+using LecturerManagement.DTOS.LecturerScientificResearch;
 using LecturerManagement.Services.LecturerScientificResearchService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,113 +14,81 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class LecturerScientificResearchesController : ControllerBase
     {
-        private readonly LecturerManagementSystemDbContext _context;
         private readonly ILecturerScientificResearchService _service;
         private readonly IMapper _mapper;
 
-        public LecturerScientificResearchesController(LecturerManagementSystemDbContext context, ILecturerScientificResearchService service, IMapper mapper)
+        public LecturerScientificResearchesController(ILecturerScientificResearchService service, IMapper mapper)
         {
-            _context = context;
             _service = service;
             _mapper = mapper;
         }
 
         // GET: api/LecturerScientificResearches
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LecturerScientificResearch>>> GetLecturerScientificResearches()
+        public async Task<IActionResult> GetLecturerScientificResearches()
         {
-            return await _context.LecturerScientificResearches.ToListAsync();
+            var response = await _service.GetAllLecturerScientificResearch();
+            if(response.Data == null)
+            {
+                return NotFound(response);
+            }    
+            return Ok(response);
         }
 
         // GET: api/LecturerScientificResearches/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<LecturerScientificResearch>> GetLecturerScientificResearch(string id)
+        public async Task<IActionResult> GetLecturerScientificResearch(string id)
         {
-            var lecturerScientificResearch = await _context.LecturerScientificResearches.FindAsync(id);
+            var lecturerScientificResearch = await _service.GetLecturerScientificResearchByCondition(x => x.Id.ToLower().Equals(id.ToLower()));
 
-            if (lecturerScientificResearch == null)
+            if (lecturerScientificResearch.Data == null)
             {
-                return NotFound();
+                return NotFound(lecturerScientificResearch);
             }
-
-            return lecturerScientificResearch;
+            return Ok(lecturerScientificResearch);
         }
 
         // PUT: api/LecturerScientificResearches/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutLecturerScientificResearch(string id, LecturerScientificResearch lecturerScientificResearch)
+        [HttpPut]
+        public async Task<IActionResult> PutLecturerScientificResearch(string id, UpdateLecturerScientificResearchDto updateLecturerScientificResearchDto)
         {
-            if (id != lecturerScientificResearch.Id)
+            if(!await LecturerScientificResearchExists(id))
             {
-                return BadRequest();
+                return NotFound();
             }
-
-            _context.Entry(lecturerScientificResearch).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LecturerScientificResearchExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(await _service.UpdateLecturerScientificResearch(updateLecturerScientificResearchDto));
         }
 
         // POST: api/LecturerScientificResearches
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<LecturerScientificResearch>> PostLecturerScientificResearch(LecturerScientificResearch lecturerScientificResearch)
+        public async Task<IActionResult> PostLecturerScientificResearch(AddLecturerScientificResearchDto addLecturerScientificResearchDto)
         {
-            _context.LecturerScientificResearches.Add(lecturerScientificResearch);
-            try
+            var response = await _service.AddLecturerScientificResearch(addLecturerScientificResearchDto);
+            if(response.Success == false)
             {
-                await _context.SaveChangesAsync();
+                return BadRequest(response);
             }
-            catch (DbUpdateException)
-            {
-                if (LecturerScientificResearchExists(lecturerScientificResearch.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetLecturerScientificResearch", new { id = lecturerScientificResearch.Id }, lecturerScientificResearch);
+            return Ok(response);
         }
 
         // DELETE: api/LecturerScientificResearches/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLecturerScientificResearch(string id)
         {
-            var lecturerScientificResearch = await _context.LecturerScientificResearches.FindAsync(id);
-            if (lecturerScientificResearch == null)
+            var data = _mapper.Map<LecturerScientificResearch>(await _service.GetLecturerScientificResearchByCondition(x => x.Id.ToLower().Equals(id.ToLower())));
+            var response = await _service.DeleteLecturerScientificResearch(data);
+            if(response.Success == false)
             {
-                return NotFound();
+                return BadRequest(response);
             }
-
-            _context.LecturerScientificResearches.Remove(lecturerScientificResearch);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(response);
         }
 
-        private bool LecturerScientificResearchExists(string id)
+        private async Task<bool> LecturerScientificResearchExists(string id)
         {
-            return _context.LecturerScientificResearches.Any(e => e.Id == id);
+            return await _service.IsExisted(x => x.Id.ToLower().Equals(id.ToLower()));
         }
     }
 }

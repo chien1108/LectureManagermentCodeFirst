@@ -31,7 +31,7 @@ namespace LecturerManagement.API.Controllers
 
         // GET: api/GraduationThesis/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<GraduationThesis>> GetGraduationThesis(int id)
+        public async Task<ActionResult<ServiceResponse<GraduationThesis>>> GetGraduationThesis(int id)
         {
             var graduationThesis = await _graduationThesisService.GetGraduationThesisByCondition(x => x.Id == id);
 

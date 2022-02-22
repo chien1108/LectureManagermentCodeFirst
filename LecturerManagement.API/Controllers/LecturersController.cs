@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LecturerManagement.Core.Data;
 using LecturerManagement.Core.Models.Entities;
+using LecturerManagement.DTOS.LecturerDTO;
 using LecturerManagement.Services.LecturerService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,113 +15,82 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class LecturersController : ControllerBase
     {
-        private readonly LecturerManagementSystemDbContext _context;
         private readonly ILecturerService _lecturerService;
         private readonly IMapper _mapper;
 
-        public LecturersController(LecturerManagementSystemDbContext context, ILecturerService lecturerService, IMapper mapper)
+        public LecturersController( ILecturerService lecturerService, IMapper mapper)
         {
-            _context = context;
             _lecturerService = lecturerService;
             _mapper = mapper;
         }
 
         // GET: api/Lecturers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Lecturer>>> GetLecturers()
+        public async Task<IActionResult> GetLecturers()
         {
-            return await _context.Lecturers.ToListAsync();
+            var response = await _lecturerService.GetAllLecturer();
+            if(response.Data == null)
+            {
+                return NotFound(response);
+            }    
+            return Ok(response);
         }
 
         // GET: api/Lecturers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Lecturer>> GetLecturer(string id)
+        public async Task<IActionResult> GetLecturer(string id)
         {
-            var lecturer = await _context.Lecturers.FindAsync(id);
+            var lecturer = await _lecturerService.GetLecturerByCondition(x => x.Id.ToLower().Equals(id.ToLower()));
 
-            if (lecturer == null)
+            if (lecturer.Data == null)
             {
-                return NotFound();
+                return NotFound(lecturer);
             }
 
-            return lecturer;
+            return Ok(lecturer);
         }
 
         // PUT: api/Lecturers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutLecturer(string id, Lecturer lecturer)
+        [HttpPut]
+        public async Task<IActionResult> PutLecturer(string id, UpdateLecturerDto updateLecturerDto)
         {
-            if (id != lecturer.Id)
+            if(!await LecturerExists(id))
             {
-                return BadRequest();
+                return NotFound();
             }
-
-            _context.Entry(lecturer).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LecturerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(await _lecturerService.UpdateLecturer(updateLecturerDto));
         }
 
         // POST: api/Lecturers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Lecturer>> PostLecturer(Lecturer lecturer)
+        public async Task<ActionResult<Lecturer>> PostLecturer(AddLecturerDto addLecturerDto)
         {
-            _context.Lecturers.Add(lecturer);
-            try
+            var response = await _lecturerService.AddLecturer(addLecturerDto);
+            if(!response.Success)
             {
-                await _context.SaveChangesAsync();
+                return BadRequest(response);
             }
-            catch (DbUpdateException)
-            {
-                if (LecturerExists(lecturer.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetLecturer", new { id = lecturer.Id }, lecturer);
+            return Ok(response);
         }
 
         // DELETE: api/Lecturers/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLecturer(string id)
         {
-            var lecturer = await _context.Lecturers.FindAsync(id);
-            if (lecturer == null)
+            var data = _mapper.Map<Lecturer>(await _lecturerService.GetLecturerByCondition(x => x.Id.ToLower().Equals(id.ToLower())));
+            var response = await _lecturerService.DeleteLecturer(data);
+            if(!response.Success)
             {
-                return NotFound();
+                return BadRequest(response);
             }
-
-            _context.Lecturers.Remove(lecturer);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(response);
         }
 
-        private bool LecturerExists(string id)
+        private async Task<bool> LecturerExists(string id)
         {
-            return _context.Lecturers.Any(e => e.Id == id);
+            return await _lecturerService.IsExisted(x => x.Id.ToLower().Equals(id.ToLower()));
         }
     }
 }

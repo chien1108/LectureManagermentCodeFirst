@@ -37,7 +37,7 @@ namespace LecturerManagement.Services.LecturerScientificResearchService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetLecturerScientificResearchDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetLecturerScientificResearchDto> { Success = false, Message = ex.StackTrace };
             }
         }
 
