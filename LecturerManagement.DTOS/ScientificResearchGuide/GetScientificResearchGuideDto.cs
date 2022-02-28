@@ -1,6 +1,8 @@
-﻿namespace LecturerManagement.DTOS.ScientificResearchGuide
+﻿using LecturerManagement.DTOS.Models.Base;
+
+namespace LecturerManagement.DTOS.ScientificResearchGuide
 {
-    public class GetScientificResearchGuideDto
+    public class GetScientificResearchGuideDto : BaseEntity<string>
     {
         public string LecturerID { get; set; }
 

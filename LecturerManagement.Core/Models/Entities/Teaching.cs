@@ -6,16 +6,16 @@ namespace LecturerManagement.Core.Models.Entities
     /// <summary>
     /// giảng dạy
     /// </summary>
-    public class Teaching : BaseEntity<int>
+    public class Teaching : BaseEntity<string>
     {
         [ForeignKey("Lecturer")]
-        public string LectureID { get; set; }
+        public string LectureId { get; set; }
 
         [ForeignKey("Class")]
-        public string ClassID { get; set; }
+        public string ClassId { get; set; }
 
         [ForeignKey("Subject")]
-        public string SubjectID { get; set; }
+        public string SubjectId { get; set; }
 
         public int NumberOfStudents { get; set; }
         public string SchoolYear { get; set; }

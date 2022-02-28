@@ -14,8 +14,8 @@ namespace LecturerManagement.Services.AdvancedLearningService
         //CRUD
         Task<ServiceResponse<GetAdvancedLearningDto>> AddAdvancedLearning(AddAdvancedLearningDto createAdvancedLearning);
 
-        Task<ServiceResponse<ICollection<GetAdvancedLearningDto>>> DeleteAdvancedLearning(AdvancedLearning deletedAdvancedLearning);
-        Task<ServiceResponse<GetAdvancedLearningDto>> UpdateAdvancedLearning(UpdateAdvancedLearningDto updateAdvanceLearning);
+        Task<ServiceResponse<ICollection<GetAdvancedLearningDto>>> DeleteAdvancedLearning(Expression<Func<AdvancedLearning, bool>> expression = null);
+        Task<ServiceResponse<GetAdvancedLearningDto>> UpdateAdvancedLearning(UpdateAdvancedLearningDto updateAdvanceLearning, Expression<Func<AdvancedLearning, bool>> expression = null);
         Task<ServiceResponse<GetAdvancedLearningDto>> IsExisted(Expression<Func<AdvancedLearning, bool>> expression = null);
         Task<ServiceResponse<ICollection<GetAdvancedLearningDto>>> GetAllAdvancedLearning(Expression<Func<AdvancedLearning,
                                 bool>> expression = null,

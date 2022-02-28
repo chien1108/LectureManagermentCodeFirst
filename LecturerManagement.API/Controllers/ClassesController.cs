@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using LecturerManagement.Core.Models;
-using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.Class;
 using LecturerManagement.Services.ClassService;
 using Microsoft.AspNetCore.Mvc;
@@ -50,29 +49,29 @@ namespace LecturerManagement.API.Controllers
         /// Update Class
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="class"></param>
+        /// <param name="updateClass"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateClass(string id, UpdateClassDto @class)
+        public async Task<IActionResult> UpdateClass(string id, UpdateClassDto updateClass)
         {
             if (!await ClassExists(id))
             {
                 return NotFound();
             }
 
-            return Ok(await _service.UpdateClass(@class));
+            return Ok(await _service.UpdateClass(updateClass));
         }
 
         // POST: api/Classes
         /// <summary>
         /// Add New Class 
         /// </summary>
-        /// <param name="class"></param>
+        /// <param name="newClass"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<GetClassDto>>> AddNewClass(AddClassDto @class)
+        public async Task<ActionResult<ServiceResponse<GetClassDto>>> AddNewClass(AddClassDto newClass)
         {
-            return Ok(await _service.AddNewClass(@class));
+            return Ok(await _service.AddNewClass(newClass));
         }
 
         // DELETE: api/Classes/5
@@ -84,12 +83,12 @@ namespace LecturerManagement.API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<ServiceResponse<GetClassDto>>> DeleteClass(string id)
         {
-            var @response = await _service.GetClassByCondition(x => x.Id == id);
-            if (@response.Data == null)
+            var response = await _service.GetClassByCondition(x => x.Id == id);
+            if (response.Data == null)
             {
-                return NotFound(@response);
+                return NotFound(response);
             }
-            return Ok(_service.DeleteClass(_mapper.Map<Class>(@response.Data)));
+            return Ok();//Ok(_service.DeleteClass(_mapper.Map<Class>(response.Data)));
         }
 
         private async Task<bool> ClassExists(string id)

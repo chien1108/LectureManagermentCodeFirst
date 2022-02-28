@@ -14,8 +14,8 @@ namespace LecturerManagement.Services.SubjectTypeService
         //CRUD
         Task<ServiceResponse<GetSubjectTypeDto>> AddSubjectType(AddSubjectTypeDto createSubjectType);
 
-        Task<ServiceResponse<GetSubjectTypeDto>> DeleteSubjectType(SubjectType deleteSubjectType);
-        Task<ServiceResponse<GetSubjectTypeDto>> UpdateSubjectType(UpdateSubjectTypeDto updateSubjectType);
+        Task<ServiceResponse<GetSubjectTypeDto>> DeleteSubjectType(Expression<Func<SubjectType, bool>> expression = null);
+        Task<ServiceResponse<GetSubjectTypeDto>> UpdateSubjectType(string id, UpdateSubjectTypeDto updateSubjectType);
         Task<bool> IsExisted(Expression<Func<SubjectType, bool>> expression = null);
         Task<ServiceResponse<ICollection<GetSubjectTypeDto>>> GetAllSubjectType(Expression<Func<SubjectType,
                                 bool>> expression = null,

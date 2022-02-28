@@ -37,7 +37,7 @@ namespace LecturerManagement.Services.ScientificResearchGuideService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = ex.StackTrace };
             }
         }
         public async Task<ServiceResponse<GetScientificResearchGuideDto>> DeleteScientificResearchGuide(ScientificResearchGuide deleteScientificResearchGuide)
@@ -55,7 +55,7 @@ namespace LecturerManagement.Services.ScientificResearchGuideService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = ex.StackTrace };
             }
         }
 
@@ -96,7 +96,6 @@ namespace LecturerManagement.Services.ScientificResearchGuideService
         {
             try
             {
-
                 var task = _mapper.Map<ScientificResearchGuide>(updateScientificResearchGuide);
                 _unitOfWork.ScientificResearchGuides.Update(task);
                 if (!await SaveChange())
@@ -104,11 +103,10 @@ namespace LecturerManagement.Services.ScientificResearchGuideService
                     return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = "Error when update Scientific Research Guide" };
                 }
                 return new ServiceResponse<GetScientificResearchGuideDto> { Success = true, Message = "Update Scientific Research Guide Success" };
-
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = ex.StackTrace };
             }
         }
     }

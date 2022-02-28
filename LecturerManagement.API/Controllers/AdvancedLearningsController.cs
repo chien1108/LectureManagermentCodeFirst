@@ -33,7 +33,7 @@ namespace LecturerManagement.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<GetAdvancedLearningDto>>> GetAdvancedLearning(int id)
         {
-            return Ok(await _service.GetAdvancedLearningByCondition(x => x.Id == id));
+            return Ok(await _service.GetAdvancedLearningByCondition(x => x.Id == id.ToString()));
         }
 
         // PUT: api/AdvancedLearnings/5
@@ -61,8 +61,8 @@ namespace LecturerManagement.API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<ServiceResponse<GetAdvancedLearningDto>>> DeleteAdvancedLearning(int id)
         {
-            var data = _mapper.Map<AdvancedLearning>(await _service.GetAdvancedLearningByCondition(x => x.Id == id));
-            var response = await _service.DeleteAdvancedLearning(data);
+            var data = _mapper.Map<AdvancedLearning>(await _service.GetAdvancedLearningByCondition(x => x.Id == id.ToString()));
+            var response = await _service.DeleteAdvancedLearning();
             if (response.Data == null)
             {
                 return NotFound(response);

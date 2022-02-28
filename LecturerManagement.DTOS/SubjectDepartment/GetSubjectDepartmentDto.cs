@@ -1,6 +1,8 @@
-﻿namespace LecturerManagement.DTOS.SubjectDepartment
+﻿using LecturerManagement.DTOS.Models.Base;
+
+namespace LecturerManagement.DTOS.SubjectDepartment
 {
-    public class GetSubjectDepartmentDto
+    public class GetSubjectDepartmentDto : BaseEntity<string>
     {
         public string Name { get; set; }
         public string Description { get; set; } = null;

@@ -2,7 +2,7 @@
 {
     public class AddStandardTimeDto
     {
-        public string ID { get; set; }
+        ////public string ID { get; set; }
 
         public string Name { get; set; }
         public int StandardHours { get; set; }

@@ -2,6 +2,7 @@
 using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
+using LecturerManagement.DTOS.Modules.Functions;
 using LecturerManagement.DTOS.Position;
 using System;
 using System.Collections.Generic;
@@ -25,26 +26,69 @@ namespace LecturerManagement.Services.PositionService
         {
             try
             {
-                await _unitOfWork.Positions.Create(_mapper.Map<Position>(newPosition));
-                if (await SaveChange())
+
+                var checkIsExist = await _unitOfWork.Positions.FindByConditionAsync(x => x.Name.ToLower().Trim() == newPosition.Name.Trim().ToLower());
+                if (checkIsExist == null)
                 {
-                    return new ServiceResponse<GetPositionDto> { Success = true, Message = "Add Position Success" };
+                    Position position = new()
+                    {
+                        Name = newPosition.Name,
+                        Description = newPosition.Description,
+                        DiscountPercent = newPosition.DiscountPercent,
+                        Status = DTOS.Modules.Enums.Status.IsActive,
+                        CreatedDate = DateTime.Now,
+                    };
+
+                    var listPositionFromDB = await _unitOfWork.Positions.FindAllAsync();
+                    var length = listPositionFromDB.Count;
+
+                    if (length == 0)
+                    {
+                        position.Id = "CV01";
+                    }
+                    else
+                    {
+                        position.Id = GenerateUniqueStringId.GenrateNewStringId(listPositionFromDB[length - 1].Id);
+                    }
+
+
+                    await _unitOfWork.Positions.Create(position);
+
+
+                    if (await SaveChange())
+                    {
+                        return new ServiceResponse<GetPositionDto> { Success = true, Message = "Add Position Success" };
+                    }
+                    else
+                    {
+                        return new ServiceResponse<GetPositionDto> { Success = false, Message = "Error when create new Position" };
+                    }
                 }
                 else
                 {
-                    return new ServiceResponse<GetPositionDto> { Success = false, Message = "Error when create new Position" };
+                    return new ServiceResponse<GetPositionDto>
+                    {
+                        Success = false,
+                        Message = "Position Is Exist",
+                        Data = _mapper.Map<GetPositionDto>(checkIsExist)
+                    };
                 }
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetPositionDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetPositionDto>
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
             }
         }
-        public async Task<ServiceResponse<GetPositionDto>> DeletePosition(Position deletePosition)
+        public async Task<ServiceResponse<GetPositionDto>> DeletePosition(Expression<Func<Position, bool>> expression = null)
         {
             try
             {
-                _unitOfWork.Positions.Delete(deletePosition);
+                var positionFromDb = await _unitOfWork.Positions.FindByConditionAsync(expression);
+                _unitOfWork.Positions.Delete(positionFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetPositionDto> { Success = false, Message = "Error when delete Position" };
@@ -91,13 +135,18 @@ namespace LecturerManagement.Services.PositionService
         => await _unitOfWork.Positions.Save();
 
 
-        public async Task<ServiceResponse<GetPositionDto>> UpdatePosition(UpdatePositionDto updatePosition)
+        public async Task<ServiceResponse<GetPositionDto>> UpdatePosition(string id, UpdatePositionDto updatePosition)
         {
             try
             {
+                var positionFromDb = await _unitOfWork.Positions.FindByConditionAsync(x => x.Id == id);
 
-                var task = _mapper.Map<Position>(updatePosition);
-                _unitOfWork.Positions.Update(task);
+                positionFromDb.Name = updatePosition.Name;
+                positionFromDb.Description = updatePosition.Description;
+                positionFromDb.DiscountPercent = updatePosition.DiscountPercent;
+                positionFromDb.ModifiedDate = DateTime.Now;
+
+                _unitOfWork.Positions.Update(positionFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetPositionDto> { Success = false, Message = "Error when update Position" };

@@ -1,6 +1,8 @@
-﻿namespace LecturerManagement.DTOS.Position
+﻿using LecturerManagement.DTOS.Models.Base;
+
+namespace LecturerManagement.DTOS.Position
 {
-    public class GetPositionDto
+    public class GetPositionDto : BaseEntity<string>
     {
         //public string ID { get; set; }
 

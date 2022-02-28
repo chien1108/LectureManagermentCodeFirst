@@ -12,7 +12,7 @@ namespace LecturerManagement.Core.Models.Entities
         //public string ID { get; set; }
 
         [ForeignKey("Lecturer")]
-        public string LecturerID { get; set; }
+        public string LecturerId { get; set; }
 
         public string Name { get; set; }
         public string LevelOfResearch { get; set; }

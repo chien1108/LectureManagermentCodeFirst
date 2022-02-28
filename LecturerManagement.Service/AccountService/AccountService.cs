@@ -177,21 +177,14 @@ namespace LecturerManagement.Services.AccountService
         {
             try
             {
-                var accountFromDb = await Find(x => x.Id == updateAccount.Id);
-                if (accountFromDb != null)
+                var task = _mapper.Map<AdvancedLearning>(updateAccount);
+                _unitOfWork.AdvancedLearnings.Update(task);
+                if (!await SaveChange())
                 {
-                    var task = _mapper.Map<AdvancedLearning>(updateAccount);
-                    _unitOfWork.AdvancedLearnings.Update(task);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<UpdateAccountDto> { Success = false, Message = "Error when update Account" };
-                    }
-                    return new ServiceResponse<UpdateAccountDto> { Success = true, Message = "Update Account Success" };
+                    return new ServiceResponse<UpdateAccountDto> { Success = false, Message = "Error when update Account" };
                 }
-                else
-                {
-                    return new ServiceResponse<UpdateAccountDto> { Success = false, Message = "Not Found Account" };
-                }
+                return new ServiceResponse<UpdateAccountDto> { Success = true, Message = "Update Account Success" };
+
             }
             catch (Exception ex)
             {

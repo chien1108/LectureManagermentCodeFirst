@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using LecturerManagement.Core.Models;
+using LecturerManagement.DTOS.TrainingSystem;
+using LecturerManagement.Services.TrainingSystemService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using LecturerManagement.Core.Data;
-using LecturerManagement.Core.Models.Entities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
 {
@@ -14,109 +12,110 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class TrainingSystemsController : ControllerBase
     {
-        private readonly LecturerManagementSystemDbContext _context;
+        private readonly ITrainingSystemService _trainingSystemService;
+        private readonly IMapper _mapper;
 
-        public TrainingSystemsController(LecturerManagementSystemDbContext context)
+        public TrainingSystemsController(ITrainingSystemService trainingSystemService, IMapper mapper)
         {
-            _context = context;
+            _trainingSystemService = trainingSystemService;
+            _mapper = mapper;
         }
 
         // GET: api/TrainingSystems
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TrainingSystem>>> GetTrainingSystems()
+        /// <summary>
+        /// Get All Training System
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetTrainingSystems")]
+        public async Task<ActionResult<ServiceResponse<IEnumerable<GetTrainingSystemDto>>>> GetTrainingSystems()
         {
-            return await _context.TrainingSystems.ToListAsync();
+            return Ok(await _trainingSystemService.GetAllTrainingSystem());
         }
 
         // GET: api/TrainingSystems/5
+        /// <summary>
+        /// Get Single Training System
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<TrainingSystem>> GetTrainingSystem(string id)
+        public async Task<ActionResult<ServiceResponse<GetTrainingSystemDto>>> GetTrainingSystem(string id)
         {
-            var trainingSystem = await _context.TrainingSystems.FindAsync(id);
+            var trainingSystem = await _trainingSystemService.GetTrainingSystemByCondition(x => x.Id == id);
 
-            if (trainingSystem == null)
+            if (trainingSystem.Data == null)
             {
-                return NotFound();
+                return NotFound(trainingSystem);
             }
 
-            return trainingSystem;
+            return Ok(trainingSystem);
         }
 
         // PUT: api/TrainingSystems/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update Training System By Id
+        /// </summary>
+        /// <param name="id">Id For update element</param>
+        /// <param name="updatedTrainingSystem">Update Object</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTrainingSystem(string id, TrainingSystem trainingSystem)
+        public async Task<ActionResult<ServiceResponse<GetTrainingSystemDto>>> UpdateTrainingSystem(string id, UpdateTrainingSystemDto updatedTrainingSystem)
         {
-            if (id != trainingSystem.Id)
+            if (updatedTrainingSystem == null)
             {
                 return BadRequest();
             }
-
-            _context.Entry(trainingSystem).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TrainingSystemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/TrainingSystems
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<TrainingSystem>> PostTrainingSystem(TrainingSystem trainingSystem)
-        {
-            _context.TrainingSystems.Add(trainingSystem);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (TrainingSystemExists(trainingSystem.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetTrainingSystem", new { id = trainingSystem.Id }, trainingSystem);
-        }
-
-        // DELETE: api/TrainingSystems/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTrainingSystem(string id)
-        {
-            var trainingSystem = await _context.TrainingSystems.FindAsync(id);
-            if (trainingSystem == null)
+            if (!await TrainingSystemExists(id))
             {
                 return NotFound();
             }
 
-            _context.TrainingSystems.Remove(trainingSystem);
-            await _context.SaveChangesAsync();
+            return Ok(await _trainingSystemService.UpdateTrainingSystem(updatedTrainingSystem, expression: x => x.Id == id));
+        }
 
+        // POST: api/TrainingSystems
+        /// <summary>
+        /// Add New Training System(Thêm Mới Hệ Đào Tạo)
+        /// </summary>
+        /// <param name="newTrainingSystem">New Object Instance for Add</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<ServiceResponse<GetTrainingSystemDto>>> AddNewTrainingSystem(AddTrainingSystemDto newTrainingSystem)
+        {
+
+            if (newTrainingSystem == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(await _trainingSystemService.AddTrainingSystem(newTrainingSystem));
+            }
+
+        }
+
+        // DELETE: api/TrainingSystems/5
+        /// <summary>
+        /// Delete Training System By Id(Xoá hệ đào tạo theo ID)
+        /// </summary>
+        /// <param name="id">Id For Delete Tranining System</param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTrainingSystem(string id)
+        {
+            var trainingSystem = await _trainingSystemService.GetTrainingSystemByCondition(x => x.Id == id);
+            if (trainingSystem == null)
+            {
+                return NotFound(trainingSystem);
+            }
+            await _trainingSystemService.DeleteTrainingSystem(x => x.Id == id);
             return NoContent();
         }
 
-        private bool TrainingSystemExists(string id)
+        private async Task<bool> TrainingSystemExists(string id)
         {
-            return _context.TrainingSystems.Any(e => e.Id == id);
+            var response = await _trainingSystemService.IsExisted(x => x.Id == id);
+            return response.Success;
         }
     }
 }

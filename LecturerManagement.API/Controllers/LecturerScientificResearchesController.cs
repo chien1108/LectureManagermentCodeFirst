@@ -3,9 +3,6 @@ using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.LecturerScientificResearch;
 using LecturerManagement.Services.LecturerScientificResearchService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
@@ -28,10 +25,10 @@ namespace LecturerManagement.API.Controllers
         public async Task<IActionResult> GetLecturerScientificResearches()
         {
             var response = await _service.GetAllLecturerScientificResearch();
-            if(response.Data == null)
+            if (response.Data == null)
             {
                 return NotFound(response);
-            }    
+            }
             return Ok(response);
         }
 
@@ -53,7 +50,7 @@ namespace LecturerManagement.API.Controllers
         [HttpPut]
         public async Task<IActionResult> PutLecturerScientificResearch(string id, UpdateLecturerScientificResearchDto updateLecturerScientificResearchDto)
         {
-            if(!await LecturerScientificResearchExists(id))
+            if (!await LecturerScientificResearchExists(id))
             {
                 return NotFound();
             }
@@ -66,7 +63,7 @@ namespace LecturerManagement.API.Controllers
         public async Task<IActionResult> PostLecturerScientificResearch(AddLecturerScientificResearchDto addLecturerScientificResearchDto)
         {
             var response = await _service.AddLecturerScientificResearch(addLecturerScientificResearchDto);
-            if(response.Success == false)
+            if (!response.Success)
             {
                 return BadRequest(response);
             }
@@ -79,7 +76,7 @@ namespace LecturerManagement.API.Controllers
         {
             var data = _mapper.Map<LecturerScientificResearch>(await _service.GetLecturerScientificResearchByCondition(x => x.Id.ToLower().Equals(id.ToLower())));
             var response = await _service.DeleteLecturerScientificResearch(data);
-            if(response.Success == false)
+            if (!response.Success)
             {
                 return BadRequest(response);
             }

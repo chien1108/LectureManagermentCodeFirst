@@ -1,10 +1,11 @@
 ﻿using LecturerManagement.DTOS.Account;
+using LecturerManagement.DTOS.Models.Base;
 using LecturerManagement.DTOS.Modules.Enums;
 using System;
 
 namespace LecturerManagement.DTOS.LecturerDTO
 {
-    public class GetLecturerDto
+    public class GetLecturerDto : BaseEntity<string>
     {
         public string FullName { get; set; }
         public string Gender { get; set; }

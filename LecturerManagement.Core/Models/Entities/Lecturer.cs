@@ -12,12 +12,14 @@ namespace LecturerManagement.Core.Models.Entities
         //public string ID { get; set; }
 
         [ForeignKey("StandardTime")]
-        public string StandardTimeID { get; set; }
+        public string StandardTimeId { get; set; }
 
         [ForeignKey("SubjectDepartment")]
-        public string SubjectDepartmentID { get; set; }
+        public string SubjectDepartmentId { get; set; }
+
         //public Status Status { get; set; }
         public string FullName { get; set; }
+
         public string Gender { get; set; }
         public DateTime? BirthDate { get; set; }
         public string IdentityCardNumber { get; set; }

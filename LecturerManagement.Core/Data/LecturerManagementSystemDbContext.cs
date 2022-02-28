@@ -7,13 +7,11 @@ namespace LecturerManagement.Core.Data
     {
         public LecturerManagementSystemDbContext()
         {
-
         }
 
         public LecturerManagementSystemDbContext(DbContextOptions<LecturerManagementSystemDbContext> options)
             : base(options)
         {
-
         }
 
         public DbSet<Lecturer> Lecturers { get; set; }
@@ -33,15 +31,14 @@ namespace LecturerManagement.Core.Data
         public DbSet<StandardTime> StandardTimes { get; set; }
         public DbSet<MachineRoom> MachineRooms { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Teaching>(entity =>
             {
-                entity.HasKey(e => new { e.SubjectID, e.LectureID, e.ClassID });
+                entity.HasKey(e => new { e.SubjectId, e.LectureId, e.ClassId });
             });
 
-            //modelBuilder.Entity<Account>().Property(x => x.Permission).HasDefaultValue(Permission.Lecturer);
+            ////modelBuilder.Entity<Account>().Property(x => x.Permission).HasDefaultValue(Permission.Lecturer);
         }
     }
 }

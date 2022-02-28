@@ -14,8 +14,8 @@ namespace LecturerManagement.Services.SubjectDepartmentService
         //CRUD
         Task<ServiceResponse<GetSubjectDepartmentDto>> AddSubjectDepartment(AddSubjectDepartmentDto createSubjectDepartment);
 
-        Task<ServiceResponse<GetSubjectDepartmentDto>> DeleteSubjectDepartment(SubjectDepartment deleteSubjectDepartment);
-        Task<ServiceResponse<GetSubjectDepartmentDto>> UpdateSubjectDepartment(UpdateSubjectDepartmentDto updateSubjectDepartment);
+        Task<ServiceResponse<GetSubjectDepartmentDto>> DeleteSubjectDepartment(Expression<Func<SubjectDepartment, bool>> expression = null);
+        Task<ServiceResponse<GetSubjectDepartmentDto>> UpdateSubjectDepartment(UpdateSubjectDepartmentDto updateSubjectDepartment, Expression<Func<SubjectDepartment, bool>> expression = null);
         Task<bool> IsExisted(Expression<Func<SubjectDepartment, bool>> expression = null);
         Task<ServiceResponse<ICollection<GetSubjectDepartmentDto>>> GetAllSubjectDepartment(Expression<Func<SubjectDepartment,
                                 bool>> expression = null,

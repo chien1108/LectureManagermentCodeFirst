@@ -12,8 +12,8 @@
         public int QuantityUnit { get; set; }
         public string Description { get; set; }
 
-        //public TrainingSystem TrainingSystem { get; set; }
-        //public SubjectType SubjectType { get; set; }
-        //public ICollection<Teaching> Teachings { get; set; } = new HashSet<Teaching>();
+        ////public TrainingSystem TrainingSystem { get; set; }
+        ////public SubjectType SubjectType { get; set; }
+        ////public ICollection<Teaching> Teachings { get; set; } = new HashSet<Teaching>();
     }
 }

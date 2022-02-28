@@ -3,6 +3,7 @@ using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.AdvancedLearning;
+using LecturerManagement.DTOS.Modules.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,25 @@ namespace LecturerManagement.Services.AdvancedLearningService
         {
             try
             {
-                await _unitOfWork.AdvancedLearnings.Create(_mapper.Map<AdvancedLearning>(createAdvancedLearning));
+                var listFromDb = await _unitOfWork.AdvancedLearnings.FindAllAsync();
+                AdvancedLearning advancedLearningadvancedLearning = new()
+                {
+                    CreatedDate = DateTime.Now,
+                    Description = createAdvancedLearning.Description,
+                    SchoolYear = createAdvancedLearning.SchoolYear,
+                    Status = DTOS.Modules.Enums.Status.IsActive,
+                };
+                var length = listFromDb.Count;
+                if (length != 0)
+                {
+                    advancedLearningadvancedLearning.Id = GenerateUniqueStringId.GenrateNewStringId(listFromDb[length - 1].Id);
+                }
+                else
+                {
+                    advancedLearningadvancedLearning.Id = "GC01";
+                }
+
+                await _unitOfWork.AdvancedLearnings.Create(advancedLearningadvancedLearning);
 
                 if (!await SaveChange())
                 {
@@ -42,11 +61,12 @@ namespace LecturerManagement.Services.AdvancedLearningService
             }
         }
 
-        public async Task<ServiceResponse<ICollection<GetAdvancedLearningDto>>> DeleteAdvancedLearning(AdvancedLearning deletedAdvancedLearning)
+        public async Task<ServiceResponse<ICollection<GetAdvancedLearningDto>>> DeleteAdvancedLearning(Expression<Func<AdvancedLearning, bool>> expression = null)
         {
             try
             {
-                _unitOfWork.AdvancedLearnings.Delete(deletedAdvancedLearning);
+                var advanceLearningFromDB = await _unitOfWork.AdvancedLearnings.FindByConditionAsync(expression);
+                _unitOfWork.AdvancedLearnings.Delete(advanceLearningFromDB);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<ICollection<GetAdvancedLearningDto>> { Success = false, Message = "Error when delete Advanced Learning" };
@@ -98,25 +118,17 @@ namespace LecturerManagement.Services.AdvancedLearningService
         public async Task<bool> SaveChange()
              => await _unitOfWork.AdvancedLearnings.Save();
 
-        public async Task<ServiceResponse<GetAdvancedLearningDto>> UpdateAdvancedLearning(UpdateAdvancedLearningDto updateAdvanceLearning)
+        public async Task<ServiceResponse<GetAdvancedLearningDto>> UpdateAdvancedLearning(UpdateAdvancedLearningDto updateAdvanceLearning, Expression<Func<AdvancedLearning, bool>> expression = null)
         {
             try
             {
-                var advanceLearningFromDB = await GetAdvancedLearningByCondition(x => x.Id == updateAdvanceLearning.Id);
-                if (advanceLearningFromDB.Data != null)
+                var advanceLearningFromDB = await _unitOfWork.AdvancedLearnings.FindByConditionAsync(expression);
+                _unitOfWork.AdvancedLearnings.Update(advanceLearningFromDB);
+                if (!await SaveChange())
                 {
-                    var task = _mapper.Map<AdvancedLearning>(updateAdvanceLearning);
-                    _unitOfWork.AdvancedLearnings.Update(task);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<GetAdvancedLearningDto> { Success = false, Message = "Error when update Advanced Learning" };
-                    }
-                    return new ServiceResponse<GetAdvancedLearningDto> { Data = _mapper.Map<GetAdvancedLearningDto>(updateAdvanceLearning), Success = true, Message = "Update Advanced Learning Success" };
+                    return new ServiceResponse<GetAdvancedLearningDto> { Success = false, Message = "Error when update Advanced Learning" };
                 }
-                else
-                {
-                    return new ServiceResponse<GetAdvancedLearningDto> { Success = false, Message = "Not Found Advanced Learning" };
-                }
+                return new ServiceResponse<GetAdvancedLearningDto> { Data = _mapper.Map<GetAdvancedLearningDto>(updateAdvanceLearning), Success = true, Message = "Update Advanced Learning Success" };
             }
             catch (Exception ex)
             {

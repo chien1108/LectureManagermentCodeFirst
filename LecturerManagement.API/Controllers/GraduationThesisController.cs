@@ -31,7 +31,7 @@ namespace LecturerManagement.API.Controllers
 
         // GET: api/GraduationThesis/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<GraduationThesis>>> GetGraduationThesis(int id)
+        public async Task<ActionResult<ServiceResponse<GraduationThesis>>> GetGraduationThesis(string id)
         {
             var graduationThesis = await _graduationThesisService.GetGraduationThesisByCondition(x => x.Id == id);
 
@@ -51,7 +51,7 @@ namespace LecturerManagement.API.Controllers
         /// <param name="graduationThesis"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<ActionResult<ServiceResponse<GetGraduationThesisDto>>> UpdateGraduationThesis(int id, UpdateGraduationThesisDto graduationThesis)
+        public async Task<ActionResult<ServiceResponse<GetGraduationThesisDto>>> UpdateGraduationThesis(string id, UpdateGraduationThesisDto graduationThesis)
         {
             ////if (id != graduationThesis.Id)
             ////{
@@ -83,17 +83,17 @@ namespace LecturerManagement.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGraduationThesis(int id)
+        public async Task<IActionResult> DeleteGraduationThesis(string id)
         {
-            var @response = await _graduationThesisService.GetGraduationThesisByCondition(x => x.Id == id);
-            if (@response.Data == null)
+            var response = await _graduationThesisService.GetGraduationThesisByCondition(x => x.Id == id);
+            if (response.Data == null)
             {
-                return NotFound(@response);
+                return NotFound(response);
             }
-            return Ok(_graduationThesisService.DeleteGraduationThesis(_mapper.Map<GraduationThesis>(@response.Data)));
+            return Ok(_graduationThesisService.DeleteGraduationThesis(_mapper.Map<GraduationThesis>(response.Data)));
         }
 
-        private async Task<bool> GraduationThesisExists(int id)
+        private async Task<bool> GraduationThesisExists(string id)
         {
             return await _graduationThesisService.IsExisted(x => x.Id == id);
         }

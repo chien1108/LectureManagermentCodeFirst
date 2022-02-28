@@ -51,6 +51,7 @@ namespace LecturerManagement.API
             //Position
             CreateMap<Position, GetPositionDto>().ReverseMap();
 
+
             //ScientificResarch
             CreateMap<ScientificResearchGuide, GetScientificResearchGuideDto>().ReverseMap();
 

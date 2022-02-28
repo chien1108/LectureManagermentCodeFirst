@@ -1,8 +1,6 @@
-﻿using LecturerManagement.DTOS.Models.Base;
-
-namespace LecturerManagement.DTOS.StandardTime
+﻿namespace LecturerManagement.DTOS.StandardTime
 {
-    public class UpdateStandardTimeDto : BaseEntity<string>
+    public class UpdateStandardTimeDto
     {
         ///public string Id { get; set; }
 

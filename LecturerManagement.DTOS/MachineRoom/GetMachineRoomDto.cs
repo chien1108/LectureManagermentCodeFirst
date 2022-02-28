@@ -1,6 +1,8 @@
-﻿namespace LecturerManagement.DTOS.MachineRoom
+﻿using LecturerManagement.DTOS.Models.Base;
+
+namespace LecturerManagement.DTOS.MachineRoom
 {
-    public class GetMachineRoomDto
+    public class GetMachineRoomDto : BaseEntity<string>
     {
         public string LecturerID { get; set; }
 

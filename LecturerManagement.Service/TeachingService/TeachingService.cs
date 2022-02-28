@@ -2,6 +2,7 @@
 using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
+using LecturerManagement.DTOS.Modules.Functions;
 using LecturerManagement.DTOS.Teaching;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,31 @@ namespace LecturerManagement.Services.TeachingService
         {
             try
             {
-                await _unitOfWork.Teachings.Create(_mapper.Map<Teaching>(createTeaching));
+                var listFromDb = await _unitOfWork.Teachings.FindAllAsync();
+                var length = listFromDb.Count;
+
+                var teaching = new Teaching()
+                {
+                    LectureId = createTeaching.LectureID,
+                    ClassId = createTeaching.ClassID,
+                    SubjectId = createTeaching.SubjectID,
+                    NumberOfStudents = createTeaching.NumberOfStudents,
+                    CreatedDate = DateTime.Now,
+                    Status = DTOS.Modules.Enums.Status.IsActive,
+                    Description = createTeaching.Description,
+                    SchoolYear = createTeaching.SchoolYear
+                };
+
+                if (length != 0)
+                {
+                    teaching.Id = GenerateUniqueStringId.GenrateNewStringId(listFromDb[length - 1].Id);
+                }
+                else
+                {
+                    teaching.Id = "GD01";
+                }
+
+                await _unitOfWork.Teachings.Create(teaching);
                 if (await SaveChange())
                 {
                     return new ServiceResponse<GetTeachingDto> { Success = true, Message = "Add Teaching Success" };
@@ -37,15 +62,20 @@ namespace LecturerManagement.Services.TeachingService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetTeachingDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetTeachingDto>
+                {
+                    Success = false,
+                    Message = ex.StackTrace
+                };
             }
         }
 
-        public async Task<ServiceResponse<GetTeachingDto>> DeleteTeaching(Teaching deleteTeaching)
+        public async Task<ServiceResponse<GetTeachingDto>> DeleteTeaching(Expression<Func<Teaching, bool>> expression = null)
         {
             try
             {
-                _unitOfWork.Teachings.Delete(deleteTeaching);
+                var teachingFromDb = await _unitOfWork.Teachings.FindByConditionAsync(expression);
+                _unitOfWork.Teachings.Delete(teachingFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetTeachingDto> { Success = false, Message = "Error when delete Teaching" };
@@ -54,7 +84,7 @@ namespace LecturerManagement.Services.TeachingService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetTeachingDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetTeachingDto> { Success = false, Message = ex.StackTrace };
             }
         }
 
@@ -90,12 +120,16 @@ namespace LecturerManagement.Services.TeachingService
 
         public async Task<bool> SaveChange()
         => await _unitOfWork.Teachings.Save();
-        public async Task<ServiceResponse<GetTeachingDto>> UpdateTeaching(UpdateTeachingDto updateTeaching)
+        public async Task<ServiceResponse<GetTeachingDto>> UpdateTeaching(UpdateTeachingDto updateTeaching, Expression<Func<Teaching, bool>> expression = null)
         {
             try
             {
-                var task = _mapper.Map<Teaching>(updateTeaching);
-                _unitOfWork.Teachings.Update(task);
+                var teachingFromDb = await _unitOfWork.Teachings.FindByConditionAsync(expression);
+                teachingFromDb.ModifiedDate = DateTime.Now;
+                teachingFromDb.NumberOfStudents = updateTeaching.NumberOfStudents;
+                teachingFromDb.SchoolYear = updateTeaching.SchoolYear;
+                teachingFromDb.Description = updateTeaching.Description;
+                _unitOfWork.Teachings.Update(teachingFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetTeachingDto> { Success = false, Message = "Error when update Teaching" };
@@ -104,7 +138,7 @@ namespace LecturerManagement.Services.TeachingService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetTeachingDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetTeachingDto> { Success = false, Message = ex.StackTrace };
             }
         }
     }

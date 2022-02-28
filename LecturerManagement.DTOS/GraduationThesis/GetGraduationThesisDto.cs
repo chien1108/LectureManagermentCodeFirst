@@ -1,6 +1,8 @@
-﻿namespace LecturerManagement.DTOS.GraduationThesis
+﻿using LecturerManagement.DTOS.Models.Base;
+
+namespace LecturerManagement.DTOS.GraduationThesis
 {
-    public class GetGraduationThesisDto
+    public class GetGraduationThesisDto : BaseEntity<string>
     {
         public int? TopicNumbers { get; set; }
         public int? RebuttalProjectNumbers { get; set; }

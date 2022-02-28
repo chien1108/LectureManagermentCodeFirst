@@ -1,4 +1,6 @@
-﻿namespace LecturerManagement.DTOS.SubjectType
+﻿using LecturerManagement.DTOS.Models.Base;
+
+namespace LecturerManagement.DTOS.SubjectType
 {
     public class UpdateSubjectTypeDto
     {

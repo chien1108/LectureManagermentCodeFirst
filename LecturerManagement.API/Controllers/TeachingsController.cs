@@ -1,12 +1,10 @@
-﻿using System;
+﻿using LecturerManagement.Core.Data;
+using LecturerManagement.Core.Models.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using LecturerManagement.Core.Data;
-using LecturerManagement.Core.Models.Entities;
 
 namespace LecturerManagement.API.Controllers
 {
@@ -47,7 +45,7 @@ namespace LecturerManagement.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTeaching(string id, Teaching teaching)
         {
-            if (id != teaching.SubjectID)
+            if (id != teaching.SubjectId)
             {
                 return BadRequest();
             }
@@ -85,7 +83,7 @@ namespace LecturerManagement.API.Controllers
             }
             catch (DbUpdateException)
             {
-                if (TeachingExists(teaching.SubjectID))
+                if (TeachingExists(teaching.SubjectId))
                 {
                     return Conflict();
                 }
@@ -95,7 +93,7 @@ namespace LecturerManagement.API.Controllers
                 }
             }
 
-            return CreatedAtAction("GetTeaching", new { id = teaching.SubjectID }, teaching);
+            return CreatedAtAction("GetTeaching", new { id = teaching.SubjectId }, teaching);
         }
 
         // DELETE: api/Teachings/5
@@ -116,7 +114,7 @@ namespace LecturerManagement.API.Controllers
 
         private bool TeachingExists(string id)
         {
-            return _context.Teachings.Any(e => e.SubjectID == id);
+            return _context.Teachings.Any(e => e.SubjectId == id);
         }
     }
 }

@@ -14,8 +14,8 @@ namespace LecturerManagement.Services.StandardTimeService
         //CRUD
         Task<ServiceResponse<GetStandardTimeDto>> AddStandardTime(AddStandardTimeDto createStandardTime);
 
-        Task<ServiceResponse<GetStandardTimeDto>> DeleteStandardTime(StandardTime deleteStandardTime);
-        Task<ServiceResponse<GetStandardTimeDto>> UpdateStandardTime(UpdateStandardTimeDto updateStandardTime);
+        Task<ServiceResponse<GetStandardTimeDto>> DeleteStandardTime(Expression<Func<StandardTime, bool>> expression = null);
+        Task<ServiceResponse<GetStandardTimeDto>> UpdateStandardTime(UpdateStandardTimeDto updateStandardTime, Expression<Func<StandardTime, bool>> expression = null);
         Task<ServiceResponse<GetStandardTimeDto>> IsExisted(Expression<Func<StandardTime, bool>> expression = null);
         Task<ServiceResponse<ICollection<GetStandardTimeDto>>> GetAllStandardTime(Expression<Func<StandardTime,
                                 bool>> expression = null,

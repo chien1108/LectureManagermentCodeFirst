@@ -2,6 +2,7 @@
 using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
+using LecturerManagement.DTOS.Modules.Functions;
 using LecturerManagement.DTOS.SubjectDepartment;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,33 @@ namespace LecturerManagement.Services.SubjectDepartmentService
         {
             try
             {
-                await _unitOfWork.SubjectDepartments.Create(_mapper.Map<SubjectDepartment>(createSubjectDepartment));
+                var lisrFromDb = await _unitOfWork.SubjectDepartments.FindAllAsync();
+                SubjectDepartment newSubjectDepartment;
+                var length = lisrFromDb.Count;
+                if (length != 0)
+                {
+                    newSubjectDepartment = new()
+                    {
+                        Id = GenerateUniqueStringId.GenrateNewStringId(lisrFromDb[length - 1].Id),
+                        Name = createSubjectDepartment.Name,
+                        Description = createSubjectDepartment.Description,
+                        CreatedDate = DateTime.Now,
+                        Status = DTOS.Modules.Enums.Status.IsActive
+                    };
+                }
+                else
+                {
+                    newSubjectDepartment = new()
+                    {
+                        Id = "BM01",
+                        Name = createSubjectDepartment.Name,
+                        Description = createSubjectDepartment.Description,
+                        CreatedDate = DateTime.Now,
+                        Status = DTOS.Modules.Enums.Status.IsActive
+                    };
+                }
+
+                await _unitOfWork.SubjectDepartments.Create(newSubjectDepartment);
                 if (await SaveChange())
                 {
                     return new ServiceResponse<GetSubjectDepartmentDto> { Success = true, Message = "Add Subject Department Success" };
@@ -37,39 +64,20 @@ namespace LecturerManagement.Services.SubjectDepartmentService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetSubjectDepartmentDto> { Success = false, Message = ex.Message };
-            }
-        }
-        public async Task<ServiceResponse<SubjectDepartment>> Delete(SubjectDepartment deleteSubjectDepartment)
-        {
-            try
-            {
-                var subjectDepartmentFromDB = await Find(x => x.Id == 1.ToString());
-                if (subjectDepartmentFromDB != null)
+                return new ServiceResponse<GetSubjectDepartmentDto>
                 {
-                    _unitOfWork.SubjectDepartments.Delete(deleteSubjectDepartment);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<SubjectDepartment> { Success = false, Message = "Error when delete Subject Department" };
-                    }
-                    return new ServiceResponse<SubjectDepartment> { Success = true, Message = "Delete Subject Department Success" };
-                }
-                else
-                {
-                    return new ServiceResponse<SubjectDepartment> { Success = false, Message = "Not Found Subject Department" };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponse<SubjectDepartment> { Success = false, Message = ex.Message };
+                    Success = false,
+                    Message = ex.StackTrace
+                };
             }
         }
 
-        public async Task<ServiceResponse<GetSubjectDepartmentDto>> DeleteSubjectDepartment(SubjectDepartment deleteSubjectDepartment)
+        public async Task<ServiceResponse<GetSubjectDepartmentDto>> DeleteSubjectDepartment(Expression<Func<SubjectDepartment, bool>> expression = null)
         {
             try
             {
-                _unitOfWork.SubjectDepartments.Delete(deleteSubjectDepartment);
+                var subjectDepartmentFromDb = await _unitOfWork.SubjectDepartments.FindByConditionAsync(expression);
+                _unitOfWork.SubjectDepartments.Delete(subjectDepartmentFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetSubjectDepartmentDto> { Success = false, Message = "Error when delete Subject Department" };
@@ -78,15 +86,9 @@ namespace LecturerManagement.Services.SubjectDepartmentService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetSubjectDepartmentDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetSubjectDepartmentDto> { Success = false, Message = ex.StackTrace };
             }
         }
-
-        public async Task<GetSubjectDepartmentDto> Find(Expression<Func<SubjectDepartment, bool>> expression = null, List<string> includes = null)
-         => _mapper.Map<GetSubjectDepartmentDto>(await _unitOfWork.SubjectDepartments.FindByConditionAsync(expression, includes));
-
-        public async Task<ICollection<GetSubjectDepartmentDto>> FindAll(Expression<Func<SubjectDepartment, bool>> expression = null, Func<IQueryable<SubjectDepartment>, IOrderedQueryable<SubjectDepartment>> orderBy = null, List<string> includes = null)
-        => _mapper.Map<ICollection<GetSubjectDepartmentDto>>(await _unitOfWork.SubjectDepartments.FindAllAsync(expression, orderBy, includes));
 
         public async Task<ServiceResponse<ICollection<GetSubjectDepartmentDto>>> GetAllSubjectDepartment(Expression<Func<SubjectDepartment, bool>> expression = null, Func<IQueryable<SubjectDepartment>, IOrderedQueryable<SubjectDepartment>> orderBy = null, List<string> includes = null)
         {
@@ -123,38 +125,16 @@ namespace LecturerManagement.Services.SubjectDepartmentService
         public async Task<bool> SaveChange()
         => await _unitOfWork.SubjectDepartments.Save();
 
-        public async Task<ServiceResponse<UpdateSubjectDepartmentDto>> Update(UpdateSubjectDepartmentDto updateSubjectDepartment)
-        {
-            try
-            {
-                var subjectDepartmentFromDB = await Find(x => x.Id == 1.ToString());
-                if (subjectDepartmentFromDB != null)
-                {
-                    var task = _mapper.Map<SubjectDepartment>(updateSubjectDepartment);
-                    _unitOfWork.SubjectDepartments.Update(task);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<UpdateSubjectDepartmentDto> { Success = false, Message = "Error when update Subject Department" };
-                    }
-                    return new ServiceResponse<UpdateSubjectDepartmentDto> { Success = true, Message = "Update Subject Department Success" };
-                }
-                else
-                {
-                    return new ServiceResponse<UpdateSubjectDepartmentDto> { Success = false, Message = "Not Found Subject Department" };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponse<UpdateSubjectDepartmentDto> { Success = false, Message = ex.Message };
-            }
-        }
 
-        public async Task<ServiceResponse<GetSubjectDepartmentDto>> UpdateSubjectDepartment(UpdateSubjectDepartmentDto updateSubjectDepartment)
+        public async Task<ServiceResponse<GetSubjectDepartmentDto>> UpdateSubjectDepartment(UpdateSubjectDepartmentDto updateSubjectDepartment, Expression<Func<SubjectDepartment, bool>> expression = null)
         {
             try
             {
-                var task = _mapper.Map<SubjectDepartment>(updateSubjectDepartment);
-                _unitOfWork.SubjectDepartments.Update(task);
+                var subjectDepartmentFromDb = await _unitOfWork.SubjectDepartments.FindByConditionAsync(expression);
+                subjectDepartmentFromDb.Name = updateSubjectDepartment.Name;
+                subjectDepartmentFromDb.ModifiedDate = DateTime.Now;
+                subjectDepartmentFromDb.Description = updateSubjectDepartment.Description;
+                _unitOfWork.SubjectDepartments.Update(subjectDepartmentFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetSubjectDepartmentDto> { Success = false, Message = "Error when update Subject Department" };
@@ -164,7 +144,7 @@ namespace LecturerManagement.Services.SubjectDepartmentService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetSubjectDepartmentDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetSubjectDepartmentDto> { Success = false, Message = ex.StackTrace };
             }
         }
     }

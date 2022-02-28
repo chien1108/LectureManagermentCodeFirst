@@ -14,8 +14,8 @@ namespace LecturerManagement.Services.ClassService
         //CRUD
         Task<ServiceResponse<GetClassDto>> AddNewClass(AddClassDto createClass);
 
-        Task<ServiceResponse<GetClassDto>> DeleteClass(Class deleteClass);
-        Task<ServiceResponse<GetClassDto>> UpdateClass(UpdateClassDto updateClass);
+        Task<ServiceResponse<GetClassDto>> DeleteClass(Expression<Func<Class, bool>> expression = null);
+        Task<ServiceResponse<GetClassDto>> UpdateClass(UpdateClassDto updateClass, Expression<Func<Class, bool>> expression = null);
         Task<bool> IsExisted(Expression<Func<Class, bool>> expression = null);
         Task<ServiceResponse<ICollection<GetClassDto>>> GetAllClass(Expression<Func<Class,
                                 bool>> expression = null,

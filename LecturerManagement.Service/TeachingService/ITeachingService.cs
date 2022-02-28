@@ -14,8 +14,8 @@ namespace LecturerManagement.Services.TeachingService
         //CRUD
         Task<ServiceResponse<GetTeachingDto>> AddTeaching(AddTeachingDto createTeaching);
 
-        Task<ServiceResponse<GetTeachingDto>> DeleteTeaching(Teaching deleteTeaching);
-        Task<ServiceResponse<GetTeachingDto>> UpdateTeaching(UpdateTeachingDto updateTeaching);
+        Task<ServiceResponse<GetTeachingDto>> DeleteTeaching(Expression<Func<Teaching, bool>> expression = null);
+        Task<ServiceResponse<GetTeachingDto>> UpdateTeaching(UpdateTeachingDto updateTeaching, Expression<Func<Teaching, bool>> expression = null);
         Task<bool> IsExisted(Expression<Func<Teaching, bool>> expression = null);
         Task<ServiceResponse<ICollection<GetTeachingDto>>> GetAllTeaching(Expression<Func<Teaching,
                                 bool>> expression = null,

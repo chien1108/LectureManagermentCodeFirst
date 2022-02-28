@@ -13,10 +13,10 @@ namespace LecturerManagement.Core.Models.Entities
         //public string ID { get; set; }
 
         [ForeignKey("TrainingSystem")]
-        public string TrainingSystemID { get; set; }
+        public string TrainingSystemId { get; set; }
 
         [ForeignKey("SubjectType")]
-        public string SubjectTypeID { get; set; }
+        public string SubjectTypeId { get; set; }
 
         public string Name { get; set; }
         public int QuantityUnit { get; set; }

@@ -37,14 +37,15 @@ namespace LecturerManagement.Services.SubjectService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetSubjectDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetSubjectDto> { Success = false, Message = ex.StackTrace };
             }
         }
-        public async Task<ServiceResponse<GetSubjectDto>> DeleteSubject(Subject deleteSubject)
+        public async Task<ServiceResponse<GetSubjectDto>> DeleteSubject(Expression<Func<Subject, bool>> expression = null)
         {
             try
             {
-                _unitOfWork.Subjects.Delete(deleteSubject);
+                var subjectFromDb = await _unitOfWork.Subjects.FindByConditionAsync(expression);
+                _unitOfWork.Subjects.Delete(subjectFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetSubjectDto> { Success = false, Message = "Error when delete Subject" };
@@ -53,7 +54,7 @@ namespace LecturerManagement.Services.SubjectService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetSubjectDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetSubjectDto> { Success = false, Message = ex.StackTrace };
             }
         }
 
@@ -90,12 +91,16 @@ namespace LecturerManagement.Services.SubjectService
         public async Task<bool> SaveChange()
         => await _unitOfWork.Subjects.Save();
 
-        public async Task<ServiceResponse<GetSubjectDto>> UpdateSubject(UpdateSubjectDto updateSubject)
+        public async Task<ServiceResponse<GetSubjectDto>> UpdateSubject(UpdateSubjectDto updateSubject, Expression<Func<Subject, bool>> expression = null)
         {
             try
             {
-                var task = _mapper.Map<Subject>(updateSubject);
-                _unitOfWork.Subjects.Update(task);
+                var subjectFromDb = await _unitOfWork.Subjects.FindByConditionAsync(expression);
+                subjectFromDb.ModifiedDate = DateTime.Now;
+                subjectFromDb.Name = updateSubject.Name;
+                subjectFromDb.Description = updateSubject.Description;
+                subjectFromDb.QuantityUnit = updateSubject.QuantityUnit;
+                _unitOfWork.Subjects.Update(subjectFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetSubjectDto> { Success = false, Message = "Error when update Subject" };
@@ -104,7 +109,7 @@ namespace LecturerManagement.Services.SubjectService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetSubjectDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetSubjectDto> { Success = false, Message = ex.StackTrace };
             }
         }
     }

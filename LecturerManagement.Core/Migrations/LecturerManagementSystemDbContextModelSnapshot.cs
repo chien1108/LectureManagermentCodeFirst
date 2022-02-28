@@ -21,10 +21,8 @@ namespace LecturerManagement.Core.Migrations
 
             modelBuilder.Entity("LecturerManagement.Core.Models.Entities.Account", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -32,7 +30,7 @@ namespace LecturerManagement.Core.Migrations
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("LecturerID")
+                    b.Property<string>("LecturerId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("ModifiedDate")
@@ -51,23 +49,22 @@ namespace LecturerManagement.Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LecturerID")
+                    b.HasIndex("LecturerId")
                         .IsUnique()
-                        .HasFilter("[LecturerID] IS NOT NULL");
+                        .HasFilter("[LecturerId] IS NOT NULL");
 
                     b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("LecturerManagement.Core.Models.Entities.AdvancedLearning", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -82,6 +79,7 @@ namespace LecturerManagement.Core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SchoolYear")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
@@ -112,6 +110,7 @@ namespace LecturerManagement.Core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("NumberOfStudent")
@@ -120,12 +119,12 @@ namespace LecturerManagement.Core.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("TrainingSystemID")
+                    b.Property<string>("TrainingSystemId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TrainingSystemID");
+                    b.HasIndex("TrainingSystemId");
 
                     b.ToTable("Classes");
                 });
@@ -163,12 +162,10 @@ namespace LecturerManagement.Core.Migrations
 
             modelBuilder.Entity("LecturerManagement.Core.Models.Entities.GraduationThesis", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ClassID")
+                    b.Property<string>("ClassId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -177,7 +174,7 @@ namespace LecturerManagement.Core.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LecturerID")
+                    b.Property<string>("LecturerId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("MarkSessionNumbers")
@@ -200,9 +197,9 @@ namespace LecturerManagement.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassID");
+                    b.HasIndex("ClassId");
 
-                    b.HasIndex("LecturerID");
+                    b.HasIndex("LecturerId");
 
                     b.ToTable("GraduationTheses");
                 });
@@ -251,13 +248,13 @@ namespace LecturerManagement.Core.Migrations
                     b.Property<string>("PositionID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("StandardTimeID")
+                    b.Property<string>("StandardTimeId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("SubjectDepartmentID")
+                    b.Property<string>("SubjectDepartmentId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("YearStartWork")
@@ -267,9 +264,9 @@ namespace LecturerManagement.Core.Migrations
 
                     b.HasIndex("PositionID");
 
-                    b.HasIndex("StandardTimeID");
+                    b.HasIndex("StandardTimeId");
 
-                    b.HasIndex("SubjectDepartmentID");
+                    b.HasIndex("SubjectDepartmentId");
 
                     b.ToTable("Lecturers");
                 });
@@ -285,7 +282,7 @@ namespace LecturerManagement.Core.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LecturerID")
+                    b.Property<string>("LecturerId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LevelOfResearch")
@@ -305,7 +302,7 @@ namespace LecturerManagement.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LecturerID");
+                    b.HasIndex("LecturerId");
 
                     b.ToTable("LecturerScientificResearches");
                 });
@@ -321,7 +318,7 @@ namespace LecturerManagement.Core.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LecturerID")
+                    b.Property<string>("LecturerId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("ModifiedDate")
@@ -338,7 +335,7 @@ namespace LecturerManagement.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LecturerID");
+                    b.HasIndex("LecturerId");
 
                     b.ToTable("MachineRooms");
                 });
@@ -382,7 +379,7 @@ namespace LecturerManagement.Core.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LecturerID")
+                    b.Property<string>("LecturerId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("ModifiedDate")
@@ -402,7 +399,7 @@ namespace LecturerManagement.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LecturerID");
+                    b.HasIndex("LecturerId");
 
                     b.ToTable("ScientificResearchGuides");
                 });
@@ -458,17 +455,17 @@ namespace LecturerManagement.Core.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("SubjectTypeID")
+                    b.Property<string>("SubjectTypeId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("TrainingSystemID")
+                    b.Property<string>("TrainingSystemId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubjectTypeID");
+                    b.HasIndex("SubjectTypeId");
 
-                    b.HasIndex("TrainingSystemID");
+                    b.HasIndex("TrainingSystemId");
 
                     b.ToTable("Subjects");
                 });
@@ -525,17 +522,26 @@ namespace LecturerManagement.Core.Migrations
 
             modelBuilder.Entity("LecturerManagement.Core.Models.Entities.Teaching", b =>
                 {
-                    b.Property<string>("SubjectID")
+                    b.Property<string>("SubjectId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("LectureID")
+                    b.Property<string>("LectureId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ClassID")
+                    b.Property<string>("ClassId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("NumberOfStudents")
                         .HasColumnType("int");
@@ -543,11 +549,14 @@ namespace LecturerManagement.Core.Migrations
                     b.Property<string>("SchoolYear")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SubjectID", "LectureID", "ClassID");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
-                    b.HasIndex("ClassID");
+                    b.HasKey("SubjectId", "LectureId", "ClassId");
 
-                    b.HasIndex("LectureID");
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("LectureId");
 
                     b.ToTable("Teachings");
                 });
@@ -584,7 +593,7 @@ namespace LecturerManagement.Core.Migrations
                 {
                     b.HasOne("LecturerManagement.Core.Models.Entities.Lecturer", "Lecturer")
                         .WithOne("Account")
-                        .HasForeignKey("LecturerManagement.Core.Models.Entities.Account", "LecturerID");
+                        .HasForeignKey("LecturerManagement.Core.Models.Entities.Account", "LecturerId");
 
                     b.Navigation("Lecturer");
                 });
@@ -602,7 +611,7 @@ namespace LecturerManagement.Core.Migrations
                 {
                     b.HasOne("LecturerManagement.Core.Models.Entities.TrainingSystem", "TrainingSystem")
                         .WithMany("Classes")
-                        .HasForeignKey("TrainingSystemID");
+                        .HasForeignKey("TrainingSystemId");
 
                     b.Navigation("TrainingSystem");
                 });
@@ -611,11 +620,11 @@ namespace LecturerManagement.Core.Migrations
                 {
                     b.HasOne("LecturerManagement.Core.Models.Entities.Class", "Class")
                         .WithMany("GraduationTheses")
-                        .HasForeignKey("ClassID");
+                        .HasForeignKey("ClassId");
 
                     b.HasOne("LecturerManagement.Core.Models.Entities.Lecturer", "Lecturer")
                         .WithMany("GraduationTheses")
-                        .HasForeignKey("LecturerID");
+                        .HasForeignKey("LecturerId");
 
                     b.Navigation("Class");
 
@@ -630,11 +639,11 @@ namespace LecturerManagement.Core.Migrations
 
                     b.HasOne("LecturerManagement.Core.Models.Entities.StandardTime", "StandardTime")
                         .WithMany("Lecturers")
-                        .HasForeignKey("StandardTimeID");
+                        .HasForeignKey("StandardTimeId");
 
                     b.HasOne("LecturerManagement.Core.Models.Entities.SubjectDepartment", "SubjectDepartment")
                         .WithMany("Lecturers")
-                        .HasForeignKey("SubjectDepartmentID");
+                        .HasForeignKey("SubjectDepartmentId");
 
                     b.Navigation("Position");
 
@@ -647,7 +656,7 @@ namespace LecturerManagement.Core.Migrations
                 {
                     b.HasOne("LecturerManagement.Core.Models.Entities.Lecturer", "Lecturer")
                         .WithMany("LecturerScientificResearches")
-                        .HasForeignKey("LecturerID");
+                        .HasForeignKey("LecturerId");
 
                     b.Navigation("Lecturer");
                 });
@@ -656,7 +665,7 @@ namespace LecturerManagement.Core.Migrations
                 {
                     b.HasOne("LecturerManagement.Core.Models.Entities.Lecturer", "Lecturer")
                         .WithMany("MachineRooms")
-                        .HasForeignKey("LecturerID");
+                        .HasForeignKey("LecturerId");
 
                     b.Navigation("Lecturer");
                 });
@@ -665,7 +674,7 @@ namespace LecturerManagement.Core.Migrations
                 {
                     b.HasOne("LecturerManagement.Core.Models.Entities.Lecturer", "Lecturer")
                         .WithMany("ScientificResearchGuides")
-                        .HasForeignKey("LecturerID");
+                        .HasForeignKey("LecturerId");
 
                     b.Navigation("Lecturer");
                 });
@@ -674,11 +683,11 @@ namespace LecturerManagement.Core.Migrations
                 {
                     b.HasOne("LecturerManagement.Core.Models.Entities.SubjectType", "SubjectType")
                         .WithMany("Subjects")
-                        .HasForeignKey("SubjectTypeID");
+                        .HasForeignKey("SubjectTypeId");
 
                     b.HasOne("LecturerManagement.Core.Models.Entities.TrainingSystem", "TrainingSystem")
                         .WithMany("Subjects")
-                        .HasForeignKey("TrainingSystemID");
+                        .HasForeignKey("TrainingSystemId");
 
                     b.Navigation("SubjectType");
 
@@ -689,19 +698,19 @@ namespace LecturerManagement.Core.Migrations
                 {
                     b.HasOne("LecturerManagement.Core.Models.Entities.Class", "Class")
                         .WithMany("Teachings")
-                        .HasForeignKey("ClassID")
+                        .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LecturerManagement.Core.Models.Entities.Lecturer", "Lecturer")
                         .WithMany("Teaches")
-                        .HasForeignKey("LectureID")
+                        .HasForeignKey("LectureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LecturerManagement.Core.Models.Entities.Subject", "Subject")
                         .WithMany("Teachings")
-                        .HasForeignKey("SubjectID")
+                        .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

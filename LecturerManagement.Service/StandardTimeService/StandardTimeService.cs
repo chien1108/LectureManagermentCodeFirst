@@ -2,6 +2,7 @@
 using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
+using LecturerManagement.DTOS.Modules.Functions;
 using LecturerManagement.DTOS.StandardTime;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,29 @@ namespace LecturerManagement.Services.StandardTimeService
         {
             try
             {
-                await _unitOfWork.StandardTimes.Create(_mapper.Map<StandardTime>(createStandardTime));
+                var listFromDb = await _unitOfWork.StandardTimes.FindAllAsync();
+                var length = listFromDb.Count;
+
+                var standardTime = new StandardTime()
+                {
+                    Name = createStandardTime.Name,
+                    CreatedDate = DateTime.Now,
+                    Status = DTOS.Modules.Enums.Status.IsActive,
+                    StandardHours = createStandardTime.StandardHours,
+                    Description = createStandardTime.Description,
+                };
+
+                if (length != 0)
+                {
+                    standardTime.Id = GenerateUniqueStringId.GenrateNewStringId(listFromDb[length - 1].Id);
+                }
+                else
+                {
+                    standardTime.Id = "CD01";
+                }
+
+
+                await _unitOfWork.StandardTimes.Create(standardTime);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetStandardTimeDto> { Success = false, Message = "Error when create new Standard Time" };
@@ -35,15 +58,16 @@ namespace LecturerManagement.Services.StandardTimeService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetStandardTimeDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetStandardTimeDto> { Success = false, Message = ex.StackTrace };
             }
         }
 
-        public async Task<ServiceResponse<GetStandardTimeDto>> DeleteStandardTime(StandardTime deleteStandardTime)
+        public async Task<ServiceResponse<GetStandardTimeDto>> DeleteStandardTime(Expression<Func<StandardTime, bool>> expression = null)
         {
             try
             {
-                _unitOfWork.StandardTimes.Delete(deleteStandardTime);
+                var standardTimeFromDb = await _unitOfWork.StandardTimes.FindByConditionAsync(expression);
+                _unitOfWork.StandardTimes.Delete(standardTimeFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetStandardTimeDto> { Success = false, Message = "Error when delete Standard Time" };
@@ -97,25 +121,21 @@ namespace LecturerManagement.Services.StandardTimeService
         public async Task<bool> SaveChange()
         => await _unitOfWork.StandardTimes.Save();
 
-        public async Task<ServiceResponse<GetStandardTimeDto>> UpdateStandardTime(UpdateStandardTimeDto updateStandardTime)
+        public async Task<ServiceResponse<GetStandardTimeDto>> UpdateStandardTime(UpdateStandardTimeDto updateStandardTime, Expression<Func<StandardTime, bool>> expression = null)
         {
             try
             {
-                ////var standardTimeFromDB = await _unitOfWork.StandardTimes.FindByConditionAsync(x => x.Id == updateStandardTime.Id);
-                ////if (standardTimeFromDB != null)
-                ////{
-                var task = _mapper.Map<StandardTime>(updateStandardTime);
-                _unitOfWork.StandardTimes.Update(task);
+                var standardTimeFromDB = await _unitOfWork.StandardTimes.FindByConditionAsync(expression);
+                standardTimeFromDB.ModifiedDate = DateTime.Now;
+                standardTimeFromDB.Name = updateStandardTime.Name;
+                standardTimeFromDB.Description = updateStandardTime.Description;
+                standardTimeFromDB.StandardHours = updateStandardTime.StandardHours;
+                _unitOfWork.StandardTimes.Update(standardTimeFromDB);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetStandardTimeDto> { Success = false, Message = "Error when update Standard Time" };
                 }
                 return new ServiceResponse<GetStandardTimeDto> { Success = true, Message = "Update Standard Time Success" };
-                ////}
-                ////else
-                ////{
-                ////    return new ServiceResponse<GetStandardTimeDto> { Success = false, Message = "Not Found Standard Time" };
-                ////}
             }
             catch (Exception ex)
             {

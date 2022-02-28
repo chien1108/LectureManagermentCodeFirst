@@ -3,9 +3,9 @@ using LecturerManagement.DTOS.TrainingSystem;
 
 namespace LecturerManagement.DTOS.Class
 {
-    public class UpdateClassDto : BaseEntity<string>
+    public class UpdateClassDto
     {
-        public string TrainingSystemID { get; set; }
+        //public string TrainingSystemID { get; set; }
         ///public string ID { get; set; }
         public string Name { get; set; }
         public int? NumberOfStudent { get; set; }

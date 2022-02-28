@@ -37,39 +37,15 @@ namespace LecturerManagement.Services.SubjectTypeService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetSubjectTypeDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetSubjectTypeDto> { Success = false, Message = ex.StackTrace };
             }
         }
-        public async Task<ServiceResponse<SubjectType>> Delete(SubjectType deleteSubjectType)
+        public async Task<ServiceResponse<GetSubjectTypeDto>> DeleteSubjectType(Expression<Func<SubjectType, bool>> expression = null)
         {
             try
             {
-                var subjectTypeFromDB = await Find(x => x.Id == 1.ToString());
-                if (subjectTypeFromDB != null)
-                {
-                    _unitOfWork.SubjectTypes.Delete(deleteSubjectType);
-                    if (!await SaveChange())
-                    {
-                        return new ServiceResponse<SubjectType> { Success = false, Message = "Error when delete Subject Type" };
-                    }
-                    return new ServiceResponse<SubjectType> { Success = true, Message = "Delete Subject Type Success" };
-                }
-                else
-                {
-                    return new ServiceResponse<SubjectType> { Success = false, Message = "Not Found Subject Type" };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponse<SubjectType> { Success = false, Message = ex.Message };
-            }
-        }
-
-        public async Task<ServiceResponse<GetSubjectTypeDto>> DeleteSubjectType(SubjectType deleteSubjectType)
-        {
-            try
-            {
-                _unitOfWork.SubjectTypes.Delete(deleteSubjectType);
+                var subjectTypeFromDB = await _unitOfWork.SubjectTypes.FindByConditionAsync(expression);
+                _unitOfWork.SubjectTypes.Delete(subjectTypeFromDB);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetSubjectTypeDto> { Success = false, Message = "Error when delete Subject Type" };
@@ -78,16 +54,9 @@ namespace LecturerManagement.Services.SubjectTypeService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetSubjectTypeDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetSubjectTypeDto> { Success = false, Message = ex.StackTrace };
             }
         }
-
-        public async Task<GetSubjectTypeDto> Find(Expression<Func<SubjectType, bool>> expression = null, List<string> includes = null)
-            => _mapper.Map<GetSubjectTypeDto>(await _unitOfWork.SubjectTypes.FindByConditionAsync(expression, includes));
-
-
-        public async Task<ICollection<GetSubjectTypeDto>> FindAll(Expression<Func<SubjectType, bool>> expression = null, Func<IQueryable<SubjectType>, IOrderedQueryable<SubjectType>> orderBy = null, List<string> includes = null)
-        => _mapper.Map<ICollection<GetSubjectTypeDto>>(await _unitOfWork.SubjectTypes.FindAllAsync(expression, orderBy, includes));
 
         public async Task<ServiceResponse<ICollection<GetSubjectTypeDto>>> GetAllSubjectType(Expression<Func<SubjectType, bool>> expression = null, Func<IQueryable<SubjectType>, IOrderedQueryable<SubjectType>> orderBy = null, List<string> includes = null)
         {
@@ -121,12 +90,15 @@ namespace LecturerManagement.Services.SubjectTypeService
 
         public async Task<bool> SaveChange()
         => await _unitOfWork.SubjectTypes.Save();
-        public async Task<ServiceResponse<GetSubjectTypeDto>> UpdateSubjectType(UpdateSubjectTypeDto updateSubjectType)
+        public async Task<ServiceResponse<GetSubjectTypeDto>> UpdateSubjectType(string id, UpdateSubjectTypeDto updateSubjectType)
         {
             try
             {
-                var task = _mapper.Map<SubjectType>(updateSubjectType);
-                _unitOfWork.SubjectTypes.Update(task);
+                var subjectTypeFromDb = await _unitOfWork.SubjectTypes.FindByConditionAsync(x => x.Id == id);
+                subjectTypeFromDb.Name = updateSubjectType.Name;
+                subjectTypeFromDb.Description = updateSubjectType.Description;
+                subjectTypeFromDb.ModifiedDate = DateTime.Now;
+                _unitOfWork.SubjectTypes.Update(subjectTypeFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetSubjectTypeDto> { Success = false, Message = "Error when update Subject Type" };
@@ -135,7 +107,7 @@ namespace LecturerManagement.Services.SubjectTypeService
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<GetSubjectTypeDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetSubjectTypeDto> { Success = false, Message = ex.StackTrace };
             }
         }
     }

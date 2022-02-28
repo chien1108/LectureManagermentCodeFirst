@@ -1,11 +1,12 @@
-﻿using LecturerManagement.DTOS.Subject;
+﻿using LecturerManagement.DTOS.Models.Base;
+using LecturerManagement.DTOS.Subject;
 using System.Collections.Generic;
 
 namespace LecturerManagement.DTOS.SubjectType
 {
-    public class GetSubjectTypeDto
+    public class GetSubjectTypeDto : BaseEntity<string>
     {
-        //public string ID { get; set; }
+        ////public string Id { get; set; }
 
         public string Name { get; set; }
         public string Description { get; set; }

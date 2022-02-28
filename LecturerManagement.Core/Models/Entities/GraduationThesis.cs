@@ -4,16 +4,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace LecturerManagement.Core.Models.Entities
 {
     // đồ án tốt nghiệp
-    public class GraduationThesis : BaseEntity<int>
+    public class GraduationThesis : BaseEntity<string>
     {
         //[Key]
         //public int ID { get; set; } //auto
 
         [ForeignKey("Lecturer")]
-        public string LecturerID { get; set; }
+        public string LecturerId { get; set; }
 
         [ForeignKey("Class")]
-        public string ClassID { get; set; }
+        public string ClassId { get; set; }
 
         public int? TopicNumbers { get; set; }
         public int? RebuttalProjectNumbers { get; set; }
