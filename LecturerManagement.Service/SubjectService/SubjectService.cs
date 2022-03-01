@@ -2,6 +2,7 @@
 using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
+using LecturerManagement.DTOS.Modules.Functions;
 using LecturerManagement.DTOS.Subject;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,25 @@ namespace LecturerManagement.Services.SubjectService
         {
             try
             {
-                await _unitOfWork.Subjects.Create(_mapper.Map<Subject>(createSubject));
+                var listFromDb = await _unitOfWork.Subjects.FindAllAsync();
+                var length = listFromDb.Count;
+                var subject = new Subject()
+                {
+                    CreatedDate = DateTime.Now,
+                    Name = createSubject.Name,
+                    Description = createSubject.Description,
+                    Status = DTOS.Modules.Enums.Status.IsActive,
+                    QuantityUnit = createSubject.QuantityUnit,
+                };
+                if (length == 0)
+                {
+                    subject.Id = "SJ01";
+                }
+                else
+                {
+                    subject.Id = GenerateUniqueStringId.GenrateNewStringId(prefix: listFromDb[length - 1].Id, textFormatPrefix: 2, numberFormatPrefix: 2);
+                }
+                await _unitOfWork.Subjects.Create(subject);
                 if (await SaveChange())
                 {
                     return new ServiceResponse<GetSubjectDto> { Success = true, Message = "Add Subject Success" };

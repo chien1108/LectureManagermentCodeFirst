@@ -43,7 +43,7 @@ namespace LecturerManagement.Services.TeachingService
 
                 if (length != 0)
                 {
-                    teaching.Id = GenerateUniqueStringId.GenrateNewStringId(listFromDb[length - 1].Id);
+                    teaching.Id = GenerateUniqueStringId.GenrateNewStringId(prefix: listFromDb[length - 1].Id, textFormatPrefix: 2, numberFormatPrefix: 2);
                 }
                 else
                 {

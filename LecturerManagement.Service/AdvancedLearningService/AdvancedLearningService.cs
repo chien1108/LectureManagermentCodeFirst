@@ -29,6 +29,7 @@ namespace LecturerManagement.Services.AdvancedLearningService
             try
             {
                 var listFromDb = await _unitOfWork.AdvancedLearnings.FindAllAsync();
+                var length = listFromDb.Count;
                 AdvancedLearning advancedLearningadvancedLearning = new()
                 {
                     CreatedDate = DateTime.Now,
@@ -36,10 +37,10 @@ namespace LecturerManagement.Services.AdvancedLearningService
                     SchoolYear = createAdvancedLearning.SchoolYear,
                     Status = DTOS.Modules.Enums.Status.IsActive,
                 };
-                var length = listFromDb.Count;
+
                 if (length != 0)
                 {
-                    advancedLearningadvancedLearning.Id = GenerateUniqueStringId.GenrateNewStringId(listFromDb[length - 1].Id);
+                    advancedLearningadvancedLearning.Id = GenerateUniqueStringId.GenrateNewStringId(prefix: listFromDb[length - 1].Id, textFormatPrefix: 2, numberFormatPrefix: 2);
                 }
                 else
                 {

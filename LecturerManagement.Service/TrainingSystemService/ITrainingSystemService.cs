@@ -16,7 +16,7 @@ namespace LecturerManagement.Services.TrainingSystemService
 
         Task<ServiceResponse<GetTrainingSystemDto>> DeleteTrainingSystem(Expression<Func<TrainingSystem, bool>> expression = null);
         Task<ServiceResponse<GetTrainingSystemDto>> UpdateTrainingSystem(UpdateTrainingSystemDto updateTrainingSystem, Expression<Func<TrainingSystem, bool>> expression = null);
-        Task<ServiceResponse<GetTrainingSystemDto>> IsExisted(Expression<Func<TrainingSystem, bool>> expression = null);
+        Task<bool> IsExisted(Expression<Func<TrainingSystem, bool>> expression = null);
         Task<ServiceResponse<ICollection<GetTrainingSystemDto>>> GetAllTrainingSystem(Expression<Func<TrainingSystem, bool>> expression = null,
                                                                 Func<IQueryable<TrainingSystem>, IOrderedQueryable<TrainingSystem>> orderBy = null,
                                                                 List<string> includes = null);

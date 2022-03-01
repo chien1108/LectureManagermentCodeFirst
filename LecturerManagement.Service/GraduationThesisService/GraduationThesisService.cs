@@ -3,6 +3,7 @@ using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.GraduationThesis;
+using LecturerManagement.DTOS.Modules.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,30 @@ namespace LecturerManagement.Services.GraduationThesisService
         {
             try
             {
-                await _unitOfWork.GraduationThesises.Create(_mapper.Map<GraduationThesis>(newGraduationThesis));
+                var listFromDb = await _unitOfWork.GraduationThesises.FindAllAsync();
+                var length = listFromDb.Count();
+
+                var graduationThesis = new GraduationThesis()
+                {
+                    CreatedDate = DateTime.Now,
+                    Status = DTOS.Modules.Enums.Status.IsActive,
+                    MarkSessionNumbers = newGraduationThesis.MarkSessionNumbers,
+                    RebuttalProjectNumbers = newGraduationThesis.RebuttalProjectNumbers,
+                    SchoolYear = newGraduationThesis.SchoolYear,
+                    TopicNumbers = newGraduationThesis.TopicNumbers,
+                    Description = newGraduationThesis.Description
+                };
+
+                if (length == 0)
+                {
+                    graduationThesis.Id = "GT01";
+                }
+                else
+                {
+                    graduationThesis.Id = GenerateUniqueStringId.GenrateNewStringId(prefix: listFromDb[length - 1].Id, textFormatPrefix: 2, numberFormatPrefix: 2);
+                }
+
+                await _unitOfWork.GraduationThesises.Create(graduationThesis);
                 if (await SaveChange())
                 {
                     return new ServiceResponse<GetGraduationThesisDto> { Success = true, Message = "Add Graduation Thesis Success" };
@@ -90,17 +114,25 @@ namespace LecturerManagement.Services.GraduationThesisService
         public async Task<bool> SaveChange()
             => await _unitOfWork.GraduationThesises.Save();
 
-        public async Task<ServiceResponse<GetGraduationThesisDto>> UpdateGraduationThesis(UpdateGraduationThesisDto updateGraduationThesis)
+        public async Task<ServiceResponse<GetGraduationThesisDto>> UpdateGraduationThesis(UpdateGraduationThesisDto updateGraduationThesis, Expression<Func<GraduationThesis, bool>> expression = null)
         {
             try
             {
-                var task = _mapper.Map<Class>(updateGraduationThesis);
-                _unitOfWork.Classes.Update(task);
+                var graduationThesisFromDb = await _unitOfWork.GraduationThesises.FindByConditionAsync(expression);
+
+                graduationThesisFromDb.ModifiedDate = DateTime.Now;
+                graduationThesisFromDb.MarkSessionNumbers = updateGraduationThesis.MarkSessionNumbers;
+                graduationThesisFromDb.TopicNumbers = updateGraduationThesis.TopicNumbers;
+                graduationThesisFromDb.RebuttalProjectNumbers = updateGraduationThesis.RebuttalProjectNumbers;
+                graduationThesisFromDb.SchoolYear = updateGraduationThesis.SchoolYear;
+                graduationThesisFromDb.Description = updateGraduationThesis.Description;
+
+                _unitOfWork.GraduationThesises.Update(graduationThesisFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetGraduationThesisDto> { Success = false, Message = "Error when update Graduation Thesis" };
                 }
-                return new ServiceResponse<GetGraduationThesisDto> { Success = true, Message = "Update Graduation Thesis Success", Data = _mapper.Map<GetGraduationThesisDto>(task) };
+                return new ServiceResponse<GetGraduationThesisDto> { Success = true, Message = "Update Graduation Thesis Success", Data = _mapper.Map<GetGraduationThesisDto>(graduationThesisFromDb) };
             }
             catch (Exception ex)
             {

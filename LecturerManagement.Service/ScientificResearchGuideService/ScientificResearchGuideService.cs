@@ -2,6 +2,7 @@
 using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
+using LecturerManagement.DTOS.Modules.Functions;
 using LecturerManagement.DTOS.ScientificResearchGuide;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,30 @@ namespace LecturerManagement.Services.ScientificResearchGuideService
         {
             try
             {
-                await _unitOfWork.ScientificResearchGuides.Create(_mapper.Map<ScientificResearchGuide>(newScientificResearchGuide));
+                var listFromDb = await _unitOfWork.ScientificResearchGuides.FindAllAsync();
+                var length = listFromDb.Count;
+
+                var scientificResearchGuide = new ScientificResearchGuide()
+                {
+                    CreatedDate = DateTime.Now,
+                    LecturerId = newScientificResearchGuide.LecturerID,
+                    Description = newScientificResearchGuide.Description,
+                    Quantity = newScientificResearchGuide.Quantity,
+                    SchoolYear = newScientificResearchGuide.SchoolYear,
+                    StudentYear = newScientificResearchGuide.StudentYear,
+                    Status = DTOS.Modules.Enums.Status.IsActive
+                };
+
+                if (length == 0)
+                {
+                    scientificResearchGuide.Id = "HDNCKHUTT001";
+                }
+                else
+                {
+                    scientificResearchGuide.Id = GenerateUniqueStringId.GenrateNewStringId(prefix: listFromDb[length - 1].Id, textFormatPrefix: 9, numberFormatPrefix: 3);
+                }
+
+                await _unitOfWork.ScientificResearchGuides.Create(scientificResearchGuide);
                 if (await SaveChange())
                 {
                     return new ServiceResponse<GetScientificResearchGuideDto> { Success = true, Message = "Add Scientific Research Guide Success" };
@@ -92,12 +116,18 @@ namespace LecturerManagement.Services.ScientificResearchGuideService
         public async Task<bool> SaveChange()
         => await _unitOfWork.ScientificResearchGuides.Save();
 
-        public async Task<ServiceResponse<GetScientificResearchGuideDto>> UpdateScientificResearchGuide(UpdateScientificResearchGuideDto updateScientificResearchGuide)
+        public async Task<ServiceResponse<GetScientificResearchGuideDto>> UpdateScientificResearchGuide(UpdateScientificResearchGuideDto updateScientificResearchGuide, Expression<Func<ScientificResearchGuide, bool>> expression = null)
         {
             try
             {
-                var task = _mapper.Map<ScientificResearchGuide>(updateScientificResearchGuide);
-                _unitOfWork.ScientificResearchGuides.Update(task);
+                var scientificResearchGuideFromDb = await _unitOfWork.ScientificResearchGuides.FindByConditionAsync(expression);
+
+                scientificResearchGuideFromDb.ModifiedDate = DateTime.Now;
+                scientificResearchGuideFromDb.Quantity = updateScientificResearchGuide.Quantity;
+                scientificResearchGuideFromDb.StudentYear = updateScientificResearchGuide.StudentYear;
+                scientificResearchGuideFromDb.SchoolYear = updateScientificResearchGuide.SchoolYear;
+                scientificResearchGuideFromDb.Description = updateScientificResearchGuide.Description;
+                _unitOfWork.ScientificResearchGuides.Update(scientificResearchGuideFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = "Error when update Scientific Research Guide" };

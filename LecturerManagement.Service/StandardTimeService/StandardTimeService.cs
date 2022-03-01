@@ -40,7 +40,7 @@ namespace LecturerManagement.Services.StandardTimeService
 
                 if (length != 0)
                 {
-                    standardTime.Id = GenerateUniqueStringId.GenrateNewStringId(listFromDb[length - 1].Id);
+                    standardTime.Id = GenerateUniqueStringId.GenrateNewStringId(prefix: listFromDb[length - 1].Id, textFormatPrefix: 2, numberFormatPrefix: 2);
                 }
                 else
                 {

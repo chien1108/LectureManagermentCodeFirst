@@ -48,7 +48,7 @@ namespace LecturerManagement.Services.PositionService
                     }
                     else
                     {
-                        position.Id = GenerateUniqueStringId.GenrateNewStringId(listPositionFromDB[length - 1].Id);
+                        position.Id = GenerateUniqueStringId.GenrateNewStringId(prefix: listPositionFromDB[length - 1].Id, numberFormatPrefix: 2, textFormatPrefix: 2);
                     }
 
 
@@ -145,7 +145,6 @@ namespace LecturerManagement.Services.PositionService
                 positionFromDb.Description = updatePosition.Description;
                 positionFromDb.DiscountPercent = updatePosition.DiscountPercent;
                 positionFromDb.ModifiedDate = DateTime.Now;
-
                 _unitOfWork.Positions.Update(positionFromDb);
                 if (!await SaveChange())
                 {

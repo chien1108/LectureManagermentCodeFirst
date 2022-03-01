@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using LecturerManagement.Core.Models;
+using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.TrainingSystem;
 using LecturerManagement.Services.TrainingSystemService;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
@@ -41,7 +44,7 @@ namespace LecturerManagement.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<GetTrainingSystemDto>>> GetTrainingSystem(string id)
         {
-            var trainingSystem = await _trainingSystemService.GetTrainingSystemByCondition(x => x.Id == id);
+            var trainingSystem = await _trainingSystemService.GetTrainingSystemByCondition(x => x.Id.ToLower().Trim() == id.ToLower().Trim());
 
             if (trainingSystem.Data == null)
             {
@@ -65,12 +68,12 @@ namespace LecturerManagement.API.Controllers
             {
                 return BadRequest();
             }
-            if (!await TrainingSystemExists(id))
+            if (!await TrainingSystemExists(x => x.Id.ToLower().Trim() == id.ToLower().Trim()))
             {
                 return NotFound();
             }
 
-            return Ok(await _trainingSystemService.UpdateTrainingSystem(updatedTrainingSystem, expression: x => x.Id == id));
+            return Ok(await _trainingSystemService.UpdateTrainingSystem(updatedTrainingSystem, expression: x => x.Id.ToLower().Trim() == id.ToLower().Trim()));
         }
 
         // POST: api/TrainingSystems
@@ -103,19 +106,17 @@ namespace LecturerManagement.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTrainingSystem(string id)
         {
-            var trainingSystem = await _trainingSystemService.GetTrainingSystemByCondition(x => x.Id == id);
-            if (trainingSystem == null)
+            if (!await TrainingSystemExists(x => x.Id.ToLower().Trim() == id.ToLower().Trim()))
             {
-                return NotFound(trainingSystem);
+                return NotFound();
             }
-            await _trainingSystemService.DeleteTrainingSystem(x => x.Id == id);
+            await _trainingSystemService.DeleteTrainingSystem(x => x.Id.ToLower().Trim() == id.ToLower().Trim());
             return NoContent();
         }
 
-        private async Task<bool> TrainingSystemExists(string id)
+        private async Task<bool> TrainingSystemExists(Expression<Func<TrainingSystem, bool>> expression = null)
         {
-            var response = await _trainingSystemService.IsExisted(x => x.Id == id);
-            return response.Success;
+            return await _trainingSystemService.IsExisted(expression);
         }
     }
 }

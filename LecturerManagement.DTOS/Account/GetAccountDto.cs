@@ -12,6 +12,5 @@ namespace LecturerManagement.DTOS.Account
         public Permission Permission { get; set; }
         public DateTime? DateCreated { get; set; }
         public GetLecturerDto Lecturer { get; set; }
-
     }
 }

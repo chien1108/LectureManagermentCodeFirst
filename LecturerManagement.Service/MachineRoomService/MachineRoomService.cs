@@ -91,13 +91,18 @@ namespace LecturerManagement.Services.MachineRoomService
         public async Task<bool> SaveChange()
         => await _unitOfWork.MachineRooms.Save();
 
-        public async Task<ServiceResponse<GetMachineRoomDto>> UpdateMachineRoom(UpdateMachineRoomDto updateMachineRoom)
+        public async Task<ServiceResponse<GetMachineRoomDto>> UpdateMachineRoom(UpdateMachineRoomDto updateMachineRoom, Expression<Func<MachineRoom, bool>> expression = null)
         {
             try
             {
+                var machineRoomFromDb = await _unitOfWork.MachineRooms.FindByConditionAsync(expression);
 
-                var task = _mapper.Map<MachineRoom>(updateMachineRoom);
-                _unitOfWork.MachineRooms.Update(task);
+                machineRoomFromDb.ModifiedDate = DateTime.Now;
+                machineRoomFromDb.Description = updateMachineRoom.Description;
+                machineRoomFromDb.QantityRoom = updateMachineRoom.QantityRoom;
+                machineRoomFromDb.SchoolYear = updateMachineRoom.SchoolYear;
+                machineRoomFromDb.LecturerId = updateMachineRoom.LecturerID;
+                _unitOfWork.MachineRooms.Update(machineRoomFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetMachineRoomDto> { Success = false, Message = "Error when update Machine Room" };

@@ -47,10 +47,11 @@ namespace LecturerManagement.API
 
             //MachineRoom
             CreateMap<MachineRoom, GetMachineRoomDto>().ReverseMap();
+            CreateMap<MachineRoom, UpdateMachineRoomDto>().ReverseMap();
 
             //Position
             CreateMap<Position, GetPositionDto>().ReverseMap();
-
+            CreateMap<Position, UpdatePositionDto>().ReverseMap();
 
             //ScientificResarch
             CreateMap<ScientificResearchGuide, GetScientificResearchGuideDto>().ReverseMap();

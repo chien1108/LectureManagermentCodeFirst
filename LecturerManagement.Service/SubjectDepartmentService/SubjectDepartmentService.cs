@@ -2,7 +2,6 @@
 using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
-using LecturerManagement.DTOS.Modules.Functions;
 using LecturerManagement.DTOS.SubjectDepartment;
 using System;
 using System.Collections.Generic;
@@ -33,7 +32,7 @@ namespace LecturerManagement.Services.SubjectDepartmentService
                 {
                     newSubjectDepartment = new()
                     {
-                        Id = GenerateUniqueStringId.GenrateNewStringId(lisrFromDb[length - 1].Id),
+                        //Id = GenerateUniqueStringId.GenrateNewStringId(lisrFromDb[length - 1].Id),
                         Name = createSubjectDepartment.Name,
                         Description = createSubjectDepartment.Description,
                         CreatedDate = DateTime.Now,

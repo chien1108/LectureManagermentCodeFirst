@@ -40,7 +40,7 @@ namespace LecturerManagement.Services.TrainingSystemService
 
                 if (length != 0)
                 {
-                    trainingSystem.Id = GenerateUniqueStringId.GenrateNewStringId(listFromDb[length - 1].Id);
+                    trainingSystem.Id = GenerateUniqueStringId.GenrateNewStringId(prefix: listFromDb[length - 1].Id, textFormatPrefix: 2, numberFormatPrefix: 2);
                 }
                 else
                 {
@@ -120,14 +120,14 @@ namespace LecturerManagement.Services.TrainingSystemService
             return new() { Message = "Training System is not exist", Success = false };
         }
 
-        public async Task<ServiceResponse<GetTrainingSystemDto>> IsExisted(Expression<Func<TrainingSystem, bool>> expression = null)
+        public async Task<bool> IsExisted(Expression<Func<TrainingSystem, bool>> expression = null)
         {
             var isExist = await _unitOfWork.TrainingSystems.FindByConditionAsync(expression);
             if (isExist == null)
             {
-                return new() { Message = "Training System is not Exist", Success = false };
+                return false;
             }
-            return new ServiceResponse<GetTrainingSystemDto>() { Message = "Training System Is Exist", Success = true, Data = _mapper.Map<GetTrainingSystemDto>(isExist) };
+            return true;
         }
 
         public async Task<bool> SaveChange()

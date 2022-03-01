@@ -69,22 +69,6 @@ namespace LecturerManagement.API.Controllers
         [HttpPost]
         public async Task<ActionResult<SubjectType>> PostSubjectType(SubjectType subjectType)
         {
-            //_context.SubjectTypes.Add(subjectType);
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateException)
-            //{
-            //    if (SubjectTypeExists(subjectType.Id))
-            //    {
-            //        return Conflict();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
 
             return CreatedAtAction("GetSubjectType", new { id = subjectType.Id }, subjectType);
         }

@@ -3,6 +3,7 @@ using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.LecturerScientificResearch;
+using LecturerManagement.DTOS.Modules.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,30 @@ namespace LecturerManagement.Services.LecturerScientificResearchService
         {
             try
             {
-                await _unitOfWork.LecturerScientificResearches.Create(_mapper.Map<LecturerScientificResearch>(newLecturerScientificResearch));
+                var listFromDb = await _unitOfWork.LecturerScientificResearches.FindAllAsync();
+                var length = listFromDb.Count();
+
+                var gvNCKH = new LecturerScientificResearch()
+                {
+                    LecturerId = newLecturerScientificResearch.LecturerID,
+                    CreatedDate = DateTime.Now,
+                    Status = DTOS.Modules.Enums.Status.Working,
+                    Name = newLecturerScientificResearch.Name,
+                    Description = newLecturerScientificResearch.Description,
+                    YearOfResearchParticipation = newLecturerScientificResearch.YearOfResearchParticipation,
+                    LevelOfResearch = newLecturerScientificResearch.LevelOfResearch
+                };
+
+                if (length == 0)
+                {
+                    gvNCKH.Id = "GVUTTNCKH001";
+                }
+                else
+                {
+                    gvNCKH.Id = GenerateUniqueStringId.GenrateNewStringId(prefix: listFromDb[length - 1].Id, textFormatPrefix: 9, numberFormatPrefix: 3);
+                }
+
+                await _unitOfWork.LecturerScientificResearches.Create(gvNCKH);
                 if (await SaveChange())
                 {
                     return new ServiceResponse<GetLecturerScientificResearchDto> { Success = true, Message = "Add Lecturer Scientific Research Success" };
@@ -94,10 +118,16 @@ namespace LecturerManagement.Services.LecturerScientificResearchService
         public async Task<bool> SaveChange()
             => await _unitOfWork.LecturerScientificResearches.Save();
 
-        public async Task<ServiceResponse<GetLecturerScientificResearchDto>> UpdateLecturerScientificResearch(UpdateLecturerScientificResearchDto updatedLecturerScientificResearch)
+        public async Task<ServiceResponse<GetLecturerScientificResearchDto>> UpdateLecturerScientificResearch(UpdateLecturerScientificResearchDto updatedLecturerScientificResearch, Expression<Func<LecturerScientificResearch, bool>> expression = null)
         {
             try
             {
+                var lecturerScientificResearchFromDb = await _unitOfWork.LecturerScientificResearches.FindByConditionAsync(expression);
+                lecturerScientificResearchFromDb.ModifiedDate = DateTime.Now;
+                lecturerScientificResearchFromDb.Name = updatedLecturerScientificResearch.Name;
+                lecturerScientificResearchFromDb.LevelOfResearch = updatedLecturerScientificResearch.LevelOfResearch;
+                lecturerScientificResearchFromDb.YearOfResearchParticipation = updatedLecturerScientificResearch.YearOfResearchParticipation;
+                lecturerScientificResearchFromDb.Description = updatedLecturerScientificResearch.Description;
                 var task = _mapper.Map<Class>(updatedLecturerScientificResearch);
                 _unitOfWork.Classes.Update(task);
                 if (!await SaveChange())

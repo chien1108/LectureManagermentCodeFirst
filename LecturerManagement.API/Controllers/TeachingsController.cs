@@ -1,9 +1,9 @@
-﻿using LecturerManagement.Core.Data;
-using LecturerManagement.Core.Models.Entities;
+﻿using AutoMapper;
+using LecturerManagement.Core.Models;
+using LecturerManagement.DTOS.Teaching;
+using LecturerManagement.Services.TeachingService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
@@ -12,109 +12,84 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class TeachingsController : ControllerBase
     {
-        private readonly LecturerManagementSystemDbContext _context;
+        private readonly ITeachingService _teachingService;
+        private readonly IMapper _mapper;
 
-        public TeachingsController(LecturerManagementSystemDbContext context)
+        public TeachingsController(ITeachingService teachingService, IMapper mapper)
         {
-            _context = context;
+            _teachingService = teachingService;
+            _mapper = mapper;
         }
 
         // GET: api/Teachings
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Teaching>>> GetTeachings()
+        public async Task<ActionResult<ServiceResponse<IEnumerable<GetTeachingDto>>>> GetTeachings()
         {
-            return await _context.Teachings.ToListAsync();
+            return Ok(await _teachingService.GetAllTeaching());
         }
 
         // GET: api/Teachings/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Teaching>> GetTeaching(string id)
+        public async Task<ActionResult<ServiceResponse<GetTeachingDto>>> GetTeaching(string id)
         {
-            var teaching = await _context.Teachings.FindAsync(id);
+            var teaching = await _teachingService.GetTeachingByCondition(x => x.Id == id);
 
             if (teaching == null)
             {
                 return NotFound();
             }
 
-            return teaching;
+            return Ok(teaching);
         }
 
         // PUT: api/Teachings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTeaching(string id, Teaching teaching)
+        public async Task<ActionResult<ServiceResponse<GetTeachingDto>>> UpdateTeaching(string id, UpdateTeachingDto teaching)
         {
-            if (id != teaching.SubjectId)
+            if (teaching == null)
             {
                 return BadRequest();
             }
-
-            _context.Entry(teaching).State = EntityState.Modified;
-
-            try
+            if (!await TeachingExists(id))
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TeachingExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(await _teachingService.UpdateTeaching(teaching, x => x.Id == id));
         }
 
         // POST: api/Teachings
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Teaching>> PostTeaching(Teaching teaching)
+        public async Task<ActionResult<ServiceResponse<GetTeachingDto>>> AddTeaching(AddTeachingDto teaching)
         {
-            _context.Teachings.Add(teaching);
-            try
+            if (teaching == null)
             {
-                await _context.SaveChangesAsync();
+                return BadRequest();
             }
-            catch (DbUpdateException)
+            else
             {
-                if (TeachingExists(teaching.SubjectId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return Ok(await _teachingService.AddTeaching(teaching));
             }
-
-            return CreatedAtAction("GetTeaching", new { id = teaching.SubjectId }, teaching);
         }
 
         // DELETE: api/Teachings/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTeaching(string id)
         {
-            var teaching = await _context.Teachings.FindAsync(id);
-            if (teaching == null)
+
+            if (!await TeachingExists(id))
             {
                 return NotFound();
             }
-
-            _context.Teachings.Remove(teaching);
-            await _context.SaveChangesAsync();
+            await _teachingService.DeleteTeaching(x => x.Id == id);
 
             return NoContent();
         }
 
-        private bool TeachingExists(string id)
+        private async Task<bool> TeachingExists(string id)
         {
-            return _context.Teachings.Any(e => e.SubjectId == id);
+            return await _teachingService.IsExisted(x => x.Id == id);
         }
     }
 }

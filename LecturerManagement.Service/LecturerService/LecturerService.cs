@@ -3,6 +3,7 @@ using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.LecturerDTO;
+using LecturerManagement.DTOS.Modules.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,35 @@ namespace LecturerManagement.Services.LecturerService
         {
             try
             {
-                await _unitOfWork.Lecturers.Create(_mapper.Map<Lecturer>(createLecturer));
+                var listfromDb = await _unitOfWork.Lecturers.FindAllAsync();
+                var length = listfromDb.Count();
+
+                var lecturer = new Lecturer()
+                {
+                    FullName = createLecturer.FullName,
+                    Gender = createLecturer.Gender,
+                    BirthDate = createLecturer.BirthDate,
+                    IdentityCardNumber = createLecturer.IdentityCardNumber,
+                    Portrait = createLecturer.Portrait,
+                    AcademicLevel = createLecturer.AcademicLevel,
+                    YearStartWork = createLecturer.YearStartWork,
+                    Email = createLecturer.Email,
+                    Address = createLecturer.Address,
+                    PhoneNumber = createLecturer.PhoneNumber,
+                    Description = createLecturer.Description,
+                    CreatedDate = DateTime.Now,
+                };
+
+                if (length != 0)
+                {
+                    lecturer.Id = GenerateUniqueStringId.GenrateNewStringId(prefix: listfromDb[length - 1].Id, textFormatPrefix: 5, numberFormatPrefix: 5);
+                }
+                else
+                {
+                    lecturer.Id = "GVUTT00001";
+                }
+
+                await _unitOfWork.Lecturers.Create(lecturer);
                 if (await SaveChange())
                 {
                     return new ServiceResponse<GetLecturerDto> { Success = true, Message = "Add Lecturer Success" };
@@ -99,17 +128,32 @@ namespace LecturerManagement.Services.LecturerService
 
 
 
-        public async Task<ServiceResponse<GetLecturerDto>> UpdateLecturer(UpdateLecturerDto updateLecturer)
+        public async Task<ServiceResponse<GetLecturerDto>> UpdateLecturer(UpdateLecturerDto updateLecturer, Expression<Func<Lecturer, bool>> expression = null)
         {
             try
             {
-                var task = _mapper.Map<Lecturer>(updateLecturer);
-                _unitOfWork.Lecturers.Update(task);
+                #region UpdateLecturer
+                var lecturerFromDb = await _unitOfWork.Lecturers.FindByConditionAsync(expression);
+
+                lecturerFromDb.ModifiedDate = DateTime.Now;
+                lecturerFromDb.IdentityCardNumber = updateLecturer.IdentityCardNumber;
+                lecturerFromDb.FullName = updateLecturer.FullName;
+                lecturerFromDb.Gender = updateLecturer.Gender;
+                lecturerFromDb.Portrait = updateLecturer.Portrait;
+                lecturerFromDb.AcademicLevel = updateLecturer.AcademicLevel;
+                lecturerFromDb.Email = updateLecturer.Email;
+                lecturerFromDb.Address = updateLecturer.Address;
+                lecturerFromDb.BirthDate = updateLecturer.BirthDate;
+                lecturerFromDb.Description = updateLecturer.Description;
+                lecturerFromDb.YearStartWork = updateLecturer.YearStartWork;
+                lecturerFromDb.PhoneNumber = updateLecturer.PhoneNumber;
+                #endregion 
+                _unitOfWork.Lecturers.Update(lecturerFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetLecturerDto> { Success = false, Message = "Error when update Lecturer" };
                 }
-                return new ServiceResponse<GetLecturerDto> { Success = true, Message = "Update Lecturer Success", Data = _mapper.Map<GetLecturerDto>(await _unitOfWork.Lecturers.FindByConditionAsync(x => x.Id == task.Id)) };
+                return new ServiceResponse<GetLecturerDto> { Success = true, Message = "Update Lecturer Success", Data = _mapper.Map<GetLecturerDto>(lecturerFromDb) };
 
             }
             catch (Exception ex)

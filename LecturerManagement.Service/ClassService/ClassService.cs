@@ -3,6 +3,7 @@ using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.Class;
+using LecturerManagement.DTOS.Modules.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,27 @@ namespace LecturerManagement.Services.ClassService
         {
             try
             {
-                await _unitOfWork.Classes.Create(_mapper.Map<Class>(createClass));
+                var listFromDb = await _unitOfWork.Classes.FindAllAsync();
+                var length = listFromDb.Count();
+
+                var classForAdd = new Class()
+                {
+                    Name = createClass.Name,
+                    CreatedDate = DateTime.Now,
+                    FormsOfTraining = createClass.FormsOfTraining,
+                    Status = DTOS.Modules.Enums.Status.IsActive,
+                    NumberOfStudent = createClass.NumberOfStudent
+                };
+
+                if (length == 0)
+                {
+                    classForAdd.Id = "DHCQ01";
+                }
+                else
+                {
+                    classForAdd.Id = GenerateUniqueStringId.GenrateNewStringId(prefix: listFromDb[length - 1].Id, textFormatPrefix: 4, numberFormatPrefix: 2);
+                }
+                await _unitOfWork.Classes.Create(classForAdd);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetClassDto> { Success = false, Message = "Error when create new Class" };
