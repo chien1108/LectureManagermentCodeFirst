@@ -14,7 +14,7 @@ namespace LecturerManagement.Services.MachineRoomService
         //CRUD
         Task<ServiceResponse<GetMachineRoomDto>> AddMachineRoom(AddMachineRoomDto createMachineRoom);
 
-        Task<ServiceResponse<GetMachineRoomDto>> DeleteMachineRoom(MachineRoom deleteMachineRoom);
+        Task<ServiceResponse<GetMachineRoomDto>> DeleteMachineRoom(Expression<Func<MachineRoom, bool>> expression = null);
         Task<ServiceResponse<GetMachineRoomDto>> UpdateMachineRoom(UpdateMachineRoomDto updateMachineRoom, Expression<Func<MachineRoom, bool>> expression = null);
         Task<bool> IsExisted(Expression<Func<MachineRoom, bool>> expression = null);
         Task<ServiceResponse<ICollection<GetMachineRoomDto>>> GetAllMachineRoom(Expression<Func<MachineRoom,

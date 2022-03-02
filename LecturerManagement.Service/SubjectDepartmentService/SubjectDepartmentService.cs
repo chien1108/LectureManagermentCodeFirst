@@ -2,6 +2,7 @@
 using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
+using LecturerManagement.DTOS.Modules.Functions;
 using LecturerManagement.DTOS.SubjectDepartment;
 using System;
 using System.Collections.Generic;
@@ -26,29 +27,21 @@ namespace LecturerManagement.Services.SubjectDepartmentService
             try
             {
                 var lisrFromDb = await _unitOfWork.SubjectDepartments.FindAllAsync();
-                SubjectDepartment newSubjectDepartment;
+                SubjectDepartment newSubjectDepartment = new()
+                {
+                    Name = createSubjectDepartment.Name,
+                    Description = createSubjectDepartment.Description,
+                    CreatedDate = DateTime.Now,
+                    Status = DTOS.Modules.Enums.Status.IsActive
+                };
                 var length = lisrFromDb.Count;
                 if (length != 0)
                 {
-                    newSubjectDepartment = new()
-                    {
-                        //Id = GenerateUniqueStringId.GenrateNewStringId(lisrFromDb[length - 1].Id),
-                        Name = createSubjectDepartment.Name,
-                        Description = createSubjectDepartment.Description,
-                        CreatedDate = DateTime.Now,
-                        Status = DTOS.Modules.Enums.Status.IsActive
-                    };
+                    newSubjectDepartment.Id = GenerateUniqueStringId.GenrateNewStringId(lisrFromDb[length - 1].Id, textFormatPrefix: 2, numberFormatPrefix: 2);
                 }
                 else
                 {
-                    newSubjectDepartment = new()
-                    {
-                        Id = "BM01",
-                        Name = createSubjectDepartment.Name,
-                        Description = createSubjectDepartment.Description,
-                        CreatedDate = DateTime.Now,
-                        Status = DTOS.Modules.Enums.Status.IsActive
-                    };
+                    newSubjectDepartment.Id = "BM01";
                 }
 
                 await _unitOfWork.SubjectDepartments.Create(newSubjectDepartment);

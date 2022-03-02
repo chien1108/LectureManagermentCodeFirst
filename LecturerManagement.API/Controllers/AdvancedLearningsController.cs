@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using LecturerManagement.Core.Models;
-using LecturerManagement.Core.Models.Entities;
+﻿using LecturerManagement.Core.Models;
 using LecturerManagement.DTOS.AdvancedLearning;
 using LecturerManagement.Services.AdvancedLearningService;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +12,10 @@ namespace LecturerManagement.API.Controllers
     public class AdvancedLearningsController : ControllerBase
     {
         private readonly IAdvancedLearningService _service;
-        private readonly IMapper _mapper;
 
-        public AdvancedLearningsController(IAdvancedLearningService service, IMapper mapper)
+        public AdvancedLearningsController(IAdvancedLearningService service)
         {
             _service = service;
-            _mapper = mapper;
         }
 
         // GET: api/AdvancedLearnings
@@ -59,15 +55,14 @@ namespace LecturerManagement.API.Controllers
 
         // DELETE: api/AdvancedLearnings/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ServiceResponse<GetAdvancedLearningDto>>> DeleteAdvancedLearning(int id)
+        public async Task<ActionResult<ServiceResponse<GetAdvancedLearningDto>>> DeleteAdvancedLearning(string id)
         {
-            var data = _mapper.Map<AdvancedLearning>(await _service.GetAdvancedLearningByCondition(x => x.Id == id.ToString()));
-            var response = await _service.DeleteAdvancedLearning();
+            var response = await _service.GetAdvancedLearningByCondition(x => x.Id == id);
             if (response.Data == null)
             {
                 return NotFound(response);
             }
-            return Ok(response);
+            return Ok(await _service.DeleteAdvancedLearning(x => x.Id == id));
         }
 
         ////private async Task<ActionResult<ServiceResponse<AdvancedLearning>>> AdvancedLearningExists(int id)

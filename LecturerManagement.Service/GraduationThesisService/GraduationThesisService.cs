@@ -63,11 +63,12 @@ namespace LecturerManagement.Services.GraduationThesisService
             }
         }
 
-        public async Task<ServiceResponse<GetGraduationThesisDto>> DeleteGraduationThesis(GraduationThesis deleteGraduationThesis)
+        public async Task<ServiceResponse<GetGraduationThesisDto>> DeleteGraduationThesis(Expression<Func<GraduationThesis, bool>> expression = null)
         {
             try
             {
-                _unitOfWork.GraduationThesises.Delete(deleteGraduationThesis);
+                var elementFromDb = await _unitOfWork.GraduationThesises.FindByConditionAsync(expression);
+                _unitOfWork.GraduationThesises.Delete(elementFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetGraduationThesisDto> { Success = false, Message = "Error when delete Graduation Thesis" };

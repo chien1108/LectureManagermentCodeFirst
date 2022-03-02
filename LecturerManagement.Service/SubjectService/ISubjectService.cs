@@ -17,7 +17,7 @@ namespace LecturerManagement.Services.SubjectService
         Task<ServiceResponse<GetSubjectDto>> DeleteSubject(Expression<Func<Subject, bool>> expression = null);
         Task<ServiceResponse<GetSubjectDto>> UpdateSubject(UpdateSubjectDto updateSubject, Expression<Func<Subject, bool>> expression = null);
         Task<bool> IsExisted(Expression<Func<Subject, bool>> expression = null);
-        Task<ServiceResponse<ICollection<GetSubjectDto>>> GetAllSubject(Expression<Func<Subject,
+        Task<ServiceResponse<IEnumerable<GetSubjectDto>>> GetAllSubject(Expression<Func<Subject,
                                 bool>> expression = null,
                                 Func<IQueryable<Subject>,
                                IOrderedQueryable<Subject>> orderBy = null,

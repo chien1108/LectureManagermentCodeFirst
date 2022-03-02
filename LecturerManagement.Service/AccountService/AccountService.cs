@@ -104,7 +104,6 @@ namespace LecturerManagement.Services.AccountService
 
         private void UpdateForAdmin(ref UpdateAccountDto updateAccountDto, ref Account account)
         {
-            account.DateCreated = updateAccountDto.DateCreated;
             CreatePasswordHash(updateAccountDto.Password, out byte[] PasswordHash, account.PasswordSalt);
             account.PasswordHash = PasswordHash;
             account.Permission = updateAccountDto.Permission;
@@ -124,7 +123,6 @@ namespace LecturerManagement.Services.AccountService
 
         private void UpdateForLecturer(ref UpdateAccountDto updateAccountDto, ref Account account)
         {
-            account.DateCreated = updateAccountDto.DateCreated;
             CreatePasswordHash(updateAccountDto.Password, out byte[] PasswordHash, account.PasswordSalt);
             account.PasswordHash = PasswordHash;
             account.Lecturer.YearStartWork = updateAccountDto.YearStartWork;
@@ -146,15 +144,14 @@ namespace LecturerManagement.Services.AccountService
             passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
         }
 
-        public async Task<ServiceResponse<string>> Delete(string userName)
+        public async Task<ServiceResponse<string>> Delete(Expression<Func<Account, bool>> expression = null)
         {
             try
             {
-                var accountFromDb = await Find(x => x.UserName.ToLower().Trim() == userName.ToLower().Trim());
-                var map = _mapper.Map<Account>(accountFromDb);
+                var accountFromDb = await _unitOfWork.Accounts.FindByConditionAsync(expression);
                 if (accountFromDb != null)
                 {
-                    _unitOfWork.Accounts.Delete(map);
+                    _unitOfWork.Accounts.Delete(accountFromDb);
                     if (!await SaveChange())
                     {
                         return new ServiceResponse<string> { Success = false, Message = "Error when delete Account" };
@@ -173,12 +170,27 @@ namespace LecturerManagement.Services.AccountService
             }
         }
 
-        public async Task<ServiceResponse<UpdateAccountDto>> Update(UpdateAccountDto updateAccount)
+        public async Task<ServiceResponse<UpdateAccountDto>> Update(UpdateAccountDto updateAccount, Expression<Func<Account, bool>> expression = null)
         {
             try
             {
-                var task = _mapper.Map<AdvancedLearning>(updateAccount);
-                _unitOfWork.AdvancedLearnings.Update(task);
+                var accountFromDb = await _unitOfWork.Accounts.FindByConditionAsync(expression);
+
+                accountFromDb.Permission = updateAccount.Permission;
+                accountFromDb.Lecturer.YearStartWork = updateAccount.YearStartWork;
+                accountFromDb.Lecturer.Status = updateAccount.Status;
+                accountFromDb.Lecturer.Portrait = updateAccount.Portrait;
+                accountFromDb.Lecturer.PhoneNumber = updateAccount.PhoneNumber;
+                accountFromDb.Lecturer.IdentityCardNumber = updateAccount.IdentityCardNumber;
+                accountFromDb.Lecturer.Gender = updateAccount.Gender;
+                accountFromDb.Lecturer.FullName = updateAccount.FullName;
+                accountFromDb.Lecturer.Email = updateAccount.Email;
+                accountFromDb.Lecturer.Description = updateAccount.Description;
+                accountFromDb.Lecturer.BirthDate = updateAccount.BirthDate;
+                accountFromDb.Lecturer.Address = updateAccount.Address;
+                accountFromDb.Lecturer.AcademicLevel = updateAccount.AcademicLevel;
+
+                _unitOfWork.Accounts.Update(accountFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<UpdateAccountDto> { Success = false, Message = "Error when update Account" };

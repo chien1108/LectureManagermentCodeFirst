@@ -65,11 +65,12 @@ namespace LecturerManagement.Services.LecturerScientificResearchService
             }
         }
 
-        public async Task<ServiceResponse<GetLecturerScientificResearchDto>> DeleteLecturerScientificResearch(LecturerScientificResearch deleteLecturerScientificResearch)
+        public async Task<ServiceResponse<GetLecturerScientificResearchDto>> DeleteLecturerScientificResearch(Expression<Func<LecturerScientificResearch, bool>> expression = null)
         {
             try
             {
-                _unitOfWork.LecturerScientificResearches.Delete(deleteLecturerScientificResearch);
+                var elementFromDb = await _unitOfWork.LecturerScientificResearches.FindByConditionAsync(expression);
+                _unitOfWork.LecturerScientificResearches.Delete(elementFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetLecturerScientificResearchDto> { Success = false, Message = "Error when delete Lecturer" };

@@ -19,8 +19,8 @@ namespace LecturerManagement.Services.AccountService
 
         ////Task<ServiceResponse<AddAdvancedLearningDto>> Create(AddAdvancedLearningDto createAdvancedLearning);
 
-        Task<ServiceResponse<string>> Delete(string userName);
-        Task<ServiceResponse<UpdateAccountDto>> Update(UpdateAccountDto updateAccount);
+        Task<ServiceResponse<string>> Delete(Expression<Func<Account, bool>> expression = null);
+        Task<ServiceResponse<UpdateAccountDto>> Update(UpdateAccountDto updateAccount, Expression<Func<Account, bool>> expression = null);
         Task<bool> IsExisted(Expression<Func<Account, bool>> expression = null);
         Task<ICollection<GetAccountDto>> FindAll(Expression<Func<Account,
                                 bool>> expression = null,

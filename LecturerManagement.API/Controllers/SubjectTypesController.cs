@@ -1,11 +1,11 @@
-﻿using AutoMapper;
-using LecturerManagement.Core.Data;
-using LecturerManagement.Core.Models;
+﻿using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.SubjectType;
 using LecturerManagement.Services.SubjectTypeService;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
@@ -14,84 +14,104 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class SubjectTypesController : ControllerBase
     {
-        private readonly LecturerManagementSystemDbContext _context;
-        private readonly ISubjectTypeService _subjectTypeService;
-        private readonly IMapper _mapper;
+        private readonly ISubjectTypeService _service;
 
-        public SubjectTypesController(LecturerManagementSystemDbContext context, ISubjectTypeService subjectTypeService, IMapper mapper)
+        public SubjectTypesController(ISubjectTypeService subjectTypeService)
         {
-            _context = context;
-            _subjectTypeService = subjectTypeService;
-            _mapper = mapper;
+            _service = subjectTypeService;
         }
 
         // GET: api/SubjectTypes
+        /// <summary>
+        /// Get All Subject Type
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<IEnumerable<GetSubjectTypeDto>>>> GetSubjectTypes()
         {
-            return Ok(await _subjectTypeService.GetAllSubjectType());
+            return Ok(await _service.GetAllSubjectType());
         }
 
         // GET: api/SubjectTypes/5
+        /// <summary>
+        /// Get Subject Type By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<GetSubjectTypeDto>>> GetSubjectType(string id)
         {
-            var subjectType = await _subjectTypeService.GetSubjectTypeByCondition(x => x.Id.Trim().ToLower() == id.ToLower().Trim());
+            var subjectType = await _service.GetSubjectTypeByCondition(x => x.Id.Trim().ToLower() == id.ToLower().Trim());
 
             if (subjectType.Data == null)
             {
                 return NotFound();
             }
 
-            return subjectType;
+            return Ok(subjectType);
         }
 
         // PUT: api/SubjectTypes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// update Subject Type By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updatedSubjectType"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSubjectType(string id, UpdateSubjectTypeDto updatedSubjectType)
         {
-
             if (updatedSubjectType == null)
             {
                 return BadRequest();
             }
-            if (!await SubjectTypeExists(id))
+            if (!await SubjectTypeExists(x => x.Id == id))
             {
                 return NotFound();
             }
-
-            return Ok(await _subjectTypeService.UpdateSubjectType(id, updatedSubjectType));
+            return Ok(await _service.UpdateSubjectType(updatedSubjectType, x => x.Id == id));
         }
 
         // POST: api/SubjectTypes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Add New Subject Type
+        /// </summary>
+        /// <param name="subjectType"></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<SubjectType>> PostSubjectType(SubjectType subjectType)
+        public async Task<ActionResult<ServiceResponse<GetSubjectTypeDto>>> AddSubjectType(AddSubjectTypeDto subjectType)
         {
-
-            return CreatedAtAction("GetSubjectType", new { id = subjectType.Id }, subjectType);
+            if (subjectType == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(await _service.AddSubjectType(subjectType));
+            }
         }
 
         // DELETE: api/SubjectTypes/5
+        /// <summary>
+        /// Delete Subject By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSubjectType(string id)
         {
-            var subjectType = await _context.SubjectTypes.FindAsync(id);
-            if (subjectType == null)
+            if (!await SubjectTypeExists(x => x.Id == id))
             {
                 return NotFound();
             }
-
-            _context.SubjectTypes.Remove(subjectType);
-            await _context.SaveChangesAsync();
+            await _service.DeleteSubjectType(x => x.Id == id);
 
             return NoContent();
         }
 
-        private async Task<bool> SubjectTypeExists(string id)
+        private async Task<bool> SubjectTypeExists(Expression<Func<SubjectType, bool>> expression = null)
         {
-            return await _subjectTypeService.IsExisted(x => x.Id.ToLower().Trim() == id.ToLower().Trim());
+            return await _service.IsExisted(expression);
         }
     }
 }

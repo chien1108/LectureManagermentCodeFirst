@@ -73,11 +73,12 @@ namespace LecturerManagement.Services.LecturerService
 
 
 
-        public async Task<ServiceResponse<GetLecturerDto>> DeleteLecturer(Lecturer deleteLecturer)
+        public async Task<ServiceResponse<GetLecturerDto>> DeleteLecturer(Expression<Func<Lecturer, bool>> expression = null)
         {
             try
             {
-                _unitOfWork.Lecturers.Delete(deleteLecturer);
+                var lecturerFromDb = await _unitOfWork.Lecturers.FindByConditionAsync(expression);
+                _unitOfWork.Lecturers.Delete(lecturerFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetLecturerDto> { Success = false, Message = "Error when delete Lecturer" };

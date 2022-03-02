@@ -1,9 +1,11 @@
-﻿using AutoMapper;
-using LecturerManagement.Core.Models;
+﻿using LecturerManagement.Core.Models;
+using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.Teaching;
 using LecturerManagement.Services.TeachingService;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
@@ -12,29 +14,36 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class TeachingsController : ControllerBase
     {
-        private readonly ITeachingService _teachingService;
-        private readonly IMapper _mapper;
+        private readonly ITeachingService _service;
 
-        public TeachingsController(ITeachingService teachingService, IMapper mapper)
+        public TeachingsController(ITeachingService teachingService)
         {
-            _teachingService = teachingService;
-            _mapper = mapper;
+            _service = teachingService;
         }
 
         // GET: api/Teachings
+        /// <summary>
+        /// Get List Teaching
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<IEnumerable<GetTeachingDto>>>> GetTeachings()
         {
-            return Ok(await _teachingService.GetAllTeaching());
+            return Ok(await _service.GetAllTeaching());
         }
 
         // GET: api/Teachings/5
+        /// <summary>
+        /// Get Single Teaching By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<GetTeachingDto>>> GetTeaching(string id)
         {
-            var teaching = await _teachingService.GetTeachingByCondition(x => x.Id == id);
+            var teaching = await _service.GetTeachingByCondition(x => x.Id == id);
 
-            if (teaching == null)
+            if (teaching.Data == null)
             {
                 return NotFound();
             }
@@ -43,7 +52,12 @@ namespace LecturerManagement.API.Controllers
         }
 
         // PUT: api/Teachings/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update Teaching By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="teaching"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<ActionResult<ServiceResponse<GetTeachingDto>>> UpdateTeaching(string id, UpdateTeachingDto teaching)
         {
@@ -51,15 +65,19 @@ namespace LecturerManagement.API.Controllers
             {
                 return BadRequest();
             }
-            if (!await TeachingExists(id))
+            if (!await TeachingExists(x => x.Id == id))
             {
                 return NotFound();
             }
-            return Ok(await _teachingService.UpdateTeaching(teaching, x => x.Id == id));
+            return Ok(await _service.UpdateTeaching(teaching, x => x.Id == id));
         }
 
         // POST: api/Teachings
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Add New Teaching
+        /// </summary>
+        /// <param name="teaching"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<GetTeachingDto>>> AddTeaching(AddTeachingDto teaching)
         {
@@ -69,27 +87,31 @@ namespace LecturerManagement.API.Controllers
             }
             else
             {
-                return Ok(await _teachingService.AddTeaching(teaching));
+                return Ok(await _service.AddTeaching(teaching));
             }
         }
 
         // DELETE: api/Teachings/5
+        /// <summary>
+        /// Delete Teaching By Id
+        /// </summary>
+        /// <param name="id">ID For Delete Element</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTeaching(string id)
         {
-
-            if (!await TeachingExists(id))
+            if (!await TeachingExists(x => x.Id == id))
             {
                 return NotFound();
             }
-            await _teachingService.DeleteTeaching(x => x.Id == id);
+            await _service.DeleteTeaching(x => x.Id == id);
 
             return NoContent();
         }
 
-        private async Task<bool> TeachingExists(string id)
+        private async Task<bool> TeachingExists(Expression<Func<Teaching, bool>> expression = null)
         {
-            return await _teachingService.IsExisted(x => x.Id == id);
+            return await _service.IsExisted(expression);
         }
     }
 }

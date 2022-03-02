@@ -40,11 +40,12 @@ namespace LecturerManagement.Services.MachineRoomService
                 return new ServiceResponse<GetMachineRoomDto> { Success = false, Message = ex.Message };
             }
         }
-        public async Task<ServiceResponse<GetMachineRoomDto>> DeleteMachineRoom(MachineRoom deleteMachineRoom)
+        public async Task<ServiceResponse<GetMachineRoomDto>> DeleteMachineRoom(Expression<Func<MachineRoom, bool>> expression = null)
         {
             try
             {
-                _unitOfWork.MachineRooms.Delete(deleteMachineRoom);
+                var machineRoomFromDb = await _unitOfWork.MachineRooms.FindByConditionAsync(expression);
+                _unitOfWork.MachineRooms.Delete(machineRoomFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetMachineRoomDto> { Success = false, Message = "Error when delete Machine Room" };

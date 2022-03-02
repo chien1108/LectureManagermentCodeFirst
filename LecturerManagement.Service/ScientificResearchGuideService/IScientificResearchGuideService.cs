@@ -14,7 +14,7 @@ namespace LecturerManagement.Services.ScientificResearchGuideService
         //CRUD
         Task<ServiceResponse<GetScientificResearchGuideDto>> AddScientificResearchGuide(AddScientificResearchGuideDto newScientificResearchGuide);
 
-        Task<ServiceResponse<GetScientificResearchGuideDto>> DeleteScientificResearchGuide(ScientificResearchGuide deleteScientificResearchGuide);
+        Task<ServiceResponse<GetScientificResearchGuideDto>> DeleteScientificResearchGuide(Expression<Func<ScientificResearchGuide, bool>> expression = null);
         Task<ServiceResponse<GetScientificResearchGuideDto>> UpdateScientificResearchGuide(UpdateScientificResearchGuideDto updateScientificResearchGuide, Expression<Func<ScientificResearchGuide, bool>> expression = null);
         Task<bool> IsExisted(Expression<Func<ScientificResearchGuide, bool>> expression = null);
         Task<ServiceResponse<ICollection<GetScientificResearchGuideDto>>> GetAllScientificResearchGuide(Expression<Func<ScientificResearchGuide,

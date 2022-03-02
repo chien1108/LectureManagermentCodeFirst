@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using LecturerManagement.Core.Data;
+﻿using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
+using LecturerManagement.DTOS.ScientificResearchGuide;
+using LecturerManagement.Services.ScientificResearchGuideService;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
 {
@@ -14,109 +14,104 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class ScientificResearchGuidesController : ControllerBase
     {
-        private readonly LecturerManagementSystemDbContext _context;
+        private readonly IScientificResearchGuideService _service;
 
-        public ScientificResearchGuidesController(LecturerManagementSystemDbContext context)
+        public ScientificResearchGuidesController(IScientificResearchGuideService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/ScientificResearchGuides
+        /// <summary>
+        /// Get All ScientificResearchGuides
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ScientificResearchGuide>>> GetScientificResearchGuides()
+        public async Task<ActionResult<ServiceResponse<IEnumerable<GetScientificResearchGuideDto>>>> GetScientificResearchGuides()
         {
-            return await _context.ScientificResearchGuides.ToListAsync();
+            return Ok(await _service.GetAllScientificResearchGuide());
         }
 
         // GET: api/ScientificResearchGuides/5
+        /// <summary>
+        /// Get Scientific Research Guides By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<ScientificResearchGuide>> GetScientificResearchGuide(string id)
+        public async Task<ActionResult<ServiceResponse<GetScientificResearchGuideDto>>> GetScientificResearchGuide(string id)
         {
-            var scientificResearchGuide = await _context.ScientificResearchGuides.FindAsync(id);
+            var response = await _service.GetScientificResearchGuideByCondition(x => x.Id == id);
 
-            if (scientificResearchGuide == null)
+            if (response.Data == null)
             {
                 return NotFound();
             }
 
-            return scientificResearchGuide;
+            return Ok(response);
         }
 
         // PUT: api/ScientificResearchGuides/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update Scientific Research Guides By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="scientificResearchGuide"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutScientificResearchGuide(string id, ScientificResearchGuide scientificResearchGuide)
+        public async Task<ActionResult<ServiceResponse<GetScientificResearchGuideDto>>> UpdateScientificResearchGuide(string id, UpdateScientificResearchGuideDto scientificResearchGuide)
         {
-            if (id != scientificResearchGuide.Id)
+            if (scientificResearchGuide == null)
             {
                 return BadRequest();
             }
-
-            _context.Entry(scientificResearchGuide).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ScientificResearchGuideExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/ScientificResearchGuides
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<ScientificResearchGuide>> PostScientificResearchGuide(ScientificResearchGuide scientificResearchGuide)
-        {
-            _context.ScientificResearchGuides.Add(scientificResearchGuide);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (ScientificResearchGuideExists(scientificResearchGuide.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetScientificResearchGuide", new { id = scientificResearchGuide.Id }, scientificResearchGuide);
-        }
-
-        // DELETE: api/ScientificResearchGuides/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteScientificResearchGuide(string id)
-        {
-            var scientificResearchGuide = await _context.ScientificResearchGuides.FindAsync(id);
-            if (scientificResearchGuide == null)
+            if (!await ScientificResearchGuideExists(x => x.Id == id))
             {
                 return NotFound();
             }
+            return Ok(await _service.UpdateScientificResearchGuide(scientificResearchGuide, x => x.Id == id));
+        }
 
-            _context.ScientificResearchGuides.Remove(scientificResearchGuide);
-            await _context.SaveChangesAsync();
+        // POST: api/ScientificResearchGuides
+        /// <summary>
+        /// Add New Scientific Research Guides
+        /// </summary>
+        /// <param name="scientificResearchGuide"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<ServiceResponse<GetScientificResearchGuideDto>>> AddScientificResearchGuide(AddScientificResearchGuideDto scientificResearchGuide)
+        {
+            if (scientificResearchGuide == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(await _service.AddScientificResearchGuide(scientificResearchGuide));
+            }
+        }
+
+        // DELETE: api/ScientificResearchGuides/5
+        /// <summary>
+        /// Delete Scientific Research Guide By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteScientificResearchGuide(string id)
+        {
+            if (!await ScientificResearchGuideExists(x => x.Id == id))
+            {
+                return NotFound();
+            }
+            await _service.DeleteScientificResearchGuide(x => x.Id == id);
 
             return NoContent();
         }
 
-        private bool ScientificResearchGuideExists(string id)
+        private async Task<bool> ScientificResearchGuideExists(Expression<Func<ScientificResearchGuide, bool>> expression = null)
         {
-            return _context.ScientificResearchGuides.Any(e => e.Id == id);
+            return await _service.IsExisted(expression);
         }
     }
 }

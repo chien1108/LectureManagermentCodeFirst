@@ -9,7 +9,7 @@ namespace LecturerManagement.Core.Models.Entities
     public class SubjectType : BaseEntity<string>
     {
         //[Key]
-        //public string ID { get; set; }
+        ///public string ID { get; set; }
 
         public string Name { get; set; }
         public string Description { get; set; } = null;

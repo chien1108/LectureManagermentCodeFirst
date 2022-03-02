@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LecturerManagement.Core.Models;
+﻿using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.TrainingSystem;
 using LecturerManagement.Services.TrainingSystemService;
@@ -15,13 +14,11 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class TrainingSystemsController : ControllerBase
     {
-        private readonly ITrainingSystemService _trainingSystemService;
-        private readonly IMapper _mapper;
+        private readonly ITrainingSystemService _service;
 
-        public TrainingSystemsController(ITrainingSystemService trainingSystemService, IMapper mapper)
+        public TrainingSystemsController(ITrainingSystemService trainingSystemService)
         {
-            _trainingSystemService = trainingSystemService;
-            _mapper = mapper;
+            _service = trainingSystemService;
         }
 
         // GET: api/TrainingSystems
@@ -32,7 +29,7 @@ namespace LecturerManagement.API.Controllers
         [HttpGet("GetTrainingSystems")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<GetTrainingSystemDto>>>> GetTrainingSystems()
         {
-            return Ok(await _trainingSystemService.GetAllTrainingSystem());
+            return Ok(await _service.GetAllTrainingSystem());
         }
 
         // GET: api/TrainingSystems/5
@@ -44,7 +41,7 @@ namespace LecturerManagement.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<GetTrainingSystemDto>>> GetTrainingSystem(string id)
         {
-            var trainingSystem = await _trainingSystemService.GetTrainingSystemByCondition(x => x.Id.ToLower().Trim() == id.ToLower().Trim());
+            var trainingSystem = await _service.GetTrainingSystemByCondition(x => x.Id.ToLower().Trim() == id.ToLower().Trim());
 
             if (trainingSystem.Data == null)
             {
@@ -73,7 +70,7 @@ namespace LecturerManagement.API.Controllers
                 return NotFound();
             }
 
-            return Ok(await _trainingSystemService.UpdateTrainingSystem(updatedTrainingSystem, expression: x => x.Id.ToLower().Trim() == id.ToLower().Trim()));
+            return Ok(await _service.UpdateTrainingSystem(updatedTrainingSystem, expression: x => x.Id.ToLower().Trim() == id.ToLower().Trim()));
         }
 
         // POST: api/TrainingSystems
@@ -92,7 +89,7 @@ namespace LecturerManagement.API.Controllers
             }
             else
             {
-                return Ok(await _trainingSystemService.AddTrainingSystem(newTrainingSystem));
+                return Ok(await _service.AddTrainingSystem(newTrainingSystem));
             }
 
         }
@@ -110,13 +107,13 @@ namespace LecturerManagement.API.Controllers
             {
                 return NotFound();
             }
-            await _trainingSystemService.DeleteTrainingSystem(x => x.Id.ToLower().Trim() == id.ToLower().Trim());
+            await _service.DeleteTrainingSystem(x => x.Id.ToLower().Trim() == id.ToLower().Trim());
             return NoContent();
         }
 
         private async Task<bool> TrainingSystemExists(Expression<Func<TrainingSystem, bool>> expression = null)
         {
-            return await _trainingSystemService.IsExisted(expression);
+            return await _service.IsExisted(expression);
         }
     }
 }

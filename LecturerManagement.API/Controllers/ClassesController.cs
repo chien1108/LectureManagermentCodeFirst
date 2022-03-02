@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LecturerManagement.Core.Models;
+﻿using LecturerManagement.Core.Models;
 using LecturerManagement.DTOS.Class;
 using LecturerManagement.Services.ClassService;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +12,10 @@ namespace LecturerManagement.API.Controllers
     public class ClassesController : ControllerBase
     {
         private readonly IClassService _service;
-        private readonly IMapper _mapper;
 
-        public ClassesController(IClassService service, IMapper mapper)
+        public ClassesController(IClassService service)
         {
             _service = service;
-            _mapper = mapper;
         }
 
         // GET: api/Classes
@@ -88,7 +85,7 @@ namespace LecturerManagement.API.Controllers
             {
                 return NotFound(response);
             }
-            return Ok();//Ok(_service.DeleteClass(_mapper.Map<Class>(response.Data)));
+            return Ok(await _service.DeleteClass(x => x.Id == id));
         }
 
         private async Task<bool> ClassExists(string id)

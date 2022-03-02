@@ -77,9 +77,9 @@ namespace LecturerManagement.Services.SubjectService
             }
         }
 
-        public async Task<ServiceResponse<ICollection<GetSubjectDto>>> GetAllSubject(Expression<Func<Subject, bool>> expression = null, Func<IQueryable<Subject>, IOrderedQueryable<Subject>> orderBy = null, List<string> includes = null)
+        public async Task<ServiceResponse<IEnumerable<GetSubjectDto>>> GetAllSubject(Expression<Func<Subject, bool>> expression = null, Func<IQueryable<Subject>, IOrderedQueryable<Subject>> orderBy = null, List<string> includes = null)
         {
-            var listSubjectFromDb = _mapper.Map<ICollection<GetSubjectDto>>(await _unitOfWork.Subjects.FindAllAsync(expression, orderBy, includes));
+            var listSubjectFromDb = _mapper.Map<IEnumerable<GetSubjectDto>>(await _unitOfWork.Subjects.FindAllAsync(expression, orderBy, includes));
             if (listSubjectFromDb != null)
             {
                 return new() { Success = true, Message = "Get list Subject Success", Data = listSubjectFromDb };

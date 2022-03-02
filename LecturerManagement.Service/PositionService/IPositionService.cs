@@ -15,7 +15,7 @@ namespace LecturerManagement.Services.PositionService
         Task<ServiceResponse<GetPositionDto>> AddPosition(AddPositionDto newPosition);
 
         Task<ServiceResponse<GetPositionDto>> DeletePosition(Expression<Func<Position, bool>> expression = null);
-        Task<ServiceResponse<GetPositionDto>> UpdatePosition(string id, UpdatePositionDto updatePosition);
+        Task<ServiceResponse<GetPositionDto>> UpdatePosition(UpdatePositionDto updatePosition, Expression<Func<Position, bool>> expression = null);
         Task<bool> IsExisted(Expression<Func<Position, bool>> expression = null);
         Task<ServiceResponse<ICollection<GetPositionDto>>> GetAllPosition(Expression<Func<Position,
                                 bool>> expression = null,

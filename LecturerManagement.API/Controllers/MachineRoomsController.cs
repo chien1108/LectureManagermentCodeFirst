@@ -1,11 +1,8 @@
-﻿using AutoMapper;
-using LecturerManagement.Core.Data;
-using LecturerManagement.Core.Models.Entities;
+﻿using LecturerManagement.Core.Models;
+using LecturerManagement.DTOS.MachineRoom;
 using LecturerManagement.Services.MachineRoomService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
@@ -14,113 +11,100 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class MachineRoomsController : ControllerBase
     {
-        private readonly LecturerManagementSystemDbContext _context;
-        private readonly IMachineRoomService _machineRoomService;
-        private readonly IMapper _mapper;
-
-        public MachineRoomsController(LecturerManagementSystemDbContext context, IMachineRoomService machineRoomService, IMapper mapper)
+        private readonly IMachineRoomService _service;
+        public MachineRoomsController(IMachineRoomService machineRoomService)
         {
-            _context = context;
-            _machineRoomService = machineRoomService;
-            _mapper = mapper;
+            _service = machineRoomService;
         }
 
         // GET: api/MachineRooms
+        /// <summary>
+        /// Get All Machine Room
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MachineRoom>>> GetMachineRooms()
+        public async Task<ActionResult<ServiceResponse<IEnumerable<GetMachineRoomDto>>>> GetMachineRooms()
         {
-            return await _context.MachineRooms.ToListAsync();
+            return Ok(await _service.GetAllMachineRoom());
         }
 
         // GET: api/MachineRooms/5
+        /// <summary>
+        /// Get Machine Room By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<MachineRoom>> GetMachineRoom(string id)
+        public async Task<ActionResult<ServiceResponse<GetMachineRoomDto>>> GetMachineRoom(string id)
         {
-            var machineRoom = await _context.MachineRooms.FindAsync(id);
+            var response = await _service.GetMachineRoomByCondition(x => x.Id == id);
 
-            if (machineRoom == null)
+            if (response.Data == null)
             {
                 return NotFound();
             }
 
-            return machineRoom;
+            return Ok(response);
         }
 
         // PUT: api/MachineRooms/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update Machine Room By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="machineRoom"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMachineRoom(string id, MachineRoom machineRoom)
+        public async Task<IActionResult> UpdateMachineRoom(string id, UpdateMachineRoomDto machineRoom)
         {
-            if (id != machineRoom.Id)
+            if (machineRoom == null)
+            {
+                return BadRequest();
+            }
+            if (!await MachineRoomExists(id))
+            {
+                return NotFound();
+            }
+            return Ok(await _service.UpdateMachineRoom(machineRoom, x => x.Id == id));
+        }
+
+        // POST: api/MachineRooms
+        /// <summary>
+        /// Add New Machine Room
+        /// </summary>
+        /// <param name="machineRoom"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<ServiceResponse<GetMachineRoomDto>>> AddMachineRoom(AddMachineRoomDto machineRoom)
+        {
+            if (machineRoom == null)
             {
                 return BadRequest();
             }
 
-            _context.Entry(machineRoom).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MachineRoomExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/MachineRooms
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<MachineRoom>> PostMachineRoom(MachineRoom machineRoom)
-        {
-            _context.MachineRooms.Add(machineRoom);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (MachineRoomExists(machineRoom.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetMachineRoom", new { id = machineRoom.Id }, machineRoom);
+            return Ok(await _service.AddMachineRoom(machineRoom));
         }
 
         // DELETE: api/MachineRooms/5
+        /// <summary>
+        /// Delete Machine Room By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMachineRoom(string id)
+        public async Task<ActionResult<ServiceResponse<GetMachineRoomDto>>> DeleteMachineRoom(string id)
         {
-            var machineRoom = await _context.MachineRooms.FindAsync(id);
-            if (machineRoom == null)
+            var response = await _service.GetMachineRoomByCondition(x => x.Id == id);
+            if (response.Data == null)
             {
-                return NotFound();
+                return NotFound(response);
             }
-
-            _context.MachineRooms.Remove(machineRoom);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(await _service.DeleteMachineRoom(x => x.Id == id));
         }
 
-        private bool MachineRoomExists(string id)
+        private async Task<bool> MachineRoomExists(string id)
         {
-            return _context.MachineRooms.Any(e => e.Id == id);
+            return await _service.IsExisted(x => x.Id == id);
         }
     }
 }

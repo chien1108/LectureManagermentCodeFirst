@@ -14,7 +14,7 @@ namespace LecturerManagement.Services.GraduationThesisService
         //CRUD
         Task<ServiceResponse<GetGraduationThesisDto>> AddGraduationThesis(AddGraduationThesisDto newGraduationThesis);
 
-        Task<ServiceResponse<GetGraduationThesisDto>> DeleteGraduationThesis(GraduationThesis deleteGraduationThesis);
+        Task<ServiceResponse<GetGraduationThesisDto>> DeleteGraduationThesis(Expression<Func<GraduationThesis, bool>> expression = null);
         Task<ServiceResponse<GetGraduationThesisDto>> UpdateGraduationThesis(UpdateGraduationThesisDto updateGraduationThesis, Expression<Func<GraduationThesis, bool>> expression = null);
         Task<bool> IsExisted(Expression<Func<GraduationThesis, bool>> expression = null);
         Task<ServiceResponse<IEnumerable<GetGraduationThesisDto>>> GetAllGraduationThesis(Expression<Func<GraduationThesis,

@@ -90,11 +90,11 @@ namespace LecturerManagement.Services.SubjectTypeService
 
         public async Task<bool> SaveChange()
         => await _unitOfWork.SubjectTypes.Save();
-        public async Task<ServiceResponse<GetSubjectTypeDto>> UpdateSubjectType(string id, UpdateSubjectTypeDto updateSubjectType)
+        public async Task<ServiceResponse<GetSubjectTypeDto>> UpdateSubjectType(UpdateSubjectTypeDto updateSubjectType, Expression<Func<SubjectType, bool>> expression = null)
         {
             try
             {
-                var subjectTypeFromDb = await _unitOfWork.SubjectTypes.FindByConditionAsync(x => x.Id == id);
+                var subjectTypeFromDb = await _unitOfWork.SubjectTypes.FindByConditionAsync(expression);
                 subjectTypeFromDb.Name = updateSubjectType.Name;
                 subjectTypeFromDb.Description = updateSubjectType.Description;
                 subjectTypeFromDb.ModifiedDate = DateTime.Now;

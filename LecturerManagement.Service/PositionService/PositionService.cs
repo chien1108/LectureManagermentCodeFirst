@@ -135,11 +135,11 @@ namespace LecturerManagement.Services.PositionService
         => await _unitOfWork.Positions.Save();
 
 
-        public async Task<ServiceResponse<GetPositionDto>> UpdatePosition(string id, UpdatePositionDto updatePosition)
+        public async Task<ServiceResponse<GetPositionDto>> UpdatePosition(UpdatePositionDto updatePosition, Expression<Func<Position, bool>> expression = null)
         {
             try
             {
-                var positionFromDb = await _unitOfWork.Positions.FindByConditionAsync(x => x.Id == id);
+                var positionFromDb = await _unitOfWork.Positions.FindByConditionAsync(expression);
 
                 positionFromDb.Name = updatePosition.Name;
                 positionFromDb.Description = updatePosition.Description;

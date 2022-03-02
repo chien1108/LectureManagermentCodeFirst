@@ -64,12 +64,12 @@ namespace LecturerManagement.Services.ScientificResearchGuideService
                 return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = ex.StackTrace };
             }
         }
-        public async Task<ServiceResponse<GetScientificResearchGuideDto>> DeleteScientificResearchGuide(ScientificResearchGuide deleteScientificResearchGuide)
+        public async Task<ServiceResponse<GetScientificResearchGuideDto>> DeleteScientificResearchGuide(Expression<Func<ScientificResearchGuide, bool>> expression = null)
         {
             try
             {
-
-                _unitOfWork.ScientificResearchGuides.Delete(deleteScientificResearchGuide);
+                var elementFromDb = await _unitOfWork.ScientificResearchGuides.FindByConditionAsync(expression);
+                _unitOfWork.ScientificResearchGuides.Delete(elementFromDb);
                 if (!await SaveChange())
                 {
                     return new ServiceResponse<GetScientificResearchGuideDto> { Success = false, Message = "Error when delete Scientific Research Guide" };

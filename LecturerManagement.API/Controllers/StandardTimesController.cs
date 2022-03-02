@@ -1,9 +1,11 @@
-﻿using AutoMapper;
-using LecturerManagement.Core.Models;
+﻿using LecturerManagement.Core.Models;
+using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.StandardTime;
 using LecturerManagement.Services.StandardTimeService;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
@@ -13,12 +15,10 @@ namespace LecturerManagement.API.Controllers
     public class StandardTimesController : ControllerBase
     {
         private readonly IStandardTimeService _service;
-        private readonly IMapper _mapper;
 
-        public StandardTimesController(IStandardTimeService service, IMapper mapper)
+        public StandardTimesController(IStandardTimeService service)
         {
             _service = service;
-            _mapper = mapper;
         }
 
         // GET: api/StandardTimes
@@ -62,7 +62,7 @@ namespace LecturerManagement.API.Controllers
         public async Task<ActionResult<ServiceResponse<GetStandardTimeDto>>> UpdateStandardTime(string id, UpdateStandardTimeDto updatedStandardTime)
         {
 
-            if (!await StandardTimeExists(id))
+            if (!await StandardTimeExists(x => x.Id == id))
             {
                 return NotFound();
             }
@@ -95,18 +95,16 @@ namespace LecturerManagement.API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<ServiceResponse<GetStandardTimeDto>>> DeleteStandardTime(string id)
         {
-
-            var responseStandardTime = await _service.GetStandardTimeByCondition(x => x.Id.Trim().ToLower() == id.Trim().ToLower());
-            if (responseStandardTime.Data == null)
+            if (!await StandardTimeExists(x => x.Id == id))
             {
-                return NotFound(responseStandardTime);
+                return NotFound();
             }
             return Ok(_service.DeleteStandardTime(x => x.Id.Trim().ToLower() == id.Trim().ToLower()));
         }
 
-        private async Task<bool> StandardTimeExists(string id)
+        private async Task<bool> StandardTimeExists(Expression<Func<StandardTime, bool>> expression = null)
         {
-            var response = await _service.IsExisted(x => x.Id == id);
+            var response = await _service.IsExisted(expression);
             return response.Success;
         }
     }

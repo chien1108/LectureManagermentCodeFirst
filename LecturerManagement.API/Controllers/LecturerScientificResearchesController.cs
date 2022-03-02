@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LecturerManagement.Core.Models.Entities;
+﻿using LecturerManagement.Core.Models;
 using LecturerManagement.DTOS.LecturerScientificResearch;
 using LecturerManagement.Services.LecturerScientificResearchService;
 using Microsoft.AspNetCore.Mvc;
@@ -12,53 +11,69 @@ namespace LecturerManagement.API.Controllers
     public class LecturerScientificResearchesController : ControllerBase
     {
         private readonly ILecturerScientificResearchService _service;
-        private readonly IMapper _mapper;
 
-        public LecturerScientificResearchesController(ILecturerScientificResearchService service, IMapper mapper)
+        public LecturerScientificResearchesController(ILecturerScientificResearchService service)
         {
             _service = service;
-            _mapper = mapper;
         }
 
         // GET: api/LecturerScientificResearches
+        /// <summary>
+        /// Get All LecturerScientificResearches 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetLecturerScientificResearches()
+        public async Task<ActionResult<ServiceResponse<GetLecturerScientificResearchDto>>> GetLecturerScientificResearches()
         {
-            var response = await _service.GetAllLecturerScientificResearch();
+            return Ok(await _service.GetAllLecturerScientificResearch());
+        }
+
+        // GET: api/LecturerScientificResearches/5
+        /// <summary>
+        /// Get Single LecturerScientificResearches by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ServiceResponse<GetLecturerScientificResearchDto>>> GetLecturerScientificResearch(string id)
+        {
+            var response = await _service.GetLecturerScientificResearchByCondition(x => x.Id.ToLower().Equals(id.ToLower()));
+
             if (response.Data == null)
             {
                 return NotFound(response);
             }
+
             return Ok(response);
         }
 
-        // GET: api/LecturerScientificResearches/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetLecturerScientificResearch(string id)
-        {
-            var lecturerScientificResearch = await _service.GetLecturerScientificResearchByCondition(x => x.Id.ToLower().Equals(id.ToLower()));
-
-            if (lecturerScientificResearch.Data == null)
-            {
-                return NotFound(lecturerScientificResearch);
-            }
-            return Ok(lecturerScientificResearch);
-        }
-
         // PUT: api/LecturerScientificResearches/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update LecturerScientificResearches by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updateLecturerScientificResearchDto"></param>
+        /// <returns></returns>
         [HttpPut]
-        public async Task<IActionResult> PutLecturerScientificResearch(string id, UpdateLecturerScientificResearchDto updateLecturerScientificResearchDto)
+        public async Task<ActionResult<ServiceResponse<GetLecturerScientificResearchDto>>> PutLecturerScientificResearch(string id, UpdateLecturerScientificResearchDto updateLecturerScientificResearchDto)
         {
+            if (updateLecturerScientificResearchDto == null)
+            {
+                return BadRequest();
+            }
             if (!await LecturerScientificResearchExists(id))
             {
                 return NotFound();
             }
-            return Ok(await _service.UpdateLecturerScientificResearch(updateLecturerScientificResearchDto));
+            return Ok(await _service.UpdateLecturerScientificResearch(updateLecturerScientificResearchDto, x => x.Id == id));
         }
 
         // POST: api/LecturerScientificResearches
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Add New LecturerScientificResearches 
+        /// </summary>
+        /// <param name="addLecturerScientificResearchDto"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> PostLecturerScientificResearch(AddLecturerScientificResearchDto addLecturerScientificResearchDto)
         {
@@ -71,16 +86,20 @@ namespace LecturerManagement.API.Controllers
         }
 
         // DELETE: api/LecturerScientificResearches/5
+        /// <summary>
+        /// Delete LecturerScientificResearches by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLecturerScientificResearch(string id)
         {
-            var data = _mapper.Map<LecturerScientificResearch>(await _service.GetLecturerScientificResearchByCondition(x => x.Id.ToLower().Equals(id.ToLower())));
-            var response = await _service.DeleteLecturerScientificResearch(data);
-            if (!response.Success)
+            var response = await _service.GetLecturerScientificResearchByCondition(x => x.Id == id);
+            if (response.Data == null)
             {
-                return BadRequest(response);
+                return NotFound(response);
             }
-            return Ok(response);
+            return Ok(await _service.DeleteLecturerScientificResearch(x => x.Id == id));
         }
 
         private async Task<bool> LecturerScientificResearchExists(string id)

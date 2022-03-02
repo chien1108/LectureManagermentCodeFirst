@@ -14,7 +14,7 @@ namespace LecturerManagement.Services.LecturerService
         //CRUD
         Task<ServiceResponse<GetLecturerDto>> AddLecturer(AddLecturerDto createLecturer);
 
-        Task<ServiceResponse<GetLecturerDto>> DeleteLecturer(Lecturer deleteLecturer);
+        Task<ServiceResponse<GetLecturerDto>> DeleteLecturer(Expression<Func<Lecturer, bool>> expression = null);
         Task<ServiceResponse<GetLecturerDto>> UpdateLecturer(UpdateLecturerDto updateLecturer, Expression<Func<Lecturer, bool>> expression = null);
         Task<bool> IsExisted(Expression<Func<Lecturer, bool>> expression = null);
         Task<ServiceResponse<ICollection<GetLecturerDto>>> GetAllLecturer(Expression<Func<Lecturer,

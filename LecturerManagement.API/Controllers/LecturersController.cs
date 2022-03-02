@@ -1,12 +1,9 @@
-﻿using AutoMapper;
-using LecturerManagement.Core.Data;
+﻿using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.LecturerDTO;
 using LecturerManagement.Services.LecturerService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
@@ -15,32 +12,34 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class LecturersController : ControllerBase
     {
-        private readonly ILecturerService _lecturerService;
-        private readonly IMapper _mapper;
+        private readonly ILecturerService _service;
 
-        public LecturersController( ILecturerService lecturerService, IMapper mapper)
+        public LecturersController(ILecturerService lecturerService)
         {
-            _lecturerService = lecturerService;
-            _mapper = mapper;
+            _service = lecturerService;
         }
 
         // GET: api/Lecturers
+        /// <summary>
+        /// Get All Lecturer
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetLecturers()
+        public async Task<ActionResult<ServiceResponse<IEnumerable<GetLecturerDto>>>> GetLecturers()
         {
-            var response = await _lecturerService.GetAllLecturer();
-            if(response.Data == null)
-            {
-                return NotFound(response);
-            }    
-            return Ok(response);
+            return Ok(await _service.GetAllLecturer());
         }
 
         // GET: api/Lecturers/5
+        /// <summary>
+        /// Get Lecturer By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetLecturer(string id)
         {
-            var lecturer = await _lecturerService.GetLecturerByCondition(x => x.Id.ToLower().Equals(id.ToLower()));
+            var lecturer = await _service.GetLecturerByCondition(x => x.Id.ToLower().Equals(id.ToLower()));
 
             if (lecturer.Data == null)
             {
@@ -55,11 +54,15 @@ namespace LecturerManagement.API.Controllers
         [HttpPut]
         public async Task<IActionResult> PutLecturer(string id, UpdateLecturerDto updateLecturerDto)
         {
-            if(!await LecturerExists(id))
+            if (updateLecturerDto == null)
+            {
+                return BadRequest();
+            }
+            if (!await LecturerExists(id))
             {
                 return NotFound();
             }
-            return Ok(await _lecturerService.UpdateLecturer(updateLecturerDto));
+            return Ok(await _service.UpdateLecturer(updateLecturerDto, x => x.Id == id));
         }
 
         // POST: api/Lecturers
@@ -67,8 +70,8 @@ namespace LecturerManagement.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Lecturer>> PostLecturer(AddLecturerDto addLecturerDto)
         {
-            var response = await _lecturerService.AddLecturer(addLecturerDto);
-            if(!response.Success)
+            var response = await _service.AddLecturer(addLecturerDto);
+            if (!response.Success)
             {
                 return BadRequest(response);
             }
@@ -76,21 +79,25 @@ namespace LecturerManagement.API.Controllers
         }
 
         // DELETE: api/Lecturers/5
+        /// <summary>
+        /// Delete Lecturer By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLecturer(string id)
         {
-            var data = _mapper.Map<Lecturer>(await _lecturerService.GetLecturerByCondition(x => x.Id.ToLower().Equals(id.ToLower())));
-            var response = await _lecturerService.DeleteLecturer(data);
-            if(!response.Success)
+            var response = await _service.GetLecturerByCondition(x => x.Id == id);
+            if (response.Data == null)
             {
-                return BadRequest(response);
+                return NotFound(response);
             }
-            return Ok(response);
+            return Ok(await _service.DeleteLecturer(x => x.Id == id));
         }
 
         private async Task<bool> LecturerExists(string id)
         {
-            return await _lecturerService.IsExisted(x => x.Id.ToLower().Equals(id.ToLower()));
+            return await _service.IsExisted(x => x.Id.ToLower().Equals(id.ToLower()));
         }
     }
 }

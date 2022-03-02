@@ -1,10 +1,11 @@
-﻿using AutoMapper;
-using LecturerManagement.Core.Data;
-using LecturerManagement.Core.Models;
+﻿using LecturerManagement.Core.Models;
+using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.Position;
 using LecturerManagement.Services.PositionService;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
@@ -13,15 +14,11 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class PositionsController : ControllerBase
     {
-        private readonly LecturerManagementSystemDbContext _context;
-        private readonly IPositionService _positionService;
-        private readonly IMapper _mapper;
+        private readonly IPositionService _service;
 
-        public PositionsController(LecturerManagementSystemDbContext context, IPositionService positionService, IMapper mapper)
+        public PositionsController(IPositionService positionService)
         {
-            _context = context;
-            _positionService = positionService;
-            _mapper = mapper;
+            _service = positionService;
         }
 
         // GET: api/Positions
@@ -32,7 +29,7 @@ namespace LecturerManagement.API.Controllers
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<IEnumerable<GetPositionDto>>>> GetPositions()
         {
-            return Ok(await _positionService.GetAllPosition());
+            return Ok(await _service.GetAllPosition());
         }
 
         // GET: api/Positions/5
@@ -44,14 +41,14 @@ namespace LecturerManagement.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<GetPositionDto>>> GetPosition(string id)
         {
-            var position = await _positionService.GetPositionByCondition(x => x.Id == id);
+            var response = await _service.GetPositionByCondition(x => x.Id == id);
 
-            if (position == null)
+            if (response.Data == null)
             {
-                return NotFound(position);
+                return NotFound(response);
             }
 
-            return Ok(position);
+            return Ok(response);
         }
 
         // PUT: api/Positions/5
@@ -64,15 +61,15 @@ namespace LecturerManagement.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePosition(string id, UpdatePositionDto updatePosition)
         {
-            if (updatePosition == null || id == null)
+            if (updatePosition == null)
             {
                 return BadRequest();
             }
-            if (!await PositionExists(id))
+            if (!await PositionExists(x => x.Id == id))
             {
                 return NotFound();
             }
-            return Ok(await _positionService.UpdatePosition(id, updatePosition));
+            return Ok(await _service.UpdatePosition(updatePosition, x => x.Id == id));
         }
 
         // POST: api/Positions
@@ -89,7 +86,7 @@ namespace LecturerManagement.API.Controllers
                 return BadRequest();
             }
 
-            return Ok(await _positionService.AddPosition(newPosition));
+            return Ok(await _service.AddPosition(newPosition));
         }
 
         // DELETE: api/Positions/5
@@ -101,19 +98,19 @@ namespace LecturerManagement.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePosition(string id)
         {
-            var position = await _positionService.GetPositionByCondition(x => x.Id == id);
-            if (position == null)
+            var response = await _service.GetPositionByCondition(x => x.Id == id);
+            if (response.Data == null)
             {
-                return NotFound(position);
+                return NotFound(response);
             }
-            await _positionService.DeletePosition(x => x.Id == id);
+            await _service.DeletePosition(x => x.Id == id);
 
             return NoContent();
         }
 
-        private async Task<bool> PositionExists(string id)
+        private async Task<bool> PositionExists(Expression<Func<Position, bool>> expression = null)
         {
-            return await _positionService.IsExisted(x => x.Id == id);
+            return await _service.IsExisted(expression);
         }
     }
 }

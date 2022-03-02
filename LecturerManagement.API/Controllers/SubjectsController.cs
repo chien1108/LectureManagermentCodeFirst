@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using LecturerManagement.Core.Data;
+﻿using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
+using LecturerManagement.DTOS.Subject;
+using LecturerManagement.Services.SubjectService;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
 {
@@ -14,109 +14,104 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class SubjectsController : ControllerBase
     {
-        private readonly LecturerManagementSystemDbContext _context;
+        private readonly ISubjectService _service;
 
-        public SubjectsController(LecturerManagementSystemDbContext context)
+        public SubjectsController(ISubjectService subjectService)
         {
-            _context = context;
+            _service = subjectService;
         }
 
         // GET: api/Subjects
+        /// <summary>
+        /// Get All Subject
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Subject>>> GetSubjects()
+        public async Task<ActionResult<ServiceResponse<IEnumerable<GetSubjectDto>>>> GetSubjects()
         {
-            return await _context.Subjects.ToListAsync();
+            return Ok(await _service.GetAllSubject());
         }
 
         // GET: api/Subjects/5
+        /// <summary>
+        /// Get Subject By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Subject>> GetSubject(string id)
+        public async Task<ActionResult<ServiceResponse<GetSubjectDto>>> GetSubject(string id)
         {
-            var subject = await _context.Subjects.FindAsync(id);
+            var subject = await _service.GetSubjectByCondition(x => x.Id.Trim().ToLower() == id.ToLower().Trim());
 
-            if (subject == null)
+            if (subject.Data == null)
             {
                 return NotFound();
             }
 
-            return subject;
+            return Ok(subject);
         }
 
         // PUT: api/Subjects/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update Subject By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="subject"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSubject(string id, Subject subject)
+        public async Task<IActionResult> UpdateSubject(string id, UpdateSubjectDto subject)
         {
-            if (id != subject.Id)
+            if (subject == null)
             {
                 return BadRequest();
             }
-
-            _context.Entry(subject).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SubjectExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Subjects
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Subject>> PostSubject(Subject subject)
-        {
-            _context.Subjects.Add(subject);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (SubjectExists(subject.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetSubject", new { id = subject.Id }, subject);
-        }
-
-        // DELETE: api/Subjects/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSubject(string id)
-        {
-            var subject = await _context.Subjects.FindAsync(id);
-            if (subject == null)
+            if (!await SubjectExists(x => x.Id == id))
             {
                 return NotFound();
             }
+            return Ok(await _service.UpdateSubject(subject, x => x.Id == id));
+        }
 
-            _context.Subjects.Remove(subject);
-            await _context.SaveChangesAsync();
+        // POST: api/Subjects
+        /// <summary>
+        /// Add New Subject to Db
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<ServiceResponse<GetSubjectDto>>> AddSubject(AddSubjectDto subject)
+        {
+            if (subject == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(await _service.AddSubject(subject));
+            }
+        }
+
+        // DELETE: api/Subjects/5
+        /// <summary>
+        /// Delete Subject By ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSubject(string id)
+        {
+            if (!await SubjectExists(x => x.Id == id))
+            {
+                return NotFound();
+            }
+            await _service.DeleteSubject(x => x.Id == id);
 
             return NoContent();
         }
 
-        private bool SubjectExists(string id)
+        private async Task<bool> SubjectExists(Expression<Func<Subject, bool>> expression = null)
         {
-            return _context.Subjects.Any(e => e.Id == id);
+            return await _service.IsExisted(expression);
         }
     }
 }

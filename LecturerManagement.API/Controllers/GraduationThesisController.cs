@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LecturerManagement.Core.Models;
+﻿using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.GraduationThesis;
 using LecturerManagement.Services.GraduationThesisService;
@@ -13,27 +12,25 @@ namespace LecturerManagement.API.Controllers
     [ApiController]
     public class GraduationThesisController : ControllerBase
     {
-        private readonly IGraduationThesisService _graduationThesisService;
-        private readonly IMapper _mapper;
+        private readonly IGraduationThesisService _service;
 
-        public GraduationThesisController(IGraduationThesisService graduationThesisService, IMapper mapper)
+        public GraduationThesisController(IGraduationThesisService graduationThesisService)
         {
-            _graduationThesisService = graduationThesisService;
-            _mapper = mapper;
+            _service = graduationThesisService;
         }
 
         // GET: api/GraduationThesis
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<IEnumerable<GraduationThesis>>>> GetGraduationTheses()
         {
-            return Ok(await _graduationThesisService.GetAllGraduationThesis());
+            return Ok(await _service.GetAllGraduationThesis());
         }
 
         // GET: api/GraduationThesis/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<GraduationThesis>>> GetGraduationThesis(string id)
         {
-            var graduationThesis = await _graduationThesisService.GetGraduationThesisByCondition(x => x.Id == id);
+            var graduationThesis = await _service.GetGraduationThesisByCondition(x => x.Id == id);
 
             if (graduationThesis.Data == null)
             {
@@ -61,7 +58,7 @@ namespace LecturerManagement.API.Controllers
             {
                 return NotFound();
             }
-            return Ok(await _graduationThesisService.UpdateGraduationThesis(graduationThesis));
+            return Ok(await _service.UpdateGraduationThesis(graduationThesis));
         }
 
         // POST: api/GraduationThesis
@@ -73,7 +70,7 @@ namespace LecturerManagement.API.Controllers
         [HttpPost]
         public async Task<ActionResult<GraduationThesis>> AddGraduationThesis(AddGraduationThesisDto graduationThesis)
         {
-            return Ok(await _graduationThesisService.AddGraduationThesis(graduationThesis));
+            return Ok(await _service.AddGraduationThesis(graduationThesis));
         }
 
         // DELETE: api/GraduationThesis/5
@@ -85,17 +82,17 @@ namespace LecturerManagement.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGraduationThesis(string id)
         {
-            var response = await _graduationThesisService.GetGraduationThesisByCondition(x => x.Id == id);
+            var response = await _service.GetGraduationThesisByCondition(x => x.Id == id);
             if (response.Data == null)
             {
                 return NotFound(response);
             }
-            return Ok(_graduationThesisService.DeleteGraduationThesis(_mapper.Map<GraduationThesis>(response.Data)));
+            return Ok(await _service.DeleteGraduationThesis(x => x.Id == id));
         }
 
         private async Task<bool> GraduationThesisExists(string id)
         {
-            return await _graduationThesisService.IsExisted(x => x.Id == id);
+            return await _service.IsExisted(x => x.Id == id);
         }
     }
 }
