@@ -1,7 +1,10 @@
 ﻿using LecturerManagement.Core.Models;
 using LecturerManagement.DTOS.Account;
+using LecturerManagement.DTOS.Modules.Enums;
 using LecturerManagement.Services.AccountService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -19,6 +22,7 @@ namespace LecturerManagement.API.Controllers
             _accountService = accountService;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("{username}")]
         public async Task<ActionResult<ServiceResponse<GetAccountDto>>> GetAccountByUsername(string username)
         {
@@ -30,6 +34,7 @@ namespace LecturerManagement.API.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{username}")]
         public async Task<IActionResult> DeleteAccount(string username)
         {
@@ -41,6 +46,7 @@ namespace LecturerManagement.API.Controllers
             return Ok(response);
         }
 
+        [Authorize]
         [HttpPut("{username}")]
         public async Task<IActionResult> UpdateAccount(string username, UpdateAccountDto updateAccountDto)
         {

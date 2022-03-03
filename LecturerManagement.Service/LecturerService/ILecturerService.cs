@@ -23,6 +23,8 @@ namespace LecturerManagement.Services.LecturerService
                                IOrderedQueryable<Lecturer>> orderBy = null,
                                 List<string> includes = null);
         Task<ServiceResponse<GetLecturerDto>> GetLecturerByCondition(Expression<Func<Lecturer, bool>> expression = null, List<string> includes = null);
+        Task<ServiceResponse<GetLecturerDto>> SetStandardTimeToLecturer(string standardTimeId, Expression<Func<Lecturer, bool>> expression = null);
+        Task<ServiceResponse<GetLecturerDto>> SetSubjectDepartmentToLecturer(string subjectDepartmentId, Expression<Func<Lecturer, bool>> expression = null);
         Task<bool> SaveChange();
     }
 }

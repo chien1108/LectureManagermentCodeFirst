@@ -1,11 +1,13 @@
 ﻿using LecturerManagement.Core.Models;
 using LecturerManagement.DTOS.LecturerScientificResearch;
 using LecturerManagement.Services.LecturerScientificResearchService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class LecturerScientificResearchesController : ControllerBase

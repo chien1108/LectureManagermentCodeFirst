@@ -2,12 +2,14 @@
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.GraduationThesis;
 using LecturerManagement.Services.GraduationThesisService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class GraduationThesisController : ControllerBase

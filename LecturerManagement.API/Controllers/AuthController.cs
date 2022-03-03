@@ -1,6 +1,7 @@
 ﻿using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Repositories.AuthenRepo;
 using LecturerManagement.DTOS.Account;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -16,7 +17,6 @@ namespace LecturerManagement.API.Controllers
         public AuthController(IAuthRepository authRepo)
         {
             _authRepo = authRepo;
-
         }
 
         /// <summary>
@@ -64,7 +64,8 @@ namespace LecturerManagement.API.Controllers
         /// <param name="userName"></param>
         /// <param name="newPassword"></param>
         /// <returns></returns>
-        [HttpPatch("ChangePassword")]
+        [Authorize]
+        [HttpPut("ChangePassword")]
         public async Task<ActionResult<ServiceResponse<string>>> ChangePassword(string userName, string newPassword)
         {
             var response = await _authRepo.ChangePassword(userName, newPassword);

@@ -1,12 +1,14 @@
 ﻿using LecturerManagement.Core.Models;
 using LecturerManagement.DTOS.Class;
 using LecturerManagement.Services.ClassService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ClassesController : ControllerBase
@@ -23,6 +25,7 @@ namespace LecturerManagement.API.Controllers
         /// Get All Class
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpGet("GetClasses")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<GetClassDto>>>> GetClasses()
         {
@@ -48,6 +51,7 @@ namespace LecturerManagement.API.Controllers
         /// <param name="id"></param>
         /// <param name="updateClass"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateClass(string id, UpdateClassDto updateClass)
         {
@@ -65,6 +69,7 @@ namespace LecturerManagement.API.Controllers
         /// </summary>
         /// <param name="newClass"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<GetClassDto>>> AddNewClass(AddClassDto newClass)
         {
@@ -77,6 +82,7 @@ namespace LecturerManagement.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<ServiceResponse<GetClassDto>>> DeleteClass(string id)
         {

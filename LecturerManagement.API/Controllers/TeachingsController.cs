@@ -2,6 +2,7 @@
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.Teaching;
 using LecturerManagement.Services.TeachingService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TeachingsController : ControllerBase

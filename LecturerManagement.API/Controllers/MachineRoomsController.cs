@@ -1,12 +1,14 @@
 ﻿using LecturerManagement.Core.Models;
 using LecturerManagement.DTOS.MachineRoom;
 using LecturerManagement.Services.MachineRoomService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LecturerManagement.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MachineRoomsController : ControllerBase

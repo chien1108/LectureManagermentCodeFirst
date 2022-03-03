@@ -4,6 +4,12 @@
         <name>LecturerManagement.API</name>
     </assembly>
     <members>
+        <member name="M:LecturerManagement.API.Controllers.AdvancedLearningsController.GetListAdvancedLearning">
+            <summary>
+            Get All Advanced Learning
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:LecturerManagement.API.Controllers.AuthController.Register(LecturerManagement.DTOS.Account.AccountResgisterDto)">
             <summary>
             Đăng Ký Tài Khoản

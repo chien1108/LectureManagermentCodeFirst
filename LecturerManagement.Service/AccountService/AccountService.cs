@@ -77,11 +77,11 @@ namespace LecturerManagement.Services.AccountService
                 {
                     if (_httpContext.HttpContext.User.FindFirst(ClaimTypes.Email).Value.Equals("Admin"))
                     {
-                        UpdateForAdmin(ref updateAccount, ref account);
+                        UpdateForAdmin(updateAccount, account);
                     }
                     else
                     {
-                        UpdateForLecturer(ref updateAccount, ref account);
+                        UpdateForLecturer(updateAccount, account);
                     }
                 }
                 if (await _unitOfWork.Save())
@@ -102,7 +102,7 @@ namespace LecturerManagement.Services.AccountService
             return response;
         }
 
-        private void UpdateForAdmin(ref UpdateAccountDto updateAccountDto, ref Account account)
+        private void UpdateForAdmin(UpdateAccountDto updateAccountDto, Account account)
         {
             CreatePasswordHash(updateAccountDto.Password, out byte[] PasswordHash, account.PasswordSalt);
             account.PasswordHash = PasswordHash;
@@ -121,7 +121,7 @@ namespace LecturerManagement.Services.AccountService
             account.Lecturer.AcademicLevel = updateAccountDto.AcademicLevel;
         }
 
-        private void UpdateForLecturer(ref UpdateAccountDto updateAccountDto, ref Account account)
+        private void UpdateForLecturer(UpdateAccountDto updateAccountDto, Account account)
         {
             CreatePasswordHash(updateAccountDto.Password, out byte[] PasswordHash, account.PasswordSalt);
             account.PasswordHash = PasswordHash;

@@ -4,6 +4,7 @@ using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.LecturerDTO;
 using LecturerManagement.DTOS.Modules.Functions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,8 +72,6 @@ namespace LecturerManagement.Services.LecturerService
             }
         }
 
-
-
         public async Task<ServiceResponse<GetLecturerDto>> DeleteLecturer(Expression<Func<Lecturer, bool>> expression = null)
         {
             try
@@ -127,7 +126,43 @@ namespace LecturerManagement.Services.LecturerService
         public async Task<bool> SaveChange()
             => await _unitOfWork.Lecturers.Save();
 
+        public async Task<ServiceResponse<GetLecturerDto>> SetStandardTimeToLecturer(string standardTimeId, Expression<Func<Lecturer, bool>> expression = null)
+        {
+            var lecturerFromDb = await _unitOfWork.Lecturers.FindByConditionAsync(expression);
+            if (lecturerFromDb == null)
+            {
+                return new() { Message = "Not Found Lecturer", Success = false };
+            }
+            else
+            {
+                lecturerFromDb.StandardTimeId = standardTimeId;
+                _unitOfWork.Lecturers.Update(lecturerFromDb);
+                if (!await SaveChange())
+                {
+                    return new ServiceResponse<GetLecturerDto> { Success = false, Message = "Error when update Lecturer" };
+                }
+                return new ServiceResponse<GetLecturerDto> { Success = true, Message = "Update Lecturer Success", Data = _mapper.Map<GetLecturerDto>(lecturerFromDb) };
+            }
+        }
 
+        public async Task<ServiceResponse<GetLecturerDto>> SetSubjectDepartmentToLecturer(string subjectDepartmentId, Expression<Func<Lecturer, bool>> expression = null)
+        {
+            var lecturerFromDb = await _unitOfWork.Lecturers.FindByConditionAsync(expression);
+            if (lecturerFromDb == null)
+            {
+                return new() { Message = "Not Found Lecturer", Success = false };
+            }
+            else
+            {
+                lecturerFromDb.SubjectDepartmentId = subjectDepartmentId;
+                _unitOfWork.Lecturers.Update(lecturerFromDb);
+                if (!await SaveChange())
+                {
+                    return new ServiceResponse<GetLecturerDto> { Success = false, Message = "Error when update Lecturer" };
+                }
+                return new ServiceResponse<GetLecturerDto> { Success = true, Message = "Update Lecturer Success", Data = _mapper.Map<GetLecturerDto>(lecturerFromDb) };
+            }
+        }
 
         public async Task<ServiceResponse<GetLecturerDto>> UpdateLecturer(UpdateLecturerDto updateLecturer, Expression<Func<Lecturer, bool>> expression = null)
         {
@@ -157,9 +192,9 @@ namespace LecturerManagement.Services.LecturerService
                 return new ServiceResponse<GetLecturerDto> { Success = true, Message = "Update Lecturer Success", Data = _mapper.Map<GetLecturerDto>(lecturerFromDb) };
 
             }
-            catch (Exception ex)
+            catch (Exception dbex)
             {
-                return new ServiceResponse<GetLecturerDto> { Success = false, Message = ex.Message };
+                return new ServiceResponse<GetLecturerDto> { Success = false, Message = dbex.StackTrace };
             }
         }
     }

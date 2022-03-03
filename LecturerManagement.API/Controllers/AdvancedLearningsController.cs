@@ -1,6 +1,7 @@
 ﻿using LecturerManagement.Core.Models;
 using LecturerManagement.DTOS.AdvancedLearning;
 using LecturerManagement.Services.AdvancedLearningService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,6 +20,11 @@ namespace LecturerManagement.API.Controllers
         }
 
         // GET: api/AdvancedLearnings
+        /// <summary>
+        /// Get All Advanced Learning
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<ICollection<GetAdvancedLearningDto>>>> GetListAdvancedLearning()
         {

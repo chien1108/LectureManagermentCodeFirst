@@ -48,13 +48,13 @@ namespace LecturerManagement.Core.Repositories.AuthenRepo
 
         public async Task<ServiceResponse<Tuple<string, string>>> Register(AccountResgisterDto accountRegisterDto)
         {
-            ServiceResponse<Tuple<string, string>> response = new();
             try
             {
                 var password = CreateRandomPasswordWithRandomLength();
                 CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
                 Account account = new()
                 {
+                    Id = GenerateUniqueID(),
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
                     Permission = Permission.Lecturer,
@@ -81,23 +81,22 @@ namespace LecturerManagement.Core.Repositories.AuthenRepo
                 await _unitOfWork.Lecturers.Create(lecturer);
                 if (await _unitOfWork.Save())
                 {
-                    response = new() { Data = new Tuple<string, string>(password.ToString(), account.UserName.ToString()), Success = true, Message = "Create Account Success" };
+                    return new() { Data = new Tuple<string, string>("Password: " + password.ToString(), "Account: " + account.UserName.ToString()), Success = true, Message = "Create Account Success" };
                 }
                 else
                 {
-                    response = new() { Message = "Please Check The Information", Success = false };
+                    return new() { Message = "Please Check The Information", Success = false };
                 }
 
             }
             catch (Exception ex)
             {
-                response = new()
+                return new()
                 {
                     Message = ex.Message,
                     Success = false
                 };
             }
-            return response;
         }
 
         public async Task<ServiceResponse<string>> ChangePassword(string username, string newPassword)
