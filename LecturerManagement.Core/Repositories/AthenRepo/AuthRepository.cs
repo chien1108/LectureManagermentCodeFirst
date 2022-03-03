@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LecturerManagement.Core.Contracts;
+﻿using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.DTOS.Account;
@@ -19,13 +18,11 @@ namespace LecturerManagement.Core.Repositories.AuthenRepo
     public class AuthRepository : IAuthRepository
     {
         private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AuthRepository(IConfiguration configuration, IMapper mapper, IUnitOfWork unitOfWork)
+        public AuthRepository(IConfiguration configuration, IUnitOfWork unitOfWork)
         {
             _configuration = configuration;
-            _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 

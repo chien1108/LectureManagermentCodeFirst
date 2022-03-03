@@ -83,6 +83,96 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:LecturerManagement.API.Controllers.LecturerScientificResearchesController.GetLecturerScientificResearches">
+            <summary>
+            Get All LecturerScientificResearches 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.LecturerScientificResearchesController.GetLecturerScientificResearch(System.String)">
+            <summary>
+            Get Single LecturerScientificResearches by Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.LecturerScientificResearchesController.PutLecturerScientificResearch(System.String,LecturerManagement.DTOS.LecturerScientificResearch.UpdateLecturerScientificResearchDto)">
+            <summary>
+            Update LecturerScientificResearches by Id
+            </summary>
+            <param name="id"></param>
+            <param name="updateLecturerScientificResearchDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.LecturerScientificResearchesController.PostLecturerScientificResearch(LecturerManagement.DTOS.LecturerScientificResearch.AddLecturerScientificResearchDto)">
+            <summary>
+            Add New LecturerScientificResearches 
+            </summary>
+            <param name="addLecturerScientificResearchDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.LecturerScientificResearchesController.DeleteLecturerScientificResearch(System.String)">
+            <summary>
+            Delete LecturerScientificResearches by Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.LecturersController.GetLecturers">
+            <summary>
+            Get All Lecturer
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.LecturersController.GetLecturer(System.String)">
+            <summary>
+            Get Lecturer By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.LecturersController.DeleteLecturer(System.String)">
+            <summary>
+            Delete Lecturer By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.MachineRoomsController.GetMachineRooms">
+            <summary>
+            Get All Machine Room
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.MachineRoomsController.GetMachineRoom(System.String)">
+            <summary>
+            Get Machine Room By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.MachineRoomsController.UpdateMachineRoom(System.String,LecturerManagement.DTOS.MachineRoom.UpdateMachineRoomDto)">
+            <summary>
+            Update Machine Room By Id
+            </summary>
+            <param name="id"></param>
+            <param name="machineRoom"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.MachineRoomsController.AddMachineRoom(LecturerManagement.DTOS.MachineRoom.AddMachineRoomDto)">
+            <summary>
+            Add New Machine Room
+            </summary>
+            <param name="machineRoom"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.MachineRoomsController.DeleteMachineRoom(System.String)">
+            <summary>
+            Delete Machine Room By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:LecturerManagement.API.Controllers.PositionsController.GetPositions">
             <summary>
             Get All Position
@@ -118,6 +208,41 @@
             <param name="id">Id Element for Delete</param>
             <returns></returns>
         </member>
+        <member name="M:LecturerManagement.API.Controllers.ScientificResearchGuidesController.GetScientificResearchGuides">
+            <summary>
+            Get All ScientificResearchGuides
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.ScientificResearchGuidesController.GetScientificResearchGuide(System.String)">
+            <summary>
+            Get Scientific Research Guides By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.ScientificResearchGuidesController.UpdateScientificResearchGuide(System.String,LecturerManagement.DTOS.ScientificResearchGuide.UpdateScientificResearchGuideDto)">
+            <summary>
+            Update Scientific Research Guides By Id
+            </summary>
+            <param name="id"></param>
+            <param name="scientificResearchGuide"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.ScientificResearchGuidesController.AddScientificResearchGuide(LecturerManagement.DTOS.ScientificResearchGuide.AddScientificResearchGuideDto)">
+            <summary>
+            Add New Scientific Research Guides
+            </summary>
+            <param name="scientificResearchGuide"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.ScientificResearchGuidesController.DeleteScientificResearchGuide(System.String)">
+            <summary>
+            Delete Scientific Research Guide By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:LecturerManagement.API.Controllers.StandardTimesController.GetStandardTimes">
             <summary>
             Get All StandardTime
@@ -151,6 +276,146 @@
             Delete Standard Time By Id
             </summary>
             <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectDepartmentsController.GetSubjectDepartments">
+            <summary>
+            Get All Subject Department
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectDepartmentsController.GetSubjectDepartment(System.String)">
+            <summary>
+            Get Single Subject Department By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectDepartmentsController.PutSubjectDepartment(System.String,LecturerManagement.DTOS.SubjectDepartment.UpdateSubjectDepartmentDto)">
+            <summary>
+            Update Subject Department By Id
+            </summary>
+            <param name="id"></param>
+            <param name="subjectDepartment"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectDepartmentsController.AddSubjectDepartment(LecturerManagement.DTOS.SubjectDepartment.AddSubjectDepartmentDto)">
+            <summary>
+            Add Subject Department
+            </summary>
+            <param name="subjectDepartment"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectDepartmentsController.DeleteSubjectDepartment(System.String)">
+            <summary>
+            Delete Subject Department By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectsController.GetSubjects">
+            <summary>
+            Get All Subject
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectsController.GetSubject(System.String)">
+            <summary>
+            Get Subject By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectsController.UpdateSubject(System.String,LecturerManagement.DTOS.Subject.UpdateSubjectDto)">
+            <summary>
+            Update Subject By Id
+            </summary>
+            <param name="id"></param>
+            <param name="subject"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectsController.AddSubject(LecturerManagement.DTOS.Subject.AddSubjectDto)">
+            <summary>
+            Add New Subject to Db
+            </summary>
+            <param name="subject"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectsController.DeleteSubject(System.String)">
+            <summary>
+            Delete Subject By ID
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectTypesController.GetSubjectTypes">
+            <summary>
+            Get All Subject Type
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectTypesController.GetSubjectType(System.String)">
+            <summary>
+            Get Subject Type By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectTypesController.UpdateSubjectType(System.String,LecturerManagement.DTOS.SubjectType.UpdateSubjectTypeDto)">
+            <summary>
+            update Subject Type By Id
+            </summary>
+            <param name="id"></param>
+            <param name="updatedSubjectType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectTypesController.AddSubjectType(LecturerManagement.DTOS.SubjectType.AddSubjectTypeDto)">
+            <summary>
+            Add New Subject Type
+            </summary>
+            <param name="subjectType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.SubjectTypesController.DeleteSubjectType(System.String)">
+            <summary>
+            Delete Subject By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.TeachingsController.GetTeachings">
+            <summary>
+            Get List Teaching
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.TeachingsController.GetTeaching(System.String)">
+            <summary>
+            Get Single Teaching By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.TeachingsController.UpdateTeaching(System.String,LecturerManagement.DTOS.Teaching.UpdateTeachingDto)">
+            <summary>
+            Update Teaching By Id
+            </summary>
+            <param name="id"></param>
+            <param name="teaching"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.TeachingsController.AddTeaching(LecturerManagement.DTOS.Teaching.AddTeachingDto)">
+            <summary>
+            Add New Teaching
+            </summary>
+            <param name="teaching"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.TeachingsController.DeleteTeaching(System.String)">
+            <summary>
+            Delete Teaching By Id
+            </summary>
+            <param name="id">ID For Delete Element</param>
             <returns></returns>
         </member>
         <member name="M:LecturerManagement.API.Controllers.TrainingSystemsController.GetTrainingSystems">
