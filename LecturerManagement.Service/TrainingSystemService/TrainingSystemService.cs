@@ -140,9 +140,9 @@ namespace LecturerManagement.Services.TrainingSystemService
             {
                 var trainingSystemFromDb = await _unitOfWork.TrainingSystems.FindByConditionAsync(expression);
                 trainingSystemFromDb.ModifiedDate = DateTime.Now;
-                trainingSystemFromDb.Name ??= updateTrainingSystem.Name;
+                trainingSystemFromDb.Name = updateTrainingSystem.Name;
                 trainingSystemFromDb.NumberOfLearningUnit = updateTrainingSystem.NumberOfLearningUnit;
-                trainingSystemFromDb.Description ??= updateTrainingSystem.Description;
+                trainingSystemFromDb.Description = updateTrainingSystem.Description;
 
                 _unitOfWork.TrainingSystems.Update(trainingSystemFromDb);
                 if (!await SaveChange())

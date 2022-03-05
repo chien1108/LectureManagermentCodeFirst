@@ -5,6 +5,8 @@
         Professor,
         AssociateProfessor,
         PhilosophyDoctor,
-        MasterofScience
+        MasterofScience,
+        Master,
+        Doctor,
     }
 }

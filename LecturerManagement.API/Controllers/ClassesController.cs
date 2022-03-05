@@ -65,7 +65,7 @@ namespace LecturerManagement.API.Controllers
 
         // POST: api/Classes
         /// <summary>
-        /// Add New Class 
+        /// Add New Class
         /// </summary>
         /// <param name="newClass"></param>
         /// <returns></returns>

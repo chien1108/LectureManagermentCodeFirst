@@ -14,6 +14,7 @@ namespace LecturerManagement.API.Controllers
     public class MachineRoomsController : ControllerBase
     {
         private readonly IMachineRoomService _service;
+
         public MachineRoomsController(IMachineRoomService machineRoomService)
         {
             _service = machineRoomService;

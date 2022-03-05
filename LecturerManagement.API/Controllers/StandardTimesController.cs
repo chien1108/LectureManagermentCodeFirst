@@ -63,7 +63,6 @@ namespace LecturerManagement.API.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<ServiceResponse<GetStandardTimeDto>>> UpdateStandardTime(string id, UpdateStandardTimeDto updatedStandardTime)
         {
-
             if (!await StandardTimeExists(x => x.Id == id))
             {
                 return NotFound();

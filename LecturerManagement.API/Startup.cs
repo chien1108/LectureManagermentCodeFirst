@@ -1,7 +1,6 @@
 using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Data;
 using LecturerManagement.Core.Repositories.AdvancedLearningRepo;
-using LecturerManagement.Core.Repositories.AuthenRepo;
 using LecturerManagement.Core.Repositories.ClassRepo;
 using LecturerManagement.Core.Repositories.DynamicClassFactorRepo;
 using LecturerManagement.Core.Repositories.GraduationThesisRepo;
@@ -72,7 +71,6 @@ namespace LecturerManagement.API
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             //DI Repository
 
-            services.AddScoped<IAuthRepository, AuthRepository>();
 
             services.AddScoped<IAdvancedLearningRepository, AdvancedLearningRepository>();
             services.AddScoped<IClassRepository, ClassRepository>();

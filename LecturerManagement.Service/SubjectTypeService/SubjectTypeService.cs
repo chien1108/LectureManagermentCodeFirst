@@ -2,6 +2,7 @@
 using LecturerManagement.Core.Contracts;
 using LecturerManagement.Core.Models;
 using LecturerManagement.Core.Models.Entities;
+using LecturerManagement.DTOS.Modules.Functions;
 using LecturerManagement.DTOS.SubjectType;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,25 @@ namespace LecturerManagement.Services.SubjectTypeService
         {
             try
             {
-                await _unitOfWork.SubjectTypes.Create(_mapper.Map<SubjectType>(createSubjectType));
+                var listFromDb = await _unitOfWork.SubjectTypes.FindAllAsync();
+                var length = listFromDb.Count();
+                var subjectType = new SubjectType()
+                {
+                    Name = createSubjectType.Name,
+                    CreatedDate = DateTime.Now,
+                    Description = createSubjectType.Description,
+                    Status = DTOS.Modules.Enums.Status.IsActive,
+                };
+
+                if (length == 0)
+                {
+                    subjectType.Id = "LM01";
+                }
+                else
+                {
+                    subjectType.Id = GenerateUniqueStringId.GenrateNewStringId(prefix: listFromDb[length - 1].Id, textFormatPrefix: 2, numberFormatPrefix: 2);
+                }
+                await _unitOfWork.SubjectTypes.Create(subjectType);
                 if (await SaveChange())
                 {
                     return new ServiceResponse<GetSubjectTypeDto> { Success = true, Message = "Add Subject Type Success" };

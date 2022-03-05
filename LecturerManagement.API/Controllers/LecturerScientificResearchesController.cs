@@ -21,7 +21,7 @@ namespace LecturerManagement.API.Controllers
 
         // GET: api/LecturerScientificResearches
         /// <summary>
-        /// Get All LecturerScientificResearches 
+        /// Get All LecturerScientificResearches
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -72,7 +72,7 @@ namespace LecturerManagement.API.Controllers
 
         // POST: api/LecturerScientificResearches
         /// <summary>
-        /// Add New LecturerScientificResearches 
+        /// Add New LecturerScientificResearches
         /// </summary>
         /// <param name="addLecturerScientificResearchDto"></param>
         /// <returns></returns>

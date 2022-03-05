@@ -84,7 +84,6 @@ namespace LecturerManagement.API.Controllers
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<GetTrainingSystemDto>>> AddNewTrainingSystem(AddTrainingSystemDto newTrainingSystem)
         {
-
             if (newTrainingSystem == null)
             {
                 return BadRequest();
@@ -93,7 +92,6 @@ namespace LecturerManagement.API.Controllers
             {
                 return Ok(await _service.AddTrainingSystem(newTrainingSystem));
             }
-
         }
 
         // DELETE: api/TrainingSystems/5

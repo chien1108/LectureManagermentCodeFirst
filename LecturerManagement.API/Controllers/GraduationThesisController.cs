@@ -44,7 +44,7 @@ namespace LecturerManagement.API.Controllers
 
         // PUT: api/GraduationThesis/5
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="id"></param>
         /// <param name="graduationThesis"></param>
@@ -65,7 +65,7 @@ namespace LecturerManagement.API.Controllers
 
         // POST: api/GraduationThesis
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="graduationThesis"></param>
         /// <returns></returns>
@@ -77,7 +77,7 @@ namespace LecturerManagement.API.Controllers
 
         // DELETE: api/GraduationThesis/5
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
