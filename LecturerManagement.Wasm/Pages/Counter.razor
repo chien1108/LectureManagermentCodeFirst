@@ -1,5 +1,4 @@
 ﻿@page "/counter"
-@inject IToastService ToastService
 
 <PageTitle>Counter</PageTitle>
 
@@ -15,6 +14,5 @@
     private void IncrementCount()
     {
         currentCount++;
-        ToastService.ShowSuccess($"Count {currentCount}");
     }
 }

@@ -4,6 +4,28 @@
         <name>LecturerManagement.API</name>
     </assembly>
     <members>
+        <member name="M:LecturerManagement.API.Controllers.AccountsController.Register(LecturerManagement.DTOS.Account.AccountResgisterDto)">
+            <summary>
+            Đăng Ký Tài Khoản
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.AccountsController.Login(LecturerManagement.DTOS.Account.AccountLoginDto)">
+            <summary>
+            Đăng Nhập
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LecturerManagement.API.Controllers.AccountsController.ChangePassword(System.String,System.String)">
+            <summary>
+            Đổi Mật Khẩu
+            </summary>
+            <param name="userName"></param>
+            <param name="newPassword"></param>
+            <returns></returns>
+        </member>
         <member name="M:LecturerManagement.API.Controllers.AccountsController.GetAccountByUsername(System.String)">
             <summary>
             Controller Lấy Account theo username
@@ -30,28 +52,6 @@
             <summary>
             Get All Advanced Learning
             </summary>
-            <returns></returns>
-        </member>
-        <member name="M:LecturerManagement.API.Controllers.AuthController.Register(LecturerManagement.DTOS.Account.AccountResgisterDto)">
-            <summary>
-            Đăng Ký Tài Khoản
-            </summary>
-            <param name="request"></param>
-            <returns></returns>
-        </member>
-        <member name="M:LecturerManagement.API.Controllers.AuthController.Login(LecturerManagement.DTOS.Account.AccountLoginDto)">
-            <summary>
-            Đăng Nhập
-            </summary>
-            <param name="request"></param>
-            <returns></returns>
-        </member>
-        <member name="M:LecturerManagement.API.Controllers.AuthController.ChangePassword(System.String,System.String)">
-            <summary>
-            Đổi Mật Khẩu
-            </summary>
-            <param name="userName"></param>
-            <param name="newPassword"></param>
             <returns></returns>
         </member>
         <member name="M:LecturerManagement.API.Controllers.ClassesController.GetClasses">

@@ -235,8 +235,8 @@ namespace LecturerManagement.Core.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Gender")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<string>("IdentityCardNumber")
                         .HasColumnType("nvarchar(max)");
@@ -247,8 +247,8 @@ namespace LecturerManagement.Core.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Portrait")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("Portrait")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("PositionID")
                         .HasColumnType("nvarchar(450)");
@@ -290,8 +290,8 @@ namespace LecturerManagement.Core.Migrations
                     b.Property<string>("LecturerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("LevelOfResearch")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("LevelOfResearch")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -376,7 +376,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "CV01",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5591),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1322),
                             Description = "Giảm 25 phần trăm số giờ chuẩn.",
                             DiscountPercent = 25,
                             Name = "Trưởng Khoa",
@@ -385,7 +385,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "CV02",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5616),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1342),
                             Description = "Giảm 20 phần trăm số giờ chuẩn.",
                             DiscountPercent = 20,
                             Name = "Phó Khoa",
@@ -394,7 +394,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "CV03",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5618),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1345),
                             Description = "Giảm 20 phần trăm số giờ chuẩn.",
                             DiscountPercent = 20,
                             Name = "Trưởng Bộ Môn",
@@ -403,7 +403,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "CV04",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5620),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1347),
                             Description = "Dành cho những giảng viên chỉ phụ trách công việc giảng dạy...",
                             DiscountPercent = 0,
                             Name = "Không Có Chức Vụ",
@@ -478,7 +478,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "CD01",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5865),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1670),
                             Description = "Số giờ chuẩn cho 1 kỳ học",
                             Name = "Giáo sư và giảng viên cao cấp",
                             StandardHours = 360,
@@ -487,7 +487,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "CD02",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5867),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1673),
                             Description = "Số giờ chuẩn cho 1 kỳ học",
                             Name = "Phó giáo sư và giảng viên chính",
                             StandardHours = 320,
@@ -496,7 +496,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "CD03",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5869),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1676),
                             Description = "Số giờ chuẩn cho 1 kỳ học",
                             Name = "Giảng viên",
                             StandardHours = 280,
@@ -505,7 +505,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "CD04",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5871),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1678),
                             Description = "Số giờ chuẩn cho 1 kỳ học",
                             Name = "Giảng viên tập sự",
                             StandardHours = 140,
@@ -579,7 +579,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "BM01",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5831),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1545),
                             Description = "Bộ Môn Hệ Thống Thông Tin",
                             Name = "Hệ Thống Thông Tin",
                             Status = 1
@@ -587,7 +587,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "BM02",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5835),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1548),
                             Description = "Bộ Môn Công Nghệ Thông Tin",
                             Name = "Công Nghệ Thông Tin",
                             Status = 1
@@ -595,7 +595,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "BM03",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5837),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1550),
                             Description = "Truyền Thông Mạng Máy Tính",
                             Name = "Truyền Thông Mạng Máy Tính",
                             Status = 1
@@ -630,7 +630,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "LM01",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5906),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1708),
                             Description = "Môn học lý thuyết",
                             Name = "Lý Thuyết",
                             Status = 1
@@ -638,7 +638,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "LM02",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5910),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1711),
                             Description = "Môn học thực hành",
                             Name = "Thực Hành",
                             Status = 1
@@ -646,7 +646,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "LM03",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5913),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1713),
                             Description = "Thực tập cơ sở và thực tập tốt nghiệp",
                             Name = "Các Đồ án, TTCS,TTCN, TTTN, Project",
                             Status = 1
@@ -654,7 +654,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "LM04",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5916),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1715),
                             Description = "Thực tập doanh nghiệp",
                             Name = "Thực tập doanh nghiệp",
                             Status = 1
@@ -662,7 +662,7 @@ namespace LecturerManagement.Core.Migrations
                         new
                         {
                             Id = "LM05",
-                            CreatedDate = new DateTime(2022, 3, 5, 13, 59, 14, 877, DateTimeKind.Local).AddTicks(5919),
+                            CreatedDate = new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1717),
                             Description = "Thực tập sư phạm",
                             Name = "Thực tập sư phạm",
                             Status = 1

@@ -6,30 +6,86 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LecturerManagement.Core.Models.Entities
 {
+    /// <summary>
+    /// Giảng Viên
+    /// </summary>
     public class Lecturer : BaseEntity<string>
     {
         //[Key]
         //public string ID { get; set; }
 
+        /// <summary>
+        /// Giảng Viên Thuộc Giờ Chuẩn
+        /// </summary>
         [ForeignKey("StandardTime")]
         public string StandardTimeId { get; set; }
 
+        /// <summary>
+        /// Giảng Viên Thuộc Bộ Môn
+        /// </summary>
         [ForeignKey("SubjectDepartment")]
         public string SubjectDepartmentId { get; set; }
 
+        /// <summary>
+        /// Chức Vụ GV Nắm Giữ
+        /// </summary>
+        [ForeignKey("Position")]
+        public string PositionID { get; set; }
+
         //public Status Status { get; set; }
+        /// <summary>
+        /// Họ Và Tên
+        /// </summary>
         public string FullName { get; set; }
 
-        public string Gender { get; set; }
+        /// <summary>
+        /// Giới Tính
+        /// </summary>
+        public Gender Gender { get; set; }
+
+        /// <summary>
+        /// Ngày Sinh
+        /// </summary>
         public DateTime? BirthDate { get; set; }
+
+        /// <summary>
+        /// Sô CMT/CCCD
+        /// </summary>
         public string IdentityCardNumber { get; set; }
-        public string Portrait { get; set; }
+
+        /// <summary>
+        /// Ảnh
+        /// </summary>
+        public byte[] Portrait { get; set; }
+
+        /// <summary>
+        /// Trình Độ Học Vấn
+        /// </summary>
         public AcademicLevel AcademicLevel { get; set; }
-        public string PositionID { get; set; }
+
+        /// <summary>
+        /// Năm Vào Làm
+        /// </summary>
         public string YearStartWork { get; set; }
+
+        /// <summary>
+        /// Địa Chỉ Email
+        /// </summary>
         public string Email { get; set; }
+
+        /// <summary>
+        /// Địa Chỉ
+        /// </summary>
         public string Address { get; set; }
+
+        /// <summary>
+        /// Số Điện Thoại
+        /// </summary>
         public string PhoneNumber { get; set; }
+
+        /// <summary>
+        /// Ghi Chú
+        /// </summary>
         public string Description { get; set; } = null;
 
         public SubjectDepartment SubjectDepartment { get; set; }

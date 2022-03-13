@@ -78,7 +78,6 @@ namespace LecturerManagement.API.Controllers
             return Ok(response);
         }
 
-
         /// <summary>
         /// Controller Lấy Account theo username
         /// </summary>
@@ -112,6 +111,7 @@ namespace LecturerManagement.API.Controllers
             }
             return Ok(response);
         }
+
         /// <summary>
         /// Controller sửa thông tin tài khoản theo username
         /// </summary>

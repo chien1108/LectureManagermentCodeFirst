@@ -33,6 +33,7 @@ namespace LecturerManagement.Services.AccountService
             _unitOfWork = unitOfWork;
             _configuration = configuration;
         }
+
         public async Task<ServiceResponse<string>> DeleteAccount(string username)
         {
             var response = new ServiceResponse<string>();
@@ -150,7 +151,7 @@ namespace LecturerManagement.Services.AccountService
             passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
         }
 
-        public async Task<ServiceResponse<string>> Delete(Expression<Func<Account, bool>> expression = null)
+        public async Task<ServiceResponse<string>> DeleteAccountByCondition(Expression<Func<Account, bool>> expression = null)
         {
             try
             {
@@ -171,7 +172,6 @@ namespace LecturerManagement.Services.AccountService
             }
             catch (Exception ex)
             {
-
                 return new ServiceResponse<string> { Success = false, Message = ex.Message };
             }
         }
@@ -202,7 +202,6 @@ namespace LecturerManagement.Services.AccountService
                     return new ServiceResponse<UpdateAccountDto> { Success = false, Message = "Error when update Account" };
                 }
                 return new ServiceResponse<UpdateAccountDto> { Success = true, Message = "Update Account Success" };
-
             }
             catch (Exception ex)
             {
@@ -220,11 +219,27 @@ namespace LecturerManagement.Services.AccountService
             return true;
         }
 
-        public async Task<ICollection<GetAccountDto>> FindAll(Expression<Func<Account, bool>> expression = null, Func<IQueryable<Account>, IOrderedQueryable<Account>> orderBy = null, List<string> includes = null)
-        => _mapper.Map<ICollection<GetAccountDto>>(await _unitOfWork.Accounts.FindAllAsync(expression, orderBy, includes));
+        public async Task<ServiceResponse<IEnumerable<GetAccountDto>>> FindAllAccount(Expression<Func<Account, bool>> expression = null, Func<IQueryable<Account>, IOrderedQueryable<Account>> orderBy = null, List<string> includes = null)
+        {
+            var listAccoutnFromDb = await _unitOfWork.Accounts.FindAllAsync(expression, orderBy, includes);
 
-        public async Task<GetAccountDto> Find(Expression<Func<Account, bool>> expression = null, List<string> includes = null)
-        => _mapper.Map<GetAccountDto>(await _unitOfWork.Accounts.FindByConditionAsync(expression, includes));
+            if (listAccoutnFromDb.Count() != 0)
+            {
+                return new() { Success = true, Message = "Get list Account Success", Data = _mapper.Map<IEnumerable<GetAccountDto>>(listAccoutnFromDb) };
+            }
+            return new() { Message = "lits Account is not availble", Success = false };
+        }
+
+        public async Task<ServiceResponse<GetAccountDto>> FindAccountByCondition(Expression<Func<Account, bool>> expression = null, List<string> includes = null)
+        {
+            var accountFromDb = await _unitOfWork.Accounts.FindByConditionAsync(expression, includes);
+            if (accountFromDb != null)
+            {
+                return new() { Success = true, Message = "Get Account from DB Success", Data = _mapper.Map<GetAccountDto>(accountFromDb) };
+            }
+
+            return new() { Message = "Account is not exist", Success = false };
+        }
 
         public async Task<bool> SaveChange()
         => await _unitOfWork.Accounts.Save();
@@ -270,7 +285,6 @@ namespace LecturerManagement.Services.AccountService
                 {
                     return new() { Message = "Please Check The Information", Success = false };
                 }
-
             }
             catch (Exception ex)
             {
@@ -382,15 +396,15 @@ namespace LecturerManagement.Services.AccountService
 
         private string CreateRandomPasswordWithRandomLength()
         {
-            // Create a string of characters, numbers, special characters that allowed in the password  
+            // Create a string of characters, numbers, special characters that allowed in the password
             string validChars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*?_-";
             Random random = new();
 
-            // Minimum size 8. Max size is number of all allowed chars.  
+            // Minimum size 8. Max size is number of all allowed chars.
             int size = random.Next(8, validChars.Length);
 
-            // Select one random character at a time from the string  
-            // and create an array of chars  
+            // Select one random character at a time from the string
+            // and create an array of chars
             char[] chars = new char[size];
             for (int i = 0; i < size; i++)
             {

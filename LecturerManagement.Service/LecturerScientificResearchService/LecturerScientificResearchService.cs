@@ -27,7 +27,7 @@ namespace LecturerManagement.Services.LecturerScientificResearchService
             try
             {
                 var listFromDb = await _unitOfWork.LecturerScientificResearches.FindAllAsync();
-                var length = listFromDb.Count();
+                var length = listFromDb.Count;
 
                 var gvNCKH = new LecturerScientificResearch()
                 {

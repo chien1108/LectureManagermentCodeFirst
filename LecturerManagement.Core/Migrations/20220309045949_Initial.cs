@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace LecturerManagement.Core.Migrations
 {
     public partial class Initial : Migration
@@ -115,13 +117,13 @@ namespace LecturerManagement.Core.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     StandardTimeId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     SubjectDepartmentId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PositionID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Gender = table.Column<int>(type: "int", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IdentityCardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Portrait = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Portrait = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     AcademicLevel = table.Column<int>(type: "int", nullable: false),
-                    PositionID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     YearStartWork = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -138,20 +140,17 @@ namespace LecturerManagement.Core.Migrations
                         name: "FK_Lecturers_Positions_PositionID",
                         column: x => x.PositionID,
                         principalTable: "Positions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Lecturers_StandardTimes_StandardTimeId",
                         column: x => x.StandardTimeId,
                         principalTable: "StandardTimes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Lecturers_SubjectDepartments_SubjectDepartmentId",
                         column: x => x.SubjectDepartmentId,
                         principalTable: "SubjectDepartments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -175,8 +174,7 @@ namespace LecturerManagement.Core.Migrations
                         name: "FK_Classes_TrainingSystems_TrainingSystemId",
                         column: x => x.TrainingSystemId,
                         principalTable: "TrainingSystems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -200,14 +198,12 @@ namespace LecturerManagement.Core.Migrations
                         name: "FK_Subjects_SubjectTypes_SubjectTypeId",
                         column: x => x.SubjectTypeId,
                         principalTable: "SubjectTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Subjects_TrainingSystems_TrainingSystemId",
                         column: x => x.TrainingSystemId,
                         principalTable: "TrainingSystems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -219,7 +215,7 @@ namespace LecturerManagement.Core.Migrations
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    Permission = table.Column<int>(type: "int", nullable: false),
+                    Permission = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -232,8 +228,7 @@ namespace LecturerManagement.Core.Migrations
                         name: "FK_Accounts_Lecturers_LecturerId",
                         column: x => x.LecturerId,
                         principalTable: "Lecturers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -255,8 +250,7 @@ namespace LecturerManagement.Core.Migrations
                         name: "FK_AdvancedLearnings_Lecturers_LecturerID",
                         column: x => x.LecturerID,
                         principalTable: "Lecturers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -266,7 +260,7 @@ namespace LecturerManagement.Core.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     LecturerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LevelOfResearch = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LevelOfResearch = table.Column<int>(type: "int", nullable: false),
                     YearOfResearchParticipation = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
@@ -280,8 +274,7 @@ namespace LecturerManagement.Core.Migrations
                         name: "FK_LecturerScientificResearches_Lecturers_LecturerId",
                         column: x => x.LecturerId,
                         principalTable: "Lecturers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -304,8 +297,7 @@ namespace LecturerManagement.Core.Migrations
                         name: "FK_MachineRooms_Lecturers_LecturerId",
                         column: x => x.LecturerId,
                         principalTable: "Lecturers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -329,8 +321,7 @@ namespace LecturerManagement.Core.Migrations
                         name: "FK_ScientificResearchGuides_Lecturers_LecturerId",
                         column: x => x.LecturerId,
                         principalTable: "Lecturers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -356,14 +347,12 @@ namespace LecturerManagement.Core.Migrations
                         name: "FK_GraduationTheses_Classes_ClassId",
                         column: x => x.ClassId,
                         principalTable: "Classes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_GraduationTheses_Lecturers_LecturerId",
                         column: x => x.LecturerId,
                         principalTable: "Lecturers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -402,6 +391,50 @@ namespace LecturerManagement.Core.Migrations
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Positions",
+                columns: new[] { "Id", "CreatedDate", "Description", "DiscountPercent", "ModifiedDate", "Name", "Status" },
+                values: new object[,]
+                {
+                    { "CV01", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1322), "Giảm 25 phần trăm số giờ chuẩn.", 25, null, "Trưởng Khoa", 1 },
+                    { "CV02", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1342), "Giảm 20 phần trăm số giờ chuẩn.", 20, null, "Phó Khoa", 1 },
+                    { "CV03", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1345), "Giảm 20 phần trăm số giờ chuẩn.", 20, null, "Trưởng Bộ Môn", 1 },
+                    { "CV04", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1347), "Dành cho những giảng viên chỉ phụ trách công việc giảng dạy...", 0, null, "Không Có Chức Vụ", 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "StandardTimes",
+                columns: new[] { "Id", "CreatedDate", "Description", "ModifiedDate", "Name", "StandardHours", "Status" },
+                values: new object[,]
+                {
+                    { "CD01", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1670), "Số giờ chuẩn cho 1 kỳ học", null, "Giáo sư và giảng viên cao cấp", 360, 1 },
+                    { "CD02", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1673), "Số giờ chuẩn cho 1 kỳ học", null, "Phó giáo sư và giảng viên chính", 320, 1 },
+                    { "CD03", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1676), "Số giờ chuẩn cho 1 kỳ học", null, "Giảng viên", 280, 1 },
+                    { "CD04", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1678), "Số giờ chuẩn cho 1 kỳ học", null, "Giảng viên tập sự", 140, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SubjectDepartments",
+                columns: new[] { "Id", "CreatedDate", "Description", "ModifiedDate", "Name", "Status" },
+                values: new object[,]
+                {
+                    { "BM01", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1545), "Bộ Môn Hệ Thống Thông Tin", null, "Hệ Thống Thông Tin", 1 },
+                    { "BM02", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1548), "Bộ Môn Công Nghệ Thông Tin", null, "Công Nghệ Thông Tin", 1 },
+                    { "BM03", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1550), "Truyền Thông Mạng Máy Tính", null, "Truyền Thông Mạng Máy Tính", 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SubjectTypes",
+                columns: new[] { "Id", "CreatedDate", "Description", "ModifiedDate", "Name", "Status" },
+                values: new object[,]
+                {
+                    { "LM01", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1708), "Môn học lý thuyết", null, "Lý Thuyết", 1 },
+                    { "LM02", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1711), "Môn học thực hành", null, "Thực Hành", 1 },
+                    { "LM03", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1713), "Thực tập cơ sở và thực tập tốt nghiệp", null, "Các Đồ án, TTCS,TTCN, TTTN, Project", 1 },
+                    { "LM04", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1715), "Thực tập doanh nghiệp", null, "Thực tập doanh nghiệp", 1 },
+                    { "LM05", new DateTime(2022, 3, 9, 11, 59, 49, 474, DateTimeKind.Local).AddTicks(1717), "Thực tập sư phạm", null, "Thực tập sư phạm", 1 }
                 });
 
             migrationBuilder.CreateIndex(

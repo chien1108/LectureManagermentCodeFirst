@@ -29,7 +29,7 @@ namespace LecturerManagement.Services.LecturerService
             try
             {
                 var listfromDb = await _unitOfWork.Lecturers.FindAllAsync();
-                var length = listfromDb.Count();
+                var length = listfromDb.Count;
 
                 var lecturer = new Lecturer()
                 {

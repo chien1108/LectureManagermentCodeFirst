@@ -1,6 +1,7 @@
 ﻿using LecturerManagement.Core.Data;
 using LecturerManagement.Core.Models.Entities;
 using LecturerManagement.Core.Repositories.GenericRepo;
+using Microsoft.EntityFrameworkCore;
 
 namespace LecturerManagement.Core.Repositories.ClassRepo
 {
